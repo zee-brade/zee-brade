@@ -172,8 +172,6 @@ nav ul li a:hover {
 animation: float 4s ease-in-out infinite;
 }
 
-.hero-image img{
-    
 @keyframes float{
     0%,100%{
         transform: translateY(0);
