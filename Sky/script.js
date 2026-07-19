@@ -19,3 +19,13 @@ function showTab(tabName) {
     event.currentTarget.classList.add("active");
 
 }
+// --- KODE BARU UNTUK SPLASH SCREEN ---
+// Menunggu halaman dimuat sepenuhnya
+window.addEventListener("load", function() {
+    // Memberikan jeda waktu (contoh: 2500 milidetik = 2,5 detik)
+    setTimeout(function() {
+        // Menambahkan class 'hidden' untuk menghilangkan splash screen dengan animasi transisi
+        document.getElementById("splash-screen").classList.add("hidden");
+    }, 2500); 
+});
+
