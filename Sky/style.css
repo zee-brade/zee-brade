@@ -327,10 +327,9 @@ nav ul li a:hover {
 }
 
 /* =========================================
-   7. ANIMASI (Splash Screen & Efek Muncul)
+   7. ANIMASI WELCOME (SPLASH SCREEN)
    ========================================= */
 
-/* A. Pengaturan Splash Screen */
 #splash-screen {
     position: fixed;
     top: 0;
@@ -338,56 +337,95 @@ nav ul li a:hover {
     width: 100%;
     height: 100vh;
     background-color: var(--bg-color); 
-    z-index: 9999; /* Agar berada di lapisan paling atas menutupi website */
+    z-index: 9999;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    transition: opacity 0.8s ease, visibility 0.8s ease;
+    /* Efek transisi saat layar ditarik ke atas */
+    transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 1s ease; 
 }
 
-/* Class ini akan ditambahkan oleh JavaScript untuk menyembunyikan layar intro */
+/* Class ini ditambahkan oleh JS untuk menarik layar ke atas */
 #splash-screen.hidden {
+    transform: translateY(-100%); /* Geser layar ke atas sampai hilang */
     opacity: 0;
-    visibility: hidden;
+    pointer-events: none;
 }
 
-/* B. Animasi Mengambang (Floating) untuk Ilustrasi */
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); } /* Naik 20px */
-    100% { transform: translateY(0px); }
+.splash-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
 }
 
-/* Menerapkan animasi melayang ke bulatan ilustrasi */
-.mock-illustration {
-    animation: float 4s ease-in-out infinite; 
+/* Animasi untuk Ikon (Muncul satu per satu) */
+.splash-icons {
+    display: flex;
+    gap: 25px;
+    font-size: 1.5rem;
+    color: var(--text-muted);
 }
 
-/* C. Animasi Muncul dari Bawah (Fade In Up) */
+.splash-icons i {
+    opacity: 0;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.splash-icons i:nth-child(1) { animation-delay: 0.2s; }
+.splash-icons i:nth-child(2) { animation-delay: 0.4s; }
+.splash-icons i:nth-child(3) { animation-delay: 0.6s; }
+
+/* Animasi untuk Teks Utama */
+.splash-text {
+    font-size: 3.5rem;
+    line-height: 1.2;
+    color: var(--text-main);
+    opacity: 0;
+    /* Teks muncul setelah ikon (delay 0.8s) */
+    animation: fadeInUp 0.8s ease forwards 0.8s; 
+}
+
+.splash-text .purple-text {
+    color: var(--primary-color);
+}
+
+/* Animasi untuk Link Web */
+.splash-link {
+    font-size: 1rem;
+    color: var(--primary-color);
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(138, 43, 226, 0.1);
+    padding: 5px 15px;
+    border-radius: 20px;
+    margin-top: 10px;
+    /* Link muncul paling akhir (delay 1.2s) */
+    animation: fadeInUp 0.8s ease forwards 1.2s; 
+}
+
+/* Keyframes untuk Ikon Membesar (Pop) */
+@keyframes popIn {
+    0% { opacity: 0; transform: scale(0.5); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* Keyframes untuk Teks Muncul dari Bawah (jika belum ada di file CSS Anda) */
 @keyframes fadeInUp {
-    0% { 
-        opacity: 0; 
-        transform: translateY(40px); 
-    }
-    100% { 
-        opacity: 1; 
-        transform: translateY(0); 
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsif untuk teks Welcome di HP */
+@media (max-width: 768px) {
+    .splash-text {
+        font-size: 2.2rem;
     }
 }
 
-/* Menerapkan animasi muncul ke elemen di dalam Hero Section secara berurutan */
-.hero-content > * {
-    opacity: 0; /* Sembunyikan dulu di awal */
-    animation: fadeInUp 1s ease forwards;
-}
-
-/* Mengatur jeda (delay) agar elemen muncul satu per satu */
-.hero-content .badge { animation-delay: 0.5s; }
-.hero-content .gradient-text { animation-delay: 0.7s; }
-.hero-content p { animation-delay: 0.9s; }
-.hero-content .tech-stack-badges { animation-delay: 1.1s; }
-.hero-content .hero-buttons { animation-delay: 1.3s; }
 
 /* =========================================
    8. EFEK SCROLL REVEAL & HOVER GLOW
