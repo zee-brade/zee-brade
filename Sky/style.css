@@ -388,3 +388,45 @@ nav ul li a:hover {
 .hero-content p { animation-delay: 0.9s; }
 .hero-content .tech-stack-badges { animation-delay: 1.1s; }
 .hero-content .hero-buttons { animation-delay: 1.3s; }
+
+/* =========================================
+   8. EFEK SCROLL REVEAL & HOVER GLOW
+   ========================================= */
+
+/* A. Persiapan Animasi Scroll */
+.reveal {
+    opacity: 0;
+    transform: translateY(50px); /* Posisi awal agak ke bawah */
+    transition: all 0.8s ease-out; /* Kecepatan transisi */
+}
+
+/* Class ini akan ditambahkan otomatis oleh JavaScript saat elemen terlihat di layar */
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* B. Upgrade Efek Hover (Card Glowing) seperti di video */
+.card {
+    transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px); /* Kartu terangkat ke atas */
+    border-color: var(--primary-color);
+    /* Efek Neon Glow warna ungu/biru */
+    box-shadow: 0 10px 30px -10px rgba(138, 43, 226, 0.7), 
+                0 0 15px rgba(65, 105, 225, 0.5);
+    z-index: 10;
+}
+
+/* Upgrade efek hover pada tombol Tabs */
+.tab-btn {
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    background-color: rgba(138, 43, 226, 0.1);
+    transform: translateY(-3px);
+}
+
