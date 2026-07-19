@@ -170,6 +170,7 @@ nav ul li a:hover {
     color: var(--text-muted);
     border: 2px dashed var(--primary-color);
 }
+
 /* --- Styling Khusus About Me --- */
 
 /* Judul Section (About Me) - Ke Tengah */
@@ -177,6 +178,21 @@ nav ul li a:hover {
     text-align: center;
     font-size: 2.5rem;
     color: var(--primary-color);
+    margin-bottom: 30px;
+}
+/* Styling untuk judul About Me */
+.about-text h2 {
+    color: var(--primary-color); /* Memberikan warna ungu sesuai tema */
+    text-align: center;          /* Memastikan posisi di tengah */
+    font-size: 2.5rem;           /* Ukuran font besar */
+    margin-bottom: 20px;
+}
+
+/* Opsional: Jika ingin subtitle "Transforming ideas..." juga terlihat lebih bagus */
+.about-text p.subtitle {
+    color: #a0a0a0;              /* Warna abu-abu agar terlihat elegan sebagai subtitle */
+    text-align: center;
+    font-style: italic;
     margin-bottom: 30px;
 }
 
