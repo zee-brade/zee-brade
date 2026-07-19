@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday</title>
+    <!-- Manggil file CSS terpisah -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. HERO WELCOME -->
+    <section class="hero">
+        <h1>Happy Birthday, Angel</h1>
+        <div class="scroll-hint">↓ Scroll to explore memories ↓</div>
+    </section>
+
+    <!-- 2. TIMELINE MEMORIES -->
+    <section class="timeline">
+        <div class="memory-card">
+            <div class="memory-dot"></div>
+            <div class="memory-date">January 15, 2025</div>
+            <div class="memory-title">Our First Adventure</div>
+            <img class="memory-img" src="https://picsum.photos/450/280?random=1" alt="Memory 1">
+            <div class="memory-desc">Remember when we decided to take that spontaneous road trip? The sun was setting, and the sky turned into a canvas of orange and pink.</div>
+        </div>
+
+        <div class="memory-card">
+            <div class="memory-dot"></div>
+            <div class="memory-date">June 22, 2025</div>
+            <div class="memory-title">Summer Days</div>
+            <img class="memory-img" src="https://picsum.photos/450/280?random=2" alt="Memory 2">
+            <div class="memory-desc">Long evenings spent talking under the stars. Your laughter echoing through the warm night air, creating memories that would last forever.</div>
+        </div>
+    </section>
+
+    <!-- 3. INTERACTIVE CANDLE -->
+    <section class="candle-section" id="candleSection">
+        <div class="instruction" id="instructionText">Click and hold the candle to make a wish...</div>
+        <div class="candle" id="candleBtn">
+            <div class="wick"></div>
+            <div class="flame" id="flame"></div>
+        </div>
+    </section>
+
+    <!-- 4. FINAL CELEBRATION -->
+    <div class="final-screen" id="finalScreen">
+        <h2>🎉 Happy Birthday! 🎉</h2>
+        <p style="color: #666; font-size: 1.2rem;">May all your wishes come true!</p>
+    </div>
+
+    <!-- Manggil file JavaScript terpisah -->
+    <script src="script.js"></script>
+</body>
+  
+</html>
