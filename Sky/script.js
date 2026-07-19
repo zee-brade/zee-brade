@@ -52,16 +52,3 @@ window.addEventListener("scroll", revealOnScroll);
 
 // Menjalankan sekali saat halaman pertama dibuka (untuk elemen di bagian atas)
 revealOnScroll();
-
-media (max-width: 768px) {
-    /* ... (kode media query yang sudah ada) ... */
-    /* Tambahkan ini untuk Contact di mobile */
-    .contact-container {
-        flex-direction: column;
-        gap: 30px;
-    }
-    
-    .info-card:hover {
-        transform: none; /* Matikan efek geser di mobile agar tidak aneh */
-    }
-}
