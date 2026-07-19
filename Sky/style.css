@@ -169,7 +169,7 @@ nav ul li a:hover {
     border: 4px solid #8a2be2;
     box-shadow: 0 0 30px rgba(138,43,226,.5);
    
-animation: float 4s ease-in-out infinite;
+    animation: float 4s ease-in-out infinite;
 }
 
 @keyframes float{
@@ -177,7 +177,7 @@ animation: float 4s ease-in-out infinite;
         transform: translateY(0);
     }
     50%{
-        transform: translateY(-10px);
+        transform: translateY(-30px);
     }
 }
 
