@@ -1,9 +1,11 @@
-/* Konfigurasi Warna & Font */
+/* =========================================
+   1. Variabel dan Pengaturan Dasar
+   ========================================= */
 :root {
     --bg-color: #0b0914;
     --card-bg: #151226;
-    --primary-color: #8a2be2; /* Ungu */
-    --secondary-color: #4169e1; /* Biru */
+    --primary-color: #8a2be2;
+    --secondary-color: #4169e1;
     --text-main: #ffffff;
     --text-muted: #a0a0b0;
 }
@@ -15,13 +17,20 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     background-color: var(--bg-color);
     color: var(--text-main);
     line-height: 1.6;
+    overflow-x: hidden; /* Mencegah layar bergeser ke kanan di mobile */
 }
 
-/* Navbar */
+/* =========================================
+   2. Navbar (Header)
+   ========================================= */
 header {
     display: flex;
     justify-content: space-between;
@@ -56,52 +65,18 @@ nav ul li a:hover {
     color: var(--primary-color);
 }
 
-/* Typography Umum */
+/* =========================================
+   3. Typography & Buttons
+   ========================================= */
 .gradient-text {
     background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 4rem;
     margin: 10px 0;
+    line-height: 1.2;
 }
 
-/* Hero Section */
-.hero {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 100px 10%;
-    min-height: 80vh;
-}
-
-.hero-content {
-    max-width: 50%;
-}
-
-.badge {
-    background: rgba(138, 43, 226, 0.2);
-    color: #c98cff;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    border: 1px solid rgba(138, 43, 226, 0.5);
-}
-
-.tech-stack-badges {
-    margin: 20px 0;
-    display: flex;
-    gap: 10px;
-}
-
-.tech-stack-badges span {
-    background: var(--card-bg);
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-}
-
-/* Buttons */
 .btn {
     padding: 10px 20px;
     border-radius: 8px;
@@ -112,6 +87,7 @@ nav ul li a:hover {
     transition: 0.3s;
     border: none;
     cursor: pointer;
+    text-align: center;
 }
 
 .btn-primary {
@@ -128,13 +104,76 @@ nav ul li a:hover {
     border: 1px solid var(--text-muted);
 }
 
+/* =========================================
+   4. Hero Section
+   ========================================= */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 100px 10%;
+    min-height: 80vh;
+    gap: 40px;
+}
+
+.hero-content {
+    flex: 1; /* Mengambil ruang tersisa secara proporsional */
+    max-width: 50%;
+}
+
+.badge {
+    background: rgba(138, 43, 226, 0.2);
+    color: #c98cff;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(138, 43, 226, 0.5);
+    display: inline-block;
+}
+
+.tech-stack-badges {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap; /* Agar badge turun ke bawah jika layar sempit */
+}
+
+.tech-stack-badges span {
+    background: var(--card-bg);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
 .hero-buttons {
     display: flex;
     gap: 15px;
     margin-top: 20px;
 }
 
-/* Portfolio Section & Tabs */
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mock-illustration {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(45deg, #1e1b33, var(--card-bg));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    border: 2px dashed var(--primary-color);
+}
+
+/* =========================================
+   5. Portfolio Section & Cards
+   ========================================= */
 .portfolio {
     padding: 50px 10%;
     text-align: center;
@@ -145,6 +184,7 @@ nav ul li a:hover {
     justify-content: center;
     gap: 20px;
     margin: 30px 0;
+    flex-wrap: wrap;
 }
 
 .tab-btn {
@@ -163,16 +203,17 @@ nav ul li a:hover {
 }
 
 .tab-content {
-    display: none; /* Sembunyikan semua konten tab */
+    display: none;
 }
 
 .tab-content.active-content {
-    display: block; /* Tampilkan tab yang aktif */
+    display: block;
 }
 
-/* Grid & Cards */
+/* Grid sangat penting untuk responsivitas */
 .grid-container {
     display: grid;
+    /* Ini akan membuat kolom otomatis menyesuaikan ruang. Minimal 300px per kartu */
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     margin-top: 20px;
@@ -215,9 +256,72 @@ nav ul li a:hover {
     justify-content: space-between;
     margin-top: 15px;
     font-size: 0.9rem;
+    align-items: center;
 }
 
 .card-actions a {
     color: white;
     text-decoration: none;
-  }
+}
+
+/* =========================================
+   6. MEDIA QUERIES (Untuk Layar Mobile/Tablet)
+   ========================================= */
+@media (max-width: 768px) {
+    /* Navbar: Mengubah posisi menu agar turun ke bawah logo jika sempit */
+    header {
+        flex-direction: column;
+        padding: 15px 5%;
+        gap: 15px;
+    }
+    
+    nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* Hero Section: Teks dan gambar ditumpuk (kolom) */
+    .hero {
+        flex-direction: column-reverse; /* Gambar di atas, teks di bawah (ubah ke column jika teks ingin di atas) */
+        padding: 60px 5% 40px;
+        text-align: center;
+    }
+
+    .hero-content {
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Teks di tengah pada layar HP */
+    }
+
+    /* Mengecilkan ukuran font agar tidak terpotong di HP */
+    .gradient-text {
+        font-size: 2.5rem; 
+    }
+
+    .tech-stack-badges {
+        justify-content: center;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+        flex-direction: column; /* Tombol bertumpuk di HP */
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .hero-buttons .btn {
+        width: 100%; /* Tombol melebar penuh */
+    }
+
+    /* Memperkecil gambar ilustrasi */
+    .mock-illustration {
+        width: 250px;
+        height: 250px;
+    }
+
+    /* Portfolio: Mengurangi margin/padding sisi kiri kanan */
+    .portfolio {
+        padding: 40px 5%;
+    }
+}
