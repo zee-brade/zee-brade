@@ -19,15 +19,15 @@ function showTab(tabName) {
     event.currentTarget.classList.add("active");
 
 }
-// --- KODE BARU UNTUK SPLASH SCREEN ---
-// Menunggu halaman dimuat sepenuhnya
+// --- KODE SPLASH SCREEN ---
 window.addEventListener("load", function() {
-    // Memberikan jeda waktu (contoh: 2500 milidetik = 2,5 detik)
+    // Memberikan waktu 3,5 detik agar semua animasi ikon dan teks selesai
     setTimeout(function() {
-        // Menambahkan class 'hidden' untuk menghilangkan splash screen dengan animasi transisi
+        // Layar akan ditarik ke atas berkat transform: translateY(-100%) di CSS
         document.getElementById("splash-screen").classList.add("hidden");
-    }, 2500); 
+    }, 3500); 
 });
+
 
 // --- KODE UNTUK ANIMASI SCROLL REVEAL ---
 function revealOnScroll() {
