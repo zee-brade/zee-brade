@@ -1,0 +1,190 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Georgia', serif;
+}
+body {
+    background-color: #fcfbf9;
+    color: #333;
+    overflow-x: hidden;
+}
+/* Hero Welcome Section */
+.hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 400;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+.scroll-hint {
+    font-size: 0.9rem;
+    color: #888;
+    position: absolute;
+    bottom: 40px;
+    animation: bounce 2s infinite;
+}
+
+/* Timeline Section */
+.timeline {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 50px 20px;
+    position: relative;
+}
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 30px;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background-color: #ccc;
+}
+.memory-card {
+    position: relative;
+    margin-bottom: 60px;
+    padding-left: 60px;
+}
+.memory-dot {
+    position: absolute;
+    left: 25px;
+    top: 5px;
+    width: 11px;
+    height: 11px;
+    background-color: #333;
+    border-radius: 50%;
+}
+.memory-date {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #888;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+.memory-title {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 15px;
+}
+.memory-img {
+    width: 100%;
+    max-width: 450px;
+    height: 280px;
+    background-color: #ddd;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.memory-desc {
+    max-width: 450px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* Candle Section */
+.candle-section {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #fcfbf9;
+    position: relative;
+}
+.instruction {
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    color: #555;
+    user-select: none;
+}
+.candle {
+    width: 30px;
+    height: 120px;
+    background: linear-gradient(to right, #e0e0e0, #ffffff);
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+}
+.wick {
+    width: 4px;
+    height: 15px;
+    background-color: #444;
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.flame {
+    width: 16px;
+    height: 30px;
+    background-color: #ff9800;
+    border-radius: 50% 50% 20% 20%;
+    position: absolute;
+    top: -42px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 20px #ff9800;
+    animation: flicker 0.1s infinite alternate;
+    transition: opacity 0.5s;
+}
+
+/* Final Celebration Screen */
+.final-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #f3f4f6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+    z-index: 10;
+}
+.final-screen.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.final-screen h2 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+.balloon {
+    position: absolute;
+    width: 40px;
+    height: 50px;
+    border-radius: 50%;
+    bottom: -60px;
+    animation: floatUp 6s linear infinite;
+}
+
+/* Animations */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+@keyframes flicker {
+    0% { transform: translateX(-50%) scale(1); }
+    100% { transform: translateX(-50%) scale(1.05); opacity: 0.9; }
+}
+@keyframes floatUp {
+    0% { bottom: -60px; transform: translateX(0); }
+    50% { transform: translateX(20px); }
+    100% { bottom: 105vh; transform: translateX(-20px); }
+  }
