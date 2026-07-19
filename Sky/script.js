@@ -29,3 +29,27 @@ window.addEventListener("load", function() {
     }, 2500); 
 });
 
+// --- KODE UNTUK ANIMASI SCROLL REVEAL ---
+function revealOnScroll() {
+    // Mencari semua elemen yang punya class 'reveal'
+    var reveals = document.querySelectorAll(".reveal");
+
+    for (var i = 0; i < reveals.length; i++) {
+        // Mendapatkan ukuran layar dan posisi elemen
+        var windowHeight = window.innerHeight;
+        var elementTop = reveals[i].getBoundingClientRect().top;
+        var elementVisible = 100; // Jarak sebelum elemen muncul (dalam pixel)
+
+        // Jika elemen sudah masuk ke area layar, tambahkan class 'active'
+        if (elementTop < windowHeight - elementVisible) {
+            reveals[i].classList.add("active");
+        }
+    }
+}
+
+// Menjalankan fungsi setiap kali layar di-scroll
+window.addEventListener("scroll", revealOnScroll);
+
+// Menjalankan sekali saat halaman pertama dibuka (untuk elemen di bagian atas)
+revealOnScroll();
+
