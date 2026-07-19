@@ -152,23 +152,22 @@ nav ul li a:hover {
     margin-top: 20px;
 }
 
-.hero-image {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+..hero-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
 }
 
-.mock-illustration {
-    width: 300px;
-    height: 300px;
-    background: linear-gradient(45deg, #1e1b33, var(--card-bg));
+..hero-image{
+    width: 350px;
+    height: 350px;
+
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
-    border: 2px dashed var(--primary-color);
+    overflow: hidden;
+
+    border: 4px solid #8a2be2;
+    box-shadow: 0 0 30px rgba(138,43,226,.5);
 }
 
 /* --- Styling Khusus About Me --- */
