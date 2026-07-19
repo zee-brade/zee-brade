@@ -488,8 +488,16 @@ nav ul li a:hover {
 
 /* Responsif untuk teks Welcome di HP */
 @media (max-width: 768px) {
-    .splash-text {
-        font-size: 2.2rem;
+    /* ... (kode media query yang sudah ada) ... */
+
+    /* Tambahkan ini untuk Contact di mobile */
+    .contact-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .info-card:hover {
+        transform: none; /* Matikan efek geser di mobile agar tidak aneh */
     }
 }
 
