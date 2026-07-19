@@ -1,54 +1,60 @@
-// Fungsi untuk mengganti Tab pada bagian Portfolio
-function showTab(tabName) {
-    // Sembunyikan semua tab konten
-    let contents = document.getElementsByClassName("tab-content");
-    for (let i = 0; i < contents.length; i++) {
-        contents[i].classList.remove("active-content");
-    }
-
-    // Hapus class 'active' dari semua tombol
-    let buttons = document.getElementsByClassName("tab-btn");
-    for (let i = 0; i < buttons.length; i++) {
-        buttons[i].classList.remove("active");
-    }
-
-    // Tampilkan tab yang dipilih
-    document.getElementById(tabName).classList.add("active-content");
-    
-    // Tambahkan class 'active' pada tombol yang diklik
-    event.currentTarget.classList.add("active");
-
-}
-// --- KODE SPLASH SCREEN ---
-window.addEventListener("load", function() {
-    // Memberikan waktu 3,5 detik agar semua animasi ikon dan teks selesai
+// ==========================================
+// 1. KODE SPLASH SCREEN (ANTI STUCK)
+// ==========================================
+document.addEventListener("DOMContentLoaded", function() {
+    // Splash screen akan otomatis ditarik ke atas setelah 2.5 detik
     setTimeout(function() {
-        // Layar akan ditarik ke atas berkat transform: translateY(-100%) di CSS
-        document.getElementById("splash-screen").classList.add("hidden");
-    }, 3500); 
+        var splash = document.getElementById("splash-screen");
+        if (splash) {
+            splash.classList.add("hidden");
+        }
+    }, 2500); 
 });
 
-
-// --- KODE UNTUK ANIMASI SCROLL REVEAL ---
+// ==========================================
+// 2. KODE ANIMASI SCROLL REVEAL
+// ==========================================
 function revealOnScroll() {
-    // Mencari semua elemen yang punya class 'reveal'
     var reveals = document.querySelectorAll(".reveal");
-
     for (var i = 0; i < reveals.length; i++) {
-        // Mendapatkan ukuran layar dan posisi elemen
         var windowHeight = window.innerHeight;
         var elementTop = reveals[i].getBoundingClientRect().top;
-        var elementVisible = 100; // Jarak sebelum elemen muncul (dalam pixel)
-
-        // Jika elemen sudah masuk ke area layar, tambahkan class 'active'
+        var elementVisible = 100;
+        
         if (elementTop < windowHeight - elementVisible) {
             reveals[i].classList.add("active");
         }
     }
 }
-
-// Menjalankan fungsi setiap kali layar di-scroll
+// Jalankan saat di-scroll
 window.addEventListener("scroll", revealOnScroll);
-
-// Menjalankan sekali saat halaman pertama dibuka (untuk elemen di bagian atas)
+// Jalankan sekali saat web pertama dibuka
 revealOnScroll();
+
+// ==========================================
+// 3. KODE TABS PORTFOLIO
+// ==========================================
+function showTab(tabId) {
+    // Sembunyikan semua tab content
+    var contents = document.querySelectorAll('.tab-content');
+    for (var i = 0; i < contents.length; i++) {
+        contents[i].classList.remove('active-content');
+    }
+
+    // Hapus warna 'active' dari semua tombol
+    var buttons = document.querySelectorAll('.tab-btn');
+    for (var j = 0; j < buttons.length; j++) {
+        buttons[j].classList.remove('active');
+    }
+
+    // Munculkan tab yang dipilih
+    var selectedTab = document.getElementById(tabId);
+    if (selectedTab) {
+        selectedTab.classList.add('active-content');
+    }
+
+    // Kasih warna 'active' ke tombol yang lagi diklik
+    if (typeof event !== 'undefined' && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+    }
+}
