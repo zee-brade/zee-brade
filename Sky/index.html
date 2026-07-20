@@ -205,35 +205,49 @@
                 </div>
             </div>
 
-            <!-- Formulir Kontak -->
-            <div class="contact-form">
-                <form action="#" method="POST">
-                    <div class="input-group">
-                        <input type="text" placeholder="Your Name" required>
-                    </div>
-                    <div class="input-group">
-                        <input type="email" placeholder="Your Email" required>
-                    </div>
-                    <div class="input-group">
-                        <textarea rows="5" placeholder="Your Message" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message <i class="fas fa-paper-plane"></i></button>
-                </form>
-            </div>
+          <!-- Formulir Kontak -->
+<div class="contact-form">
+    <form id="contact-form">
+
+        <div class="input-group">
+            <input
+                type="text"
+                name="name"
+                placeholder="Your Name"
+                required>
         </div>
-    </section>
+
+        <div class="input-group">
+            <input
+                type="email"
+                name="email"
+                placeholder="Your Email"
+                required>
+        </div>
+
+        <div class="input-group">
+            <textarea
+                rows="5"
+                name="message"
+                placeholder="Your Message"
+                required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;">
+            Send Message <i class="fas fa-paper-plane"></i>
+        </button>
+
+    </form>
+</div>  
+    <!-- 7. Footer (Opsional agar terlihat rapi di paling bawah) -->
+    <footer>
+        <p>&copy; 2025 M.Azriel Rivaldi Ramadhani. All rights reserved.</p>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <script>
     emailjs.init("5pgq7PhndoiI9Xjt9");
 </script>
-
-<script src="script.js"></script>
-    <!-- 7. Footer (Opsional agar terlihat rapi di paling bawah) -->
-    <footer>
-        <p>&copy; 2025 M.Azriel Rivaldi Ramadhani. All rights reserved.</p>
-    </footer>
-    
     <script src="script.js"></script>
 </body>
 </html>
