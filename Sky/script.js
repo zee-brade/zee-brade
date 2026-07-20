@@ -93,20 +93,32 @@ document.getElementById("contact-form").addEventListener("submit", function(e){
     });
 
 });
-const light=document.querySelector(".mouse-light");
+<script>
+const b1=document.querySelector(".blur-1");
+const b2=document.querySelector(".blur-2");
+const b3=document.querySelector(".blur-3");
 
 document.addEventListener("mousemove",(e)=>{
 
-light.style.left=e.clientX+"px";
+const x=e.clientX/window.innerWidth;
+const y=e.clientY/window.innerHeight;
 
-light.style.top=e.clientY+"px";
+b1.style.transform=`translate(${x*40}px,${y*30}px)`;
+b2.style.transform=`translate(${-x*60}px,${-y*40}px)`;
+b3.style.transform=`translate(${x*30}px,${-y*35}px)`;
 
 });
 
 document.addEventListener("touchmove",(e)=>{
 
-light.style.left=e.touches[0].clientX+"px";
+const t=e.touches[0];
 
-light.style.top=e.touches[0].clientY+"px";
+const x=t.clientX/window.innerWidth;
+const y=t.clientY/window.innerHeight;
+
+b1.style.transform=`translate(${x*40}px,${y*30}px)`;
+b2.style.transform=`translate(${-x*60}px,${-y*40}px)`;
+b3.style.transform=`translate(${x*30}px,${-y*35}px)`;
 
 });
+</script>
