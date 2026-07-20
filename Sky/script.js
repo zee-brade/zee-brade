@@ -1,60 +1,56 @@
-// ==========================================
-// 1. KODE SPLASH SCREEN (ANTI STUCK)
-// ==========================================
-document.addEventListener("DOMContentLoaded", function() {
-    // Splash screen akan otomatis ditarik ke atas setelah 2.5 detik
-    setTimeout(function() {
-        var splash = document.getElementById("splash-screen");
-        if (splash) {
-            splash.classList.add("hidden");
-        }
-    }, 2500); 
+/* =========================================
+   1. Splash Screen Logic
+   ========================================= */
+window.addEventListener('load', () => {
+    const splash = document.getElementById('splash-screen');
+    
+    // Tunggu 2 detik agar animasi splash terlihat, lalu hilangkan
+    setTimeout(() => {
+        splash.classList.add('hidden');
+    }, 2000); 
 });
 
-// ==========================================
-// 2. KODE ANIMASI SCROLL REVEAL
-// ==========================================
-function revealOnScroll() {
-    var reveals = document.querySelectorAll(".reveal");
-    for (var i = 0; i < reveals.length; i++) {
-        var windowHeight = window.innerHeight;
-        var elementTop = reveals[i].getBoundingClientRect().top;
-        var elementVisible = 100;
-        
-        if (elementTop < windowHeight - elementVisible) {
-            reveals[i].classList.add("active");
+/* =========================================
+   2. Scroll Reveal Logic (Intersection Observer)
+   ========================================= */
+// Ini jauh lebih efisien daripada menggunakan scroll event listener biasa
+const observerOptions = {
+    threshold: 0.1 // Animasi muncul saat 10% elemen terlihat di layar
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('active');
         }
-    }
-}
-// Jalankan saat di-scroll
-window.addEventListener("scroll", revealOnScroll);
-// Jalankan sekali saat web pertama dibuka
-revealOnScroll();
+    });
+}, observerOptions);
 
-// ==========================================
-// 3. KODE TABS PORTFOLIO
-// ==========================================
+// Daftarkan semua elemen dengan class .reveal untuk diamati
+document.querySelectorAll('.reveal').forEach(el => {
+    observer.observe(el);
+});
+
+/* =========================================
+   3. Tab Switching Logic
+   ========================================= */
 function showTab(tabId) {
-    // Sembunyikan semua tab content
-    var contents = document.querySelectorAll('.tab-content');
-    for (var i = 0; i < contents.length; i++) {
-        contents[i].classList.remove('active-content');
-    }
+    // 1. Sembunyikan semua konten tab
+    const contents = document.querySelectorAll('.tab-content');
+    contents.forEach(content => {
+        content.classList.remove('active-content');
+    });
 
-    // Hapus warna 'active' dari semua tombol
-    var buttons = document.querySelectorAll('.tab-btn');
-    for (var j = 0; j < buttons.length; j++) {
-        buttons[j].classList.remove('active');
-    }
+    // 2. Hapus class 'active' dari semua tombol
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => {
+        btn.classList.remove('active');
+    });
 
-    // Munculkan tab yang dipilih
-    var selectedTab = document.getElementById(tabId);
-    if (selectedTab) {
-        selectedTab.classList.add('active-content');
-    }
+    // 3. Tampilkan konten yang dipilih
+    document.getElementById(tabId).classList.add('active-content');
 
-    // Kasih warna 'active' ke tombol yang lagi diklik
-    if (typeof event !== 'undefined' && event.currentTarget) {
-        event.currentTarget.classList.add('active');
-    }
+    // 4. Tambahkan class 'active' ke tombol yang diklik
+    // Mencari tombol yang memiliki onclick sesuai tabId
+    event.currentTarget.classList.add('active');
 }
