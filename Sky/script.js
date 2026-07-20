@@ -58,3 +58,26 @@ function showTab(tabId) {
         event.currentTarget.classList.add('active');
     }
 }
+document.getElementById("contact-form").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    emailjs.sendForm(
+        "service_pkapnbu",
+        "template_sxweuvl",
+        this
+    ).then(function(){
+
+        alert("✅ Pesan berhasil dikirim!");
+
+        document.getElementById("contact-form").reset();
+
+    }).catch(function(error){
+
+        alert("❌ Gagal mengirim pesan.");
+
+        console.log(error);
+
+    });
+
+});
