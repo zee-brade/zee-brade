@@ -72,7 +72,7 @@ nav ul li a:hover {
     background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-size: 3.7rem;
+    font-size: 4rem;
     margin: 10px 0;
     line-height: 1.2;
 }
@@ -480,7 +480,7 @@ nav ul li a:hover {
 
 /* Animasi untuk Teks Utama */
 .splash-text {
-    font-size: 3.5rem;
+    font-size: 3rem;
     line-height: 1.2;
     color: var(--text-main);
     opacity: 0;
