@@ -68,13 +68,25 @@ document.getElementById("contact-form").addEventListener("submit", function(e){
         this
     ).then(function(){
 
-        alert("✅ Pesan berhasil dikirim!");
+        Swal.fire({
+    toast: true,
+    position: "top-end",
+    icon: "success",
+    title: "Message Sent Successfully",
+    showConfirmButton: false,
+    timer: 2500
+});
 
         document.getElementById("contact-form").reset();
 
     }).catch(function(error){
 
-        alert("❌ Gagal mengirim pesan.");
+        Swal.fire({
+    icon: "error",
+    title: "Oops...",
+    text: "Pesan gagal dikirim.",
+    confirmButtonColor: "#ff3b3b"
+});
 
         console.log(error);
 
