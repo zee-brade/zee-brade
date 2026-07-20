@@ -26,6 +26,11 @@ function revealOnScroll() {
         }
     }
 }
+// Jalankan saat di-scroll
+window.addEventListener("scroll", revealOnScroll);
+// Jalankan sekali saat web pertama dibuka
+revealOnScroll();
+
 // ==========================================
 // 3. KODE TABS PORTFOLIO
 // ==========================================
