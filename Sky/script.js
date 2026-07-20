@@ -44,7 +44,7 @@ function showTab(tabId) {
     // Hapus warna 'active' dari semua tombol
     var buttons = document.querySelectorAll('.tab-btn');
     for (var j = 0; j < buttons.length; j++) {
-        buttons[j].classList.remove('active');
+        buttons[j].classList.remove('active-btn');
     }
 
     // Munculkan tab yang dipilih
