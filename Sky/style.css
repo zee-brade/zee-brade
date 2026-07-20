@@ -323,6 +323,25 @@ nav ul li a:hover {
     display: block;
 }
 
+.certificate-gallery{
+    display:flex;
+    justify-content:center;
+    margin-top:40px;
+}
+
+.certificate-gallery img{
+    width:320px;
+    border-radius:15px;
+    cursor:pointer;
+    transition:.3s;
+    box-shadow:0 0 20px rgba(138,43,226,.3);
+}
+
+.certificate-gallery img:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 30px rgba(138,43,226,.7);
+}
+
 .card-body {
     padding: 20px;
 }
