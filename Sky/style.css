@@ -280,11 +280,11 @@ nav ul li a:hover {
 }
 
 .tab-content {
-    display: none;
+    display: none; /* Sembunyikan semua konten tab */
 }
 
-.active-content {
-    display: block;
+.tab-content.active-content {
+    display: block; /* Tampilkan tab yang aktif */
 }
 
 /* Grid sangat penting untuk responsivitas */
