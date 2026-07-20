@@ -93,3 +93,20 @@ document.getElementById("contact-form").addEventListener("submit", function(e){
     });
 
 });
+const light=document.querySelector(".mouse-light");
+
+document.addEventListener("mousemove",(e)=>{
+
+light.style.left=e.clientX+"px";
+
+light.style.top=e.clientY+"px";
+
+});
+
+document.addEventListener("touchmove",(e)=>{
+
+light.style.left=e.touches[0].clientX+"px";
+
+light.style.top=e.touches[0].clientY+"px";
+
+});
