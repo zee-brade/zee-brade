@@ -72,7 +72,7 @@ nav ul li a:hover {
     background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-size: 4rem;
+    font-size: 3.7rem;
     margin: 10px 0;
     line-height: 1.2;
 }
