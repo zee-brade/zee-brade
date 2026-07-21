@@ -93,3 +93,33 @@ document.getElementById("contact-form").addEventListener("submit", function(e){
     });
 
 });
+
+<script>
+const b1=document.querySelector(".blur-1");
+const b2=document.querySelector(".blur-2");
+const b3=document.querySelector(".blur-3");
+
+document.addEventListener("mousemove",(e)=>{
+
+const x=e.clientX/window.innerWidth;
+const y=e.clientY/window.innerHeight;
+
+b1.style.transform=`translate(${x*40}px,${y*30}px)`;
+b2.style.transform=`translate(${-x*60}px,${-y*40}px)`;
+b3.style.transform=`translate(${x*30}px,${-y*35}px)`;
+
+});
+
+document.addEventListener("touchmove",(e)=>{
+
+const t=e.touches[0];
+
+const x=t.clientX/window.innerWidth;
+const y=t.clientY/window.innerHeight;
+
+b1.style.transform=`translate(${x*40}px,${y*30}px)`;
+b2.style.transform=`translate(${-x*60}px,${-y*40}px)`;
+b3.style.transform=`translate(${x*30}px,${-y*35}px)`;
+
+});
+</script>
