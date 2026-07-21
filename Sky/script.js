@@ -93,7 +93,6 @@ document.getElementById("contact-form").addEventListener("submit", function(e){
     });
 
 });
-<script>
 const b1=document.querySelector(".blur-1");
 const b2=document.querySelector(".blur-2");
 const b3=document.querySelector(".blur-3");
@@ -121,4 +120,3 @@ b2.style.transform=`translate(${-x*60}px,${-y*40}px)`;
 b3.style.transform=`translate(${x*30}px,${-y*35}px)`;
 
 });
-</script>
