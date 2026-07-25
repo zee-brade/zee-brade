@@ -1,433 +1,259 @@
-<!DOCTYPE html>
-<html lang="id">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#050505" />
-  <meta name="description" content="Interactive Software Engineer Portfolio" />
-  <title>SYAHRUL NIZAM • Software Engineer Portfolio</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0D0F12">
+  <meta name="description" content="ALANGKUN - Modern software engineer portfolio with rich animations, visual effects, and interactive sections.">
+  <title>ALANGKUN | Software Engineer Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body data-scene="intro">
-  <div id="introOverlay" class="intro-overlay" aria-hidden="true">
-    <div class="intro-title">ALANGKUN</div>
+<body>
+  <div class="intro" id="intro">
+    <div class="intro-inner">
+      <div class="intro-brand">ALANGKUN</div>
+      <div class="intro-sub">SOFTWARE ENGINEER</div>
+    </div>
   </div>
 
-  <canvas id="starfieldCanvas" class="starfield-canvas" aria-hidden="true"></canvas>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#home" aria-label="Go to home">ALANGKUN</a>
 
-  <div class="page-shell">
-    <header class="topbar">
-      <div class="brand">
-        <span class="brand-dot"></span>
-        <span>ALANGKUN</span>
-      </div>
-      <nav class="topnav">
-        <a href="#about">About</a>
-        <a href="#projects">Work</a>
-        <a href="#toolkit">Stack</a>
-        <a href="#journey">Journey</a>
-        <a href="#music">Music</a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#home">HOME</a>
+        <a href="#about">ABOUT</a>
+        <a href="#work">TECH</a>
+        <a href="#journey">EXPERIENCE</a>
+        <a href="#music">MUSIC</a>
+        <a href="#contact">GITHUB</a>
       </nav>
-    </header>
 
-    <section id="hero" class="hero section scene-hero">
-      <div class="hero-parallax">
-        <div class="mountain mountain-back"></div>
-        <div class="mountain mountain-mid"></div>
-        <div class="mountain mountain-front"></div>
-        <div class="forest-stripes"></div>
-        <div class="hero-glow"></div>
-      </div>
+      <button class="menu-pill" type="button" data-scroll="#music">MY FAV SONG</button>
+    </div>
+  </header>
 
-      <div class="hero-content">
-        <div class="eyebrow reveal" data-reveal>SOFTWARE ENGINEER • CREATIVE PORTFOLIO</div>
-        <h1 class="hero-title reveal stagger-1" data-reveal>SYAHRUL NIZAM</h1>
-        <p class="hero-subtitle reveal stagger-2" data-reveal>Crafting interactive digital experiences with motion, systems, and a bit of neon-laced theatre.</p>
+  <main>
+    <section class="hero section-shell reveal" id="home">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow hero-reveal">ALANGKUN PRESENTS</p>
+          <h1 class="hero-title hero-reveal">SYAHRUL NIZAM</h1>
+          <h2 class="hero-subtitle hero-reveal">SOFTWARE ENGINEER</h2>
 
-        <div class="badge-row reveal stagger-3" data-reveal>
-          <span class="badge">INDONESIA</span>
-          <span class="badge">FRONT END</span>
-          <span class="badge badge-live">AVAILABLE</span>
+          <div class="status-row hero-reveal">
+            <span class="status-chip"><strong>LOCATION:</strong> INDONESIA</span>
+            <span class="status-chip"><strong>CURRENT ROLE:</strong> FRONT END</span>
+            <span class="status-chip status-chip--accent"><strong>STATUS:</strong> AVAILABLE</span>
+          </div>
+
+          <div class="hero-actions hero-reveal">
+            <a class="button button-primary" href="#journey">VIEW EXPERIENCE <span>→</span></a>
+            <div class="scroll-indicator">SCROLL TO EXPLORE ↓</div>
+          </div>
         </div>
 
-        <div class="hero-actions reveal stagger-4" data-reveal>
-          <a class="button button-primary" href="#about">
-            <span>EXPLORE PROFILE</span>
-            <span class="button-arrow">→</span>
-          </a>
-          <a class="button button-secondary" href="#projects">
-            <span>SEE PROJECTS</span>
-          </a>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-haze"></div>
+          <div class="hero-sun"></div>
+          <div class="hero-mountain hero-layer" data-depth="0.14"></div>
+          <div class="hero-forest hero-layer" data-depth="0.26"></div>
+          <div class="hero-fog hero-layer" data-depth="0.08"></div>
+          <div class="hero-stars hero-layer" data-depth="0.04"></div>
         </div>
       </div>
 
-      <div class="marquee-wrap reveal stagger-5" data-reveal>
-        <div class="marquee">
-          <div class="marquee-track">
-            <span>INTERACTIVE UI</span>
-            <span>CREATIVE CODING</span>
-            <span>ANIMATION SYSTEMS</span>
-            <span>RESPONSIVE DESIGN</span>
-            <span>JAVASCRIPT ENGINEERING</span>
-            <span>INTERACTIVE UI</span>
-            <span>CREATIVE CODING</span>
-            <span>ANIMATION SYSTEMS</span>
-            <span>RESPONSIVE DESIGN</span>
-            <span>JAVASCRIPT ENGINEERING</span>
+      <div class="ticker-wrap">
+        <div class="ticker">
+          <div class="ticker-track">
+            <span>NEXT.JS</span><span>•</span>
+            <span>TAILWIND CSS</span><span>•</span>
+            <span>NODE.JS</span><span>•</span>
+            <span>PYTHON</span><span>•</span>
+            <span>PHP</span><span>•</span>
+            <span>KOTLIN</span><span>•</span>
+            <span>GIT</span><span>•</span>
+            <span>FRAMER MOTION</span><span>•</span>
+            <span>NEXT.JS</span><span>•</span>
+            <span>TAILWIND CSS</span><span>•</span>
+            <span>NODE.JS</span><span>•</span>
+            <span>PYTHON</span><span>•</span>
+            <span>PHP</span><span>•</span>
+            <span>KOTLIN</span><span>•</span>
+            <span>GIT</span><span>•</span>
+            <span>FRAMER MOTION</span><span>•</span>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="about" class="about section scene-about">
-      <div class="section-bg-word" data-parallax-word>ABOUT ME</div>
-      <div class="section-header reveal" data-reveal>
-        <span class="section-kicker">01 / ABOUT</span>
-        <h2>Designing with motion, building with structure.</h2>
-      </div>
+    <section class="about section-shell reveal" id="about">
+      <div class="container about-grid">
+        <div class="watermark watermark-left">ABOUT ME</div>
+        <div class="watermark watermark-right">PASSIONATE</div>
 
-      <div class="about-grid">
-        <article class="about-card reveal" data-reveal>
-          <p>
-            Saya suka bikin interface yang terasa hidup: transisi halus, depth, micro-interaction,
-            dan visual yang punya rasa. Fokusnya bukan cuma “kelihatan keren”, tapi juga enak dipakai.
-          </p>
-        </article>
+        <div class="section-kicker">// ABOUT</div>
+        <h3 class="section-title">Crafting clean digital systems with motion, clarity, and a developer-first mindset.</h3>
+        <p class="section-copy">
+          I build fast, polished interfaces that feel alive. My focus lives at the intersection of frontend engineering,
+          product thinking, and visual storytelling, with a soft spot for smooth interactions, thoughtful structure,
+          and experiences that stay crisp on every screen.
+        </p>
 
-        <article class="about-card reveal stagger-1" data-reveal>
-          <p>
-            Dari landing page sampai dashboard, dari portfolio sampai web experience yang imersif,
-            saya membangun alur yang ngikutin ritme cerita, bukan cuma susunan komponen.
-          </p>
-        </article>
-
-        <article class="about-card reveal stagger-2" data-reveal>
-          <p>
-            Stack favorit saya condong ke front-end modern, animasi berbasis JS, dan arsitektur
-            yang tetap ringan di device. Kecepatan, polish, dan detail itu trio sakti.
-          </p>
-        </article>
-      </div>
-
-      <div class="about-cta reveal" data-reveal>
-        <a class="button button-glow" href="#projects">
-          <span>VIEW EXPERIENCE</span>
-          <span class="button-arrow">→</span>
-        </a>
-      </div>
-    </section>
-
-    <section id="projects" class="projects section scene-projects">
-      <div class="section-header reveal" data-reveal>
-        <span class="section-kicker">02 / PROJECTS</span>
-        <h2>Selected work cards with motion and depth.</h2>
-      </div>
-
-      <div class="project-grid">
-        <article class="project-card reveal" data-reveal>
-          <div class="project-thumb thumb-cutyo"></div>
-          <div class="project-body">
-            <h3>CutYO</h3>
-            <p>Video cut assistant dengan workflow cepat dan visual clean.</p>
-            <div class="tech-tags">
-              <span>UI</span><span>Motion</span><span>Tools</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="project-card reveal stagger-1" data-reveal>
-          <div class="project-thumb thumb-komiyo"></div>
-          <div class="project-body">
-            <h3>KomiYO</h3>
-            <p>Komunitas digital dengan kartu profil interaktif dan transisi lembut.</p>
-            <div class="tech-tags">
-              <span>Community</span><span>Social</span><span>Cards</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="project-card reveal stagger-2" data-reveal>
-          <div class="project-thumb thumb-roastgram"></div>
-          <div class="project-body">
-            <h3>Roastgram</h3>
-            <p>Social feed satir dengan efek dramatis dan layout yang padat energi.</p>
-            <div class="tech-tags">
-              <span>Feed</span><span>Animation</span><span>Story</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="project-card reveal stagger-3" data-reveal>
-          <div class="project-thumb thumb-roastblox"></div>
-          <div class="project-body">
-            <h3>Roastblox</h3>
-            <p>Game-like interface dengan motion playful dan tone neon cyber.</p>
-            <div class="tech-tags">
-              <span>Game UI</span><span>Neon</span><span>UX</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="project-card reveal" data-reveal>
-          <div class="project-thumb thumb-pixup"></div>
-          <div class="project-body">
-            <h3>PixUP</h3>
-            <p>Uploader visual yang fokus ke speed, clarity, dan feedback instan.</p>
-            <div class="tech-tags">
-              <span>Upload</span><span>Cloud</span><span>Fast</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="project-card reveal stagger-1" data-reveal>
-          <div class="project-thumb thumb-cinefy"></div>
-          <div class="project-body">
-            <h3>Cinefy</h3>
-            <p>Movie discovery dengan layout sinematik dan panel detail yang elegan.</p>
-            <div class="tech-tags">
-              <span>Movies</span><span>Cinematic</span><span>Grid</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="project-card reveal stagger-2" data-reveal>
-          <div class="project-thumb thumb-impostorgram"></div>
-          <div class="project-body">
-            <h3>Impostorgram</h3>
-            <p>Game social experiment dengan visual badge, tasks, dan suspense UI.</p>
-            <div class="tech-tags">
-              <span>Game</span><span>Social</span><span>Logic</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="project-card reveal stagger-3" data-reveal>
-          <div class="project-thumb thumb-alangaep"></div>
-          <div class="project-body">
-            <h3>Alang AEP</h3>
-            <p>Personal ecosystem untuk showcase pengalaman, proses, dan identitas visual.</p>
-            <div class="tech-tags">
-              <span>Portfolio</span><span>Brand</span><span>System</span>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section id="toolkit" class="toolkit section scene-toolkit">
-      <div class="section-header reveal" data-reveal>
-        <span class="section-kicker">03 / TOOLKIT</span>
-        <h2>Stack that keeps the wheels humming.</h2>
-      </div>
-
-      <div class="toolkit-grid">
-        <div class="tool-card reveal" data-reveal>
-          <span class="tool-icon">⚛</span>
-          <span>React</span>
-        </div>
-        <div class="tool-card reveal stagger-1" data-reveal>
-          <span class="tool-icon">▲</span>
-          <span>Next.js</span>
-        </div>
-        <div class="tool-card reveal stagger-2" data-reveal>
-          <span class="tool-icon">{} </span>
-          <span>TypeScript</span>
-        </div>
-        <div class="tool-card reveal stagger-3" data-reveal>
-          <span class="tool-icon">✦</span>
-          <span>Tailwind</span>
-        </div>
-        <div class="tool-card reveal" data-reveal>
-          <span class="tool-icon">⬢</span>
-          <span>Node.js</span>
-        </div>
-        <div class="tool-card reveal stagger-1" data-reveal>
-          <span class="tool-icon">🐍</span>
-          <span>Python</span>
-        </div>
-        <div class="tool-card reveal stagger-2" data-reveal>
-          <span class="tool-icon">php</span>
-          <span>PHP</span>
-        </div>
-        <div class="tool-card reveal stagger-3" data-reveal>
-          <span class="tool-icon">◈</span>
-          <span>Kotlin</span>
-        </div>
-        <div class="tool-card reveal" data-reveal>
-          <span class="tool-icon">⎇</span>
-          <span>Git</span>
+        <div class="about-actions">
+          <a class="button button-secondary" href="#journey">VIEW EXPERIENCE <span>→</span></a>
+          <div class="scroll-indicator">SCROLL TO EXPLORE ↓</div>
         </div>
       </div>
     </section>
 
-    <section id="journey" class="journey section scene-journey">
-      <div class="journey-waves" aria-hidden="true"></div>
-
-      <div class="section-header reveal" data-reveal>
-        <span class="section-kicker">04 / JOURNEY</span>
-        <h2>From sparks to flight path.</h2>
+    <section class="projects section-shell reveal" id="work">
+      <div class="container">
+        <div class="section-kicker">// MY WORK - PROJECTS</div>
+        <h3 class="section-title section-title--light">Selected builds with sharp UX, playful logic, and a lot of motion sugar.</h3>
+        <div class="projects-grid" id="projectsGrid"></div>
       </div>
+    </section>
 
-      <div class="journey-layout">
-        <div class="timeline-path">
-          <div class="timeline-line"></div>
+    <section class="toolkit section-shell reveal" id="tech">
+      <div class="container">
+        <div class="section-kicker">// TOOLKIT - TECH STACK</div>
+        <h3 class="section-title section-title--light">A curated collection of modern technologies I use to ship polished products.</h3>
+        <p class="section-copy section-copy--light">
+          Interactive, responsive, and built to breathe on the page.
+        </p>
+        <div class="tech-grid" id="techGrid"></div>
+      </div>
+    </section>
+
+    <section class="journey section-shell reveal" id="journey">
+      <div class="container">
+        <div class="section-kicker">// MY JOURNEY</div>
+        <h3 class="section-title">A moving timeline with a paper plane that follows the route of progress.</h3>
+
+        <div class="journey-stage">
+          <svg class="journey-path-svg" viewBox="0 0 1300 320" preserveAspectRatio="none" aria-hidden="true">
+            <path id="journeyPath" d="M 90 80 C 280 10, 420 10, 560 90 S 850 170, 1000 95 S 1180 30, 1240 130" />
+          </svg>
+
           <div class="paper-plane" id="paperPlane" aria-hidden="true">
-            <svg viewBox="0 0 120 120" role="img" aria-label="Paper airplane">
-              <path d="M7 60 L112 12 L76 108 L58 72 L7 60 Z"></path>
-              <path d="M58 72 L112 12" class="plane-fold"></path>
+            <svg viewBox="0 0 120 120" role="img" aria-label="Paper plane">
+              <path d="M 14 62 L 108 16 L 71 104 L 55 66 L 14 62 Z" />
+              <path d="M 54 66 L 108 16" />
             </svg>
           </div>
+        </div>
 
-          <article class="timeline-card polaroid reveal" data-reveal>
-            <span class="timeline-date">2019</span>
-            <h3>Foundation</h3>
-            <p>Mulai mendalami struktur, UI, dan logika interaktif dari dasar.</p>
-          </article>
+        <div class="timeline-cards" id="timelineCards"></div>
+      </div>
+    </section>
 
-          <article class="timeline-card polaroid reveal stagger-1" data-reveal>
-            <span class="timeline-date">2021</span>
-            <h3>Motion</h3>
-            <p>Naik level ke animasi, transisi, dan pengalaman visual yang lebih terasa.</p>
-          </article>
+    <section class="github section-shell reveal" id="github">
+      <div class="container">
+        <div class="section-kicker">// COMMIT PATTERN - GITHUB ACTIVITY</div>
+        <h3 class="section-title section-title--light">A green pulse map inspired by year-round shipping energy.</h3>
 
-          <article class="timeline-card polaroid reveal stagger-2" data-reveal>
-            <span class="timeline-date">2023</span>
-            <h3>Systems</h3>
-            <p>Fokus ke arsitektur yang stabil, komponen reusable, dan performance.</p>
-          </article>
-
-          <article class="timeline-card polaroid reveal stagger-3" data-reveal>
-            <span class="timeline-date">2026</span>
-            <h3>Portfolio World</h3>
-            <p>Build experience yang punya identitas, suasana, dan alur yang sinematik.</p>
-          </article>
+        <div class="github-wrap">
+          <div class="github-labels">
+            <span>JAN</span><span>FEB</span><span>MAR</span><span>APR</span><span>MAY</span><span>JUN</span>
+            <span>JUL</span><span>AUG</span><span>SEP</span><span>OCT</span><span>NOV</span><span>DEC</span>
+          </div>
+          <div class="heatmap" id="heatmap" aria-label="GitHub contribution heatmap"></div>
         </div>
       </div>
     </section>
 
-    <section id="github" class="github section scene-github">
-      <div class="section-header reveal" data-reveal>
-        <span class="section-kicker">05 / ACTIVITY</span>
-        <h2>GitHub heatmap with pulse rhythm.</h2>
-      </div>
+    <section class="music section-shell reveal" id="music">
+      <canvas id="starfieldCanvas" class="starfield-canvas" aria-hidden="true"></canvas>
 
-      <div class="heatmap-shell reveal" data-reveal>
-        <div class="heatmap-legend">
-          <span>Less</span>
-          <span>More</span>
-        </div>
-        <div id="heatmapGrid" class="heatmap-grid" aria-label="GitHub activity heatmap"></div>
-      </div>
-    </section>
+      <div class="container music-grid">
+        <div class="section-kicker">// BY THE WAY... MY FAV SONG</div>
+        <h3 class="section-title section-title--light">A spacey player with orbiting album art, circular visual feedback, and synced lyrics.</h3>
 
-    <section id="music" class="music section scene-music">
-      <div class="music-overlay"></div>
-
-      <div class="section-header reveal" data-reveal>
-        <span class="section-kicker">06 / MUSIC</span>
-        <h2>Space player with circular spectrum and synced lyrics.</h2>
-      </div>
-
-      <div class="music-layout">
-        <div class="album-stage">
-          <div class="album-orbit" id="albumOrbit" aria-label="Album art selection">
-            <button class="album-card is-selected" type="button" data-track="0" data-title="Neon Drift">
-              <span class="album-art art-1"></span>
-              <span class="album-title">Neon Drift</span>
-            </button>
-            <button class="album-card" type="button" data-track="1" data-title="Orbit Glow">
-              <span class="album-art art-2"></span>
-              <span class="album-title">Orbit Glow</span>
-            </button>
-            <button class="album-card" type="button" data-track="2" data-title="Midnight Pulse">
-              <span class="album-art art-3"></span>
-              <span class="album-title">Midnight Pulse</span>
-            </button>
-            <button class="album-card" type="button" data-track="3" data-title="Aurora Loop">
-              <span class="album-art art-4"></span>
-              <span class="album-title">Aurora Loop</span>
-            </button>
-            <button class="album-card" type="button" data-track="4" data-title="Static Bloom">
-              <span class="album-art art-5"></span>
-              <span class="album-title">Static Bloom</span>
-            </button>
-            <button class="album-card" type="button" data-track="5" data-title="Starlane">
-              <span class="album-art art-6"></span>
-              <span class="album-title">Starlane</span>
-            </button>
-            <button class="album-card" type="button" data-track="6" data-title="Wave Runner">
-              <span class="album-art art-7"></span>
-              <span class="album-title">Wave Runner</span>
-            </button>
-            <button class="album-card" type="button" data-track="7" data-title="Cosmic Tape">
-              <span class="album-art art-8"></span>
-              <span class="album-title">Cosmic Tape</span>
-            </button>
+        <div class="music-layout">
+          <div class="orbit-shell">
+            <canvas id="vizCanvas" class="viz-canvas" aria-hidden="true"></canvas>
+            <div class="album-orbit" id="albumOrbit" aria-label="Song selection"></div>
           </div>
 
-          <div class="music-player reveal" data-reveal>
-            <div class="player-top">
-              <div>
-                <p class="now-playing">NOW PLAYING</p>
-                <h3 id="trackName">Neon Drift</h3>
-              </div>
-              <button id="playBtn" class="play-btn" type="button">PLAY</button>
+          <div class="player-panel">
+            <div class="now-playing">
+              <p class="now-label">NOW PLAYING</p>
+              <h4 id="trackTitle">Midnight Orbit</h4>
+              <p id="trackArtist">ALANGKUN SESSION</p>
             </div>
 
-            <div class="progress-wrap">
-              <div class="progress-track">
-                <div id="progressBar" class="progress-bar"></div>
+            <div class="controls">
+              <button class="control-btn" id="playPauseBtn" type="button">PLAY</button>
+              <div class="control-group">
+                <label for="progressBar">Progress</label>
+                <input id="progressBar" type="range" min="0" max="100" value="0">
               </div>
-              <div class="time-row">
-                <span id="currentTime">00:00</span>
-                <span id="trackDuration">01:03</span>
+              <div class="control-group">
+                <label for="volumeBar">Volume</label>
+                <input id="volumeBar" type="range" min="0" max="100" value="85">
               </div>
             </div>
 
-            <canvas id="visualizerCanvas" class="visualizer-canvas" aria-label="Audio visualizer"></canvas>
-
-            <div id="lyrics" class="lyrics">
-              <div class="lyrics-line is-active">Take off through the static night.</div>
-              <div class="lyrics-line">Let the neon carry the frame.</div>
-              <div class="lyrics-line">Orbit slow, then bloom in light.</div>
-              <div class="lyrics-line">Every pulse remembers your name.</div>
+            <div class="lyrics-box">
+              <div class="lyrics-kicker">KARAOKE SYNC</div>
+              <div class="lyric-line" id="lyricLine">Press play to light up the stars.</div>
             </div>
           </div>
         </div>
       </div>
+
+      <audio id="audioElement" preload="auto"></audio>
     </section>
 
-    <footer id="footer" class="footer section scene-footer">
-      <div class="done-word reveal" data-reveal>DONE.</div>
+    <section class="contact section-shell reveal" id="contact">
+      <div class="container contact-grid">
+        <div class="done-headline">DONE.</div>
 
-      <div class="connect-wrap">
-        <div class="moon-stage" aria-hidden="true">
+        <div class="contact-top">
+          <div class="section-kicker">// LET'S CONNECT</div>
+          <h3 class="section-title section-title--light">Night mode vibes, moon glow, and open channels for collaboration.</h3>
+        </div>
+
+        <div class="contact-cards">
+          <a class="contact-card" href="mailto:hello@alangkun.dev">
+            <span>Email</span>
+            <strong>hello@alangkun.dev</strong>
+          </a>
+          <a class="contact-card" href="https://github.com/" target="_blank" rel="noreferrer">
+            <span>GitHub</span>
+            <strong>github.com/alangkun</strong>
+          </a>
+          <a class="contact-card" href="https://www.linkedin.com/" target="_blank" rel="noreferrer">
+            <span>LinkedIn</span>
+            <strong>linkedin.com/in/alangkun</strong>
+          </a>
+        </div>
+
+        <div class="moon-sky">
           <div class="moon"></div>
           <div class="moon-glow"></div>
-          <div class="cloud cloud-1"></div>
-          <div class="cloud cloud-2"></div>
-        </div>
-
-        <div class="section-header reveal" data-reveal>
-          <span class="section-kicker">07 / CONNECT</span>
-          <h2>LET'S CONNECT</h2>
-          <p>Open for collaborations, product builds, and interface moonshots.</p>
         </div>
       </div>
 
-      <div class="footer-marquee">
-        <div class="marquee">
-          <div class="marquee-track marquee-track-footer">
-            <span>LET'S WORK TOGETHER • AVAILABLE FOR HIRE • LET'S BUILD SOMETHING AMAZING</span>
-            <span>LET'S WORK TOGETHER • AVAILABLE FOR HIRE • LET'S BUILD SOMETHING AMAZING</span>
-            <span>LET'S WORK TOGETHER • AVAILABLE FOR HIRE • LET'S BUILD SOMETHING AMAZING</span>
-            <span>LET'S WORK TOGETHER • AVAILABLE FOR HIRE • LET'S BUILD SOMETHING AMAZING</span>
+      <div class="footer-ticker-wrap">
+        <div class="ticker footer-ticker">
+          <div class="ticker-track">
+            <span>LET'S WORK TOGETHER</span><span>•</span>
+            <span>AVAILABLE FOR HIRE</span><span>•</span>
+            <span>LET'S BUILD SOMETHING AMAZING</span><span>•</span>
+            <span>LET'S WORK TOGETHER</span><span>•</span>
+            <span>AVAILABLE FOR HIRE</span><span>•</span>
+            <span>LET'S BUILD SOMETHING AMAZING</span><span>•</span>
           </div>
         </div>
       </div>
-    </footer>
-  </div>
+    </section>
+  </main>
 
   <script src="script.js"></script>
 </body>
-                </html>
+</html>
