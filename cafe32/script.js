@@ -1,3 +1,20 @@
+document.body.classList.add("loading");
+
+window.addEventListener("load", () => {
+    const preloader = document.getElementById("preloader");
+
+    // tampil minimal sekitar 1.8 detik
+    setTimeout(() => {
+
+        preloader.classList.add("fade-out");
+
+        preloader.addEventListener("transitionend", () => {
+            document.body.classList.remove("loading");
+            preloader.remove();
+        }, { once: true });
+
+    }, 1800);
+});
 document.addEventListener("DOMContentLoaded", () => {
   const header = document.querySelector(".header");
   const navToggle = document.getElementById("navToggle");
