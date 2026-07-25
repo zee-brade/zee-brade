@@ -1,24 +1,54 @@
-// --- LOGIKA WELCOME SCREEN ANIMATION ---
-document.addEventListener("DOMContentLoaded", () => {
-    // 1. Kunci scroll saat animasi welcome muncul
-    document.body.classList.add('no-scroll');
+window.addEventListener("load",()=>{
 
-    // 2. Beri jeda 3.5 detik sebelum layar welcome menghilang (fade out)
-    setTimeout(() => {
-        const welcomeScreen = document.getElementById('welcome-screen');
-        if (welcomeScreen) {
-            welcomeScreen.style.opacity = '0';
-            welcomeScreen.style.visibility = 'hidden';
-            
-            // 3. Hapus layar welcome dari DOM setelah transisi opacity selesai (0.8s) & buka kunci scroll
-            setTimeout(() => {
-                document.body.classList.remove('no-scroll');
-                welcomeScreen.remove();
-            }, 800);
-        }
-    }, 3500); // 3500ms = 3.5 detik
+const screen=document.getElementById("welcome-screen");
+
+const h1=document.querySelector(".welcome-content h1");
+
+const p=document.querySelector(".welcome-content p");
+
+gsap.timeline()
+
+.to(h1,{
+opacity:1,
+y:0,
+scale:1,
+duration:1,
+ease:"power3.out"
+})
+
+.to(p,{
+opacity:1,
+y:0,
+duration:.8
+},"-=.5")
+
+.to(".welcome-content",{
+
+scale:.8,
+
+opacity:0,
+
+duration:.8,
+
+delay:1
+
+})
+
+.to(screen,{
+
+opacity:0,
+
+duration:.8,
+
+onComplete(){
+
+screen.remove();
+
+}
+
 });
 
+});
 // Toggle Hamburger Menu for Mobile / Tablet
 const hamburger = document.querySelector('.hamburger');
 const navLinks = document.querySelector('.nav-links');
