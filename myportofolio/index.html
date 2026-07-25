@@ -1,0 +1,464 @@
+<!DOCTYPE html><html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ALANGKUN | Software Engineer Portfolio</title>
+  <meta name="description" content="Modern interactive software engineer portfolio built with vanilla HTML, CSS, and JavaScript." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="ALANGKUN Home">
+        <span class="brand-mark"></span>
+        <span class="brand-text">ALANGKUN</span>
+      </a>  <button class="nav-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+
+  <nav class="site-nav" aria-label="Main Navigation">
+    <a href="#home">HOME</a>
+    <a href="#about">ABOUT</a>
+    <a href="#tech">TECH</a>
+    <a href="#experience">EXPERIENCE</a>
+    <a href="#music">MUSIC</a>
+    <a href="#github">GITHUB</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero section" id="home">
+    <div class="hero-bg-layer hero-bg-1"></div>
+    <div class="hero-bg-layer hero-bg-2"></div>
+    <div class="hero-bg-layer hero-bg-3"></div>
+
+    <div class="hero-grid">
+      <div class="hero-copy reveal">
+        <p class="eyebrow">// DIGITAL BUILDER</p>
+        <h1>SYAHRUL NIZAM</h1>
+        <h2>SOFTWARE ENGINEER</h2>
+
+        <div class="badge-row" aria-label="Profile Info">
+          <div class="info-badge">
+            <span>LOCATION</span>
+            <strong>INDONESIA</strong>
+          </div>
+          <div class="info-badge">
+            <span>CURRENT ROLE</span>
+            <strong>FRONT END</strong>
+          </div>
+          <div class="info-badge badge-accent">
+            <span>STATUS</span>
+            <strong>AVAILABLE</strong>
+          </div>
+        </div>
+
+        <div class="hero-meta">
+          <p>Crafting fast interfaces, clean systems, and polished digital experiences with a creator’s eye and an engineer’s spine.</p>
+        </div>
+      </div>
+
+      <div class="hero-illustration reveal" aria-hidden="true">
+        <svg viewBox="0 0 900 700" class="mountain-svg" role="img" aria-label="Mountain and forest illustration">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0f1623" />
+              <stop offset="100%" stop-color="#12151c" />
+            </linearGradient>
+            <linearGradient id="mist" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35"/>
+              <stop offset="50%" stop-color="#f97316" stop-opacity="0.16"/>
+              <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.25"/>
+            </linearGradient>
+          </defs>
+          <rect width="900" height="700" fill="url(#sky)"/>
+          <circle cx="730" cy="120" r="55" fill="#f97316" opacity="0.85"/>
+          <circle cx="725" cy="120" r="75" fill="#f97316" opacity="0.12"/>
+          <path d="M0 470 C120 430, 220 420, 340 470 C470 525, 610 400, 760 450 C830 475, 870 470, 900 460 L900 700 L0 700 Z" fill="#0b1018"/>
+          <path d="M0 520 C140 450, 220 500, 360 540 C500 580, 620 470, 760 520 C830 545, 870 540, 900 520 L900 700 L0 700 Z" fill="#0e1620"/>
+          <path d="M100 430 L220 200 L340 430 Z" fill="#1c2632"/>
+          <path d="M205 200 L285 330 L128 330 Z" fill="#d9e2ef" opacity="0.16"/>
+          <path d="M270 450 L430 180 L590 450 Z" fill="#223042"/>
+          <path d="M420 180 L515 340 L324 340 Z" fill="#d9e2ef" opacity="0.14"/>
+          <path d="M560 430 L700 230 L840 430 Z" fill="#182230"/>
+          <path d="M695 230 L780 360 L610 360 Z" fill="#d9e2ef" opacity="0.12"/>
+          <g fill="#0b1a12">
+            <path d="M90 560 l22 -48 l22 48 z"/>
+            <path d="M130 560 l26 -58 l26 58 z"/>
+            <path d="M180 560 l22 -50 l22 50 z"/>
+            <path d="M725 560 l24 -54 l24 54 z"/>
+            <path d="M770 560 l28 -60 l28 60 z"/>
+          </g>
+          <g fill="#0d2417" opacity="0.95">
+            <path d="M70 590 l20 -44 l20 44 z"/>
+            <path d="M115 590 l24 -52 l24 52 z"/>
+            <path d="M165 590 l20 -46 l20 46 z"/>
+            <path d="M700 590 l22 -48 l22 48 z"/>
+            <path d="M748 590 l25 -54 l25 54 z"/>
+            <path d="M795 590 l20 -44 l20 44 z"/>
+          </g>
+          <path d="M0 530 C150 500, 270 520, 420 540 C580 560, 720 500, 900 530" stroke="url(#mist)" stroke-width="10" fill="none" opacity="0.9"/>
+          <path d="M0 560 C150 530, 310 560, 450 585 C610 610, 760 560, 900 585" stroke="#38bdf8" stroke-opacity="0.15" stroke-width="8" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="hero-ticker">
+      <div class="ticker-track">
+        <span>NEXT.JS • TAILWIND CSS • NODE.JS • PYTHON • PHP • KOTLIN • GIT • FRAMER MOTION •</span>
+        <span>NEXT.JS • TAILWIND CSS • NODE.JS • PYTHON • PHP • KOTLIN • GIT • FRAMER MOTION •</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="about section" id="about">
+    <div class="section-watermark">ABOUT ME</div>
+    <div class="section-inner reveal">
+      <p class="eyebrow">// ABOUT</p>
+      <div class="section-head">
+        <h3>Passionate about building products that feel quick, sharp, and delightfully alive.</h3>
+      </div>
+      <p class="section-copy">
+        I am a front-end developer who enjoys turning messy ideas into clean interfaces. My work blends product thinking, visual rhythm, and solid engineering so the result looks good and works even better.
+      </p>
+      <div class="section-actions">
+        <a class="text-link" href="#experience">VIEW EXPERIENCE →</a>
+        <span class="scroll-hint">SCROLL TO EXPLORE ↓</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="projects section" id="projects">
+    <div class="section-inner">
+      <p class="eyebrow">// MY WORK - PROJECTS</p>
+      <div class="section-head">
+        <h3>Selected projects with sharp UI and practical punch.</h3>
+        <p>Dark cards, compact details, and preview-style interfaces.</p>
+      </div>
+
+      <div class="project-grid">
+        <article class="project-card reveal">
+          <div class="project-preview preview-cutyo">
+            <div class="preview-window">
+              <div class="preview-topbar"></div>
+              <div class="preview-body">
+                <div class="preview-pill"></div>
+                <div class="preview-image image-cut"></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <span class="project-no">01</span>
+            <h4>CutYO</h4>
+            <p>Background remover built for clean, instant cutouts and smooth workflow speed.</p>
+            <div class="pill-row">
+              <span>AI</span><span>IMAGE TOOLS</span><span>UI</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview preview-komiyo">
+            <div class="preview-window">
+              <div class="preview-topbar"></div>
+              <div class="preview-body">
+                <div class="manga-panel"></div>
+                <div class="manga-panel small"></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <span class="project-no">02</span>
+            <h4>KomiYO</h4>
+            <p>Manga reader experience with cozy reading flow and responsive content layout.</p>
+            <div class="pill-row">
+              <span>READER</span><span>RESPONSIVE</span><span>UX</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview preview-roastgram">
+            <div class="preview-window">
+              <div class="preview-topbar"></div>
+              <div class="preview-body">
+                <div class="insta-avatar"></div>
+                <div class="roast-lines"></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <span class="project-no">03</span>
+            <h4>Roastgram</h4>
+            <p>Instagram profile roaster with playful scoring and edgy social analysis cards.</p>
+            <div class="pill-row">
+              <span>SOCIAL</span><span>FUN</span><span>ANALYTICS</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview preview-roastblox">
+            <div class="preview-window">
+              <div class="preview-topbar"></div>
+              <div class="preview-body">
+                <div class="blox-avatar"></div>
+                <div class="blox-ui"></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <span class="project-no">04</span>
+            <h4>Roastblox</h4>
+            <p>Roblox avatar roaster with stylized face analysis and snappy profile feedback.</p>
+            <div class="pill-row">
+              <span>GAME UI</span><span>PROFILE</span><span>LOOP</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview preview-pixup">
+            <div class="preview-window">
+              <div class="preview-topbar"></div>
+              <div class="preview-body">
+                <div class="photo-frame"></div>
+                <div class="spark-badge"></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <span class="project-no">05</span>
+            <h4>PixUP</h4>
+            <p>AI image enhancer concept with premium visual polish and clarity boost flow.</p>
+            <div class="pill-row">
+              <span>AI</span><span>ENHANCE</span><span>PHOTO</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview preview-cinefy">
+            <div class="preview-window">
+              <div class="preview-topbar"></div>
+              <div class="preview-body">
+                <div class="poster-grid">
+                  <span></span><span></span><span></span>
+                </div>
+                <div class="movie-lines"></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <span class="project-no">06</span>
+            <h4>Cinefy</h4>
+            <p>Movie and TV show app design with cinematic navigation and crisp discovery panels.</p>
+            <div class="pill-row">
+              <span>ENTERTAINMENT</span><span>APP</span><span>DISCOVERY</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="tech section" id="tech">
+    <div class="section-inner">
+      <p class="eyebrow">// TOOLKIT - TECH STACK</p>
+      <div class="section-head">
+        <h3>A curated collection of modern technologies I use...</h3>
+        <p>Simple, fast, and ready to scale with real product needs.</p>
+      </div>
+
+      <div class="tech-grid">
+        <div class="tech-card reveal"><span>⚛</span><strong>React</strong></div>
+        <div class="tech-card reveal"><span>▲</span><strong>Next.js</strong></div>
+        <div class="tech-card reveal"><span>{ }</span><strong>TypeScript</strong></div>
+        <div class="tech-card reveal"><span>◎</span><strong>Tailwind</strong></div>
+        <div class="tech-card reveal"><span>◉</span><strong>Node.js</strong></div>
+        <div class="tech-card reveal"><span>Py</span><strong>Python</strong></div>
+        <div class="tech-card reveal"><span>php</span><strong>PHP</strong></div>
+        <div class="tech-card reveal"><span>⌘</span><strong>Kotlin</strong></div>
+        <div class="tech-card reveal"><span>⟲</span><strong>Git</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="experience section" id="experience">
+    <div class="wave-bg"></div>
+    <div class="section-inner">
+      <p class="eyebrow">// MY JOURNEY - EXPERIENCE</p>
+      <div class="section-head">
+        <h3>Milestones that shaped the craft.</h3>
+        <p>A soft blue route, with a paper plane drifting along the timeline.</p>
+      </div>
+
+      <div class="journey-wrap">
+        <div class="paper-plane" aria-hidden="true">✈</div>
+        <div class="timeline">
+          <article class="timeline-card polaroid reveal">
+            <span class="timeline-no">01</span>
+            <h4>MAHASISWA</h4>
+            <p class="timeline-meta">2020 - 2024</p>
+            <p>Politeknik Caltex Riau</p>
+          </article>
+
+          <article class="timeline-card polaroid reveal">
+            <span class="timeline-no">02</span>
+            <h4>CONTENT CREATOR &amp; FREELANCE VIDEO EDITOR</h4>
+            <p class="timeline-meta">2020 - 2024</p>
+            <p>Editing, motion rhythm, and storytelling for client content.</p>
+          </article>
+
+          <article class="timeline-card polaroid reveal">
+            <span class="timeline-no">03</span>
+            <h4>FRONT END DEVELOPER</h4>
+            <p class="timeline-meta">Present</p>
+            <p>Assist.id</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="github section" id="github">
+    <div class="section-inner">
+      <p class="eyebrow">// COMMIT PATTERN - GITHUB ACTIVITY</p>
+      <div class="section-head">
+        <h3>Profile widget with a contribution heatmap vibe.</h3>
+        <p>Green blocks from Jan to Dec, like a tiny weather system of code.</p>
+      </div>
+
+      <div class="github-panel reveal">
+        <div class="github-profile">
+          <div class="avatar-ring">
+            <div class="avatar-core">SN</div>
+          </div>
+          <div>
+            <h4>Syahrul Nizam</h4>
+            <p>@alangkun</p>
+          </div>
+        </div>
+
+        <div class="heatmap-wrap">
+          <div class="heatmap-legend">
+            <span>Less</span>
+            <span class="lvl lvl-1"></span>
+            <span class="lvl lvl-2"></span>
+            <span class="lvl lvl-3"></span>
+            <span class="lvl lvl-4"></span>
+            <span>More</span>
+          </div>
+          <div id="heatmap" class="heatmap-grid" aria-label="GitHub contribution heatmap"></div>
+          <div class="heatmap-months">
+            <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+            <span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="music section" id="music">
+    <canvas id="starfield" class="starfield" aria-hidden="true"></canvas>
+    <div class="music-overlay"></div>
+
+    <div class="section-inner music-inner">
+      <p class="eyebrow">// BY THE WAY... MY FAV SONG</p>
+      <div class="section-head">
+        <h3>Spacey, moody, and a little cinematic.</h3>
+        <p>Pick a track, let the album art rise, and watch the ring spin with the beat.</p>
+      </div>
+
+      <div class="music-layout">
+        <div class="album-library reveal" id="trackList" aria-label="Track List">
+          <button class="album-chip active" data-track="0">
+            <span>01</span>
+            <strong>Blue Orbit</strong>
+            <small>Dreamy synth</small>
+          </button>
+          <button class="album-chip" data-track="1">
+            <span>02</span>
+            <strong>Night Pulse</strong>
+            <small>Future pop</small>
+          </button>
+          <button class="album-chip" data-track="2">
+            <span>03</span>
+            <strong>Pixel Rain</strong>
+            <small>Chillwave</small>
+          </button>
+        </div>
+
+        <div class="player-stage reveal">
+          <div class="album-orbit">
+            <div class="visualizer-ring" id="visualizerRing"></div>
+            <div class="album-art active" id="albumArt">
+              <div class="album-glow"></div>
+              <div class="album-face">
+                <div class="album-title" id="activeTrackTitle">Blue Orbit</div>
+                <div class="album-subtitle" id="activeTrackArtist">ALANGKUN MIX</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lyrics-box">
+            <div class="lyrics-label">Karaoke Lyrics</div>
+            <p id="lyricsLine">Press play to start the orbit.</p>
+          </div>
+
+          <div class="player-controls">
+            <button id="playPauseBtn" class="play-btn" aria-label="Play or Pause">▶</button>
+            <div class="progress-wrap">
+              <input id="progress" type="range" min="0" max="1000" value="0" />
+              <div class="time-row"><span id="currentTime">0:00</span><span id="duration">0:00</span></div>
+            </div>
+            <div class="volume-wrap">
+              <span>VOL</span>
+              <input id="volume" type="range" min="0" max="100" value="80" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact section" id="contact">
+    <div class="moon-bg"></div>
+    <div class="section-inner">
+      <div class="done-word">DONE.</div>
+      <p class="eyebrow">// LET'S CONNECT</p>
+      <div class="section-head">
+        <h3>A night sky moment for the next collaboration.</h3>
+        <p>Reach out through the channels below and let’s build something clean, bold, and useful.</p>
+      </div>
+
+      <div class="contact-grid">
+        <a class="contact-card reveal" href="mailto:hello@alangkun.dev">
+          <span>Email</span>
+          <strong>hello@alangkun.dev</strong>
+        </a>
+        <a class="contact-card reveal" href="https://github.com/" target="_blank" rel="noreferrer">
+          <span>GitHub</span>
+          <strong>github.com/alangkun</strong>
+        </a>
+        <a class="contact-card reveal" href="https://linkedin.com/" target="_blank" rel="noreferrer">
+          <span>LinkedIn</span>
+          <strong>linkedin.com/in/alangkun</strong>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-marquee">
+      <div class="ticker-track">
+        <span>LET'S WORK TOGETHER • AVAILABLE FOR HIRE • LET'S BUILD SOMETHING AMAZING •</span>
+        <span>LET'S WORK TOGETHER • AVAILABLE FOR HIRE • LET'S BUILD SOMETHING AMAZING •</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+  </div>  <script src="script.js"></script></body>
+            </html>
