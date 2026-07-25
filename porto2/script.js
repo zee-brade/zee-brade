@@ -166,3 +166,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
+@keyframes pulseGlow{
+
+0%,100%{
+    transform:scale(1);
+    opacity:.4;
+}
+
+50%{
+    transform:scale(1.2);
+    opacity:.7;
+}
+
+}
