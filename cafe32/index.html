@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Café Website - A cozy Viennese brunch café with pastries, coffee, and warm mornings in Vienna's 7th district." />
+    <title>Café Website | Viennese Brunch Café</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="bg-orb orb-one"></div>
+    <div class="bg-orb orb-two"></div>
+
+    <header class="header" id="top">
+      <div class="container header__inner">
+        <a class="brand" href="#hero" aria-label="Café Website home">
+          <span class="brand__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <path d="M5 8h11a4 4 0 0 1 0 8H7a2 2 0 0 1-2-2V8Z" fill="currentColor"></path>
+              <path d="M16 9h2a3 3 0 0 1 0 6h-1.1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+              <path d="M7 4c0 1.2 1 1.3 1 2.5S7 8 7 9.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+              <path d="M11 4c0 1.2 1 1.3 1 2.5S11 8 11 9.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            </svg>
+          </span>
+          <span class="brand__text">Café Website</span>
+        </a>
+
+        <button class="nav-toggle" id="navToggle" aria-label="Open navigation menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="nav" id="navMenu" aria-label="Primary navigation">
+          <a href="#story">Story</a>
+          <a href="#menu">Menu</a>
+          <a href="#featured">Featured</a>
+          <a href="#experience">Experience</a>
+          <a href="#visit">Visit</a>
+        </nav>
+
+        <div class="header__actions">
+          <a class="icon-btn" href="#menu" aria-label="Search the menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M11 19a8 8 0 1 1 5.29-2.01l4.36 4.36-1.42 1.42-4.36-4.36A7.96 7.96 0 0 1 11 19Zm0-2a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" fill="currentColor" />
+            </svg>
+          </a>
+          <a class="icon-btn icon-btn--gold" href="#visit" aria-label="Reserve a table">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 7h10a3 3 0 0 1 3 3v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7a3 3 0 0 1 3-3Zm0-2a5 5 0 0 0-5 5v7a4 4 0 0 0 4 4h12a4 4 0 0 0 4-4v-7a5 5 0 0 0-5-5H7Z" fill="currentColor" />
+              <path d="M8 5V3m8 2V3M7 11h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero section" id="hero">
+        <div class="container hero__grid">
+          <div class="hero__content reveal">
+            <p class="eyebrow">BRUNCH & PASTRY • VIENNA • 7TH DISTRICT</p>
+            <h1>A taste of morning delight</h1>
+            <p class="lead">
+              Slow mornings, warm croissants, mango hours and the kind of coffee you write poems about.
+              A brunch café & pastry shop wrapped in Viennese calm.
+            </p>
+
+            <div class="hero__actions">
+              <a class="btn btn--primary" href="#story">Our story</a>
+              <a class="btn btn--ghost" href="#menu">View menu</a>
+            </div>
+
+            <a class="scroll-indicator" href="#story" aria-label="Scroll to story section">
+              <span></span>
+            </a>
+          </div>
+
+          <div class="hero__visual reveal">
+            <div class="hero-card hero-card--large">
+              <img
+                src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=1200&q=80"
+                alt="Elegant brunch table with pastries and coffee"
+                loading="eager"
+              />
+              <div class="hero-card__overlay">
+                <p>Viennese brunch ritual</p>
+                <span>Fresh bakes, deep espresso, and gentle jazz in the air.</span>
+              </div>
+            </div>
+
+            <div class="hero-card hero-card--small">
+              <div class="mini-stat">
+                <span>Since</span>
+                <strong>2019</strong>
+              </div>
+              <div class="mini-stat">
+                <span>Open</span>
+                <strong>Wed - Sun</strong>
+              </div>
+              <div class="mini-stat">
+                <span>Specialty</span>
+                <strong>House pastry</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section story" id="story">
+        <div class="container story__grid">
+          <div class="section-heading reveal">
+            <p class="eyebrow">OUR STORY</p>
+            <h2>From a local kitchen to a Viennese morning.</h2>
+          </div>
+
+          <div class="story__content reveal">
+            <p>
+              Café Website began in 2019 with a simple obsession, making mornings feel intentional.
+              What started as a tiny kitchen in Vienna’s 7th district grew into a warm neighborhood spot
+              where coffee is served with care, pastries are baked daily, and brunch arrives like a soft ritual.
+            </p>
+            <p>
+              We believe in good beans, flaky layers, honest ingredients, and the quiet luxury of a table
+              that asks nothing from you except to stay a little longer.
+            </p>
+          </div>
+
+          <div class="story__quote reveal">
+            <blockquote>
+              “A café should feel like a pause button with better lighting.”
+            </blockquote>
+            <span>Crafted in Neubaugasse, loved by early risers, pastry seekers, and slow storytellers.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section menu" id="menu">
+        <div class="container">
+          <div class="section-heading reveal">
+            <p class="eyebrow">MENU</p>
+            <h2>Small plates, big flavors.</h2>
+          </div>
+
+          <div class="menu__tabs reveal" role="tablist" aria-label="Menu categories">
+            <button class="menu-tab active" type="button" data-filter="all">All</button>
+            <button class="menu-tab" type="button" data-filter="pancakes">Pancakes</button>
+            <button class="menu-tab" type="button" data-filter="cappuccino">Cappuccino</button>
+            <button class="menu-tab" type="button" data-filter="eggs-benedict">Eggs Benedict</button>
+            <button class="menu-tab" type="button" data-filter="waffles">Waffles</button>
+            <button class="menu-tab" type="button" data-filter="pastries">Pastries</button>
+          </div>
+
+          <div class="menu-grid">
+            <article class="menu-card reveal" data-category="pancakes">
+              <img src="https://images.unsplash.com/photo-1515037893149-de7f840978e2?auto=format&fit=crop&w=1000&q=80" alt="Pancakes with berries and syrup" loading="lazy" />
+              <div class="menu-card__body">
+                <div class="menu-card__top">
+                  <h3>Lemon Ricotta Pancakes</h3>
+                  <span class="tag tag--signature">Signature</span>
+                </div>
+                <p>Cloud-soft stacks with citrus cream, berries, and maple gloss.</p>
+                <div class="menu-card__bottom">
+                  <strong>€12</strong>
+                  <span>Fresh every morning</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card reveal" data-category="cappuccino">
+              <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1000&q=80" alt="Cappuccino in a ceramic cup" loading="lazy" />
+              <div class="menu-card__body">
+                <div class="menu-card__top">
+                  <h3>Velvet Cappuccino</h3>
+                  <span class="tag tag--hot">Hot</span>
+                </div>
+                <p>Perfectly steamed milk, rich espresso, and a gold dust finish.</p>
+                <div class="menu-card__bottom">
+                  <strong>€4.50</strong>
+                  <span>Barista poured</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card reveal" data-category="eggs-benedict">
+              <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=1000&q=80" alt="Eggs Benedict with hollandaise sauce" loading="lazy" />
+              <div class="menu-card__body">
+                <div class="menu-card__top">
+                  <h3>Eggs Benedict</h3>
+                  <span class="tag tag--signature">Signature</span>
+                </div>
+                <p>Poached eggs, smoked ham, brioche, and hollandaise sauce.</p>
+                <div class="menu-card__bottom">
+                  <strong>€15</strong>
+                  <span>House favorite</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card reveal" data-category="waffles">
+              <img src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?auto=format&fit=crop&w=1000&q=80" alt="Golden waffles topped with fruit" loading="lazy" />
+              <div class="menu-card__body">
+                <div class="menu-card__top">
+                  <h3>Golden Vanilla Waffles</h3>
+                  <span class="tag tag--new">New</span>
+                </div>
+                <p>Crisp edges, soft center, whipped cream, seasonal fruit.</p>
+                <div class="menu-card__bottom">
+                  <strong>€13</strong>
+                  <span>Weekend treat</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card reveal" data-category="pastries">
+              <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1000&q=80" alt="Freshly baked blueberry muffins" loading="lazy" />
+              <div class="menu-card__body">
+                <div class="menu-card__top">
+                  <h3>Blueberry Muffins</h3>
+                  <span class="tag tag--hot">Hot</span>
+                </div>
+                <p>Warm from the oven, soft crumb, buttery top, wild berries.</p>
+                <div class="menu-card__bottom">
+                  <strong>€5.50</strong>
+                  <span>Fresh bake</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card reveal" data-category="pastries">
+              <img src="https://images.unsplash.com/photo-1508737027454-e6454ef45afd?auto=format&fit=crop&w=1000&q=80" alt="Butter croissant on a plate" loading="lazy" />
+              <div class="menu-card__body">
+                <div class="menu-card__top">
+                  <h3>Classic Butter Croissant</h3>
+                  <span class="tag tag--signature">Signature</span>
+                </div>
+                <p>Layered, flaky, and brushed with a soft honey shine.</p>
+                <div class="menu-card__bottom">
+                  <strong>€4</strong>
+                  <span>From the oven</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section featured" id="featured">
+        <div class="container">
+          <div class="section-heading reveal">
+            <p class="eyebrow">FEATURED</p>
+            <h2>Three dishes we make every day.</h2>
+          </div>
+
+          <div class="featured__grid">
+            <article class="feature-item reveal">
+              <span class="feature-item__index">01</span>
+              <div>
+                <h3>Eggs Benedict</h3>
+                <p>Poached eggs with hollandaise sauce, built for the quiet prince of brunch.</p>
+              </div>
+              <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=80" alt="Eggs Benedict plated beautifully" loading="lazy" />
+            </article>
+
+            <article class="feature-item reveal">
+              <span class="feature-item__index">02</span>
+              <div>
+                <h3>Blueberry Muffins</h3>
+                <p>Warm from the oven, with a buttery cap and a berry-rich center.</p>
+              </div>
+              <img src="https://images.unsplash.com/photo-1486427944299-d1955d23e34d?auto=format&fit=crop&w=900&q=80" alt="Blueberry muffins on a tray" loading="lazy" />
+            </article>
+
+            <article class="feature-item reveal">
+              <span class="feature-item__index">03</span>
+              <div>
+                <h3>Cappuccino</h3>
+                <p>Perfectly steamed, silky, and finished with a soft foam crown.</p>
+              </div>
+              <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80" alt="Cappuccino with latte art" loading="lazy" />
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section experience" id="experience">
+        <div class="container experience__grid">
+          <div class="section-heading reveal">
+            <p class="eyebrow">EXPERIENCE</p>
+            <h2>Slow mornings, warm corners, and nowhere to be.</h2>
+          </div>
+
+          <div class="experience__badges reveal" aria-label="Café amenities">
+            <span class="badge">Dog Friendly</span>
+            <span class="badge">WiFi Included</span>
+            <span class="badge">Vegan Options</span>
+            <span class="badge">Vinyl Saturdays</span>
+          </div>
+
+          <div class="gallery reveal">
+            <figure class="gallery__item gallery__item--wide">
+              <img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=1200&q=80" alt="Cozy café interior with warm lighting" loading="lazy" />
+            </figure>
+            <figure class="gallery__item">
+              <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=900&q=80" alt="Coffee being brewed by a barista" loading="lazy" />
+            </figure>
+            <figure class="gallery__item">
+              <img src="https://images.unsplash.com/photo-1493770348161-369560ae357d?auto=format&fit=crop&w=900&q=80" alt="Brunch table with pastries and drinks" loading="lazy" />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section visit" id="visit">
+        <div class="container visit__grid">
+          <div class="section-heading reveal">
+            <p class="eyebrow">VISIT</p>
+            <h2>Come sit with us a while.</h2>
+          </div>
+
+          <div class="visit__card reveal">
+            <div class="visit__info">
+              <div>
+                <span class="meta-label">Address</span>
+                <p>Neubaugasse 23, 1070 Vienna, Austria</p>
+              </div>
+              <div>
+                <span class="meta-label">Opening Hours</span>
+                <p>Wed - Sun | 08:00 - 16:00</p>
+              </div>
+            </div>
+
+            <div class="visit__actions">
+              <a class="btn btn--primary" href="mailto:hello@cafewebsite.example">Reserve a table</a>
+              <a class="btn btn--ghost" href="#top">Back to top</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer__grid">
+        <div class="footer__brand reveal">
+          <a class="brand brand--footer" href="#hero">
+            <span class="brand__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                <path d="M5 8h11a4 4 0 0 1 0 8H7a2 2 0 0 1-2-2V8Z" fill="currentColor"></path>
+                <path d="M16 9h2a3 3 0 0 1 0 6h-1.1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+              </svg>
+            </span>
+            <span class="brand__text">Café Website</span>
+          </a>
+          <p>
+            Viennese mornings with a cozy glow, pastry-first energy, and coffee that knows how to behave.
+          </p>
+        </div>
+
+        <div class="footer__links reveal">
+          <h3>Links</h3>
+          <a href="#story">Our story</a>
+          <a href="#menu">Menu</a>
+          <a href="#featured">Chat & picks</a>
+          <a href="#visit">Newsletter</a>
+          <a href="#visit">Press</a>
+        </div>
+
+        <div class="footer__links reveal">
+          <h3>Social</h3>
+          <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+          <a href="https://tiktok.com" target="_blank" rel="noreferrer">TikTok</a>
+          <a href="mailto:hello@cafewebsite.example">Newsletter</a>
+          <a href="#visit">Press</a>
+        </div>
+      </div>
+
+      <div class="container footer__bottom">
+        <span>© 2026 Café Website. All rights reserved.</span>
+        <span>Made for slow mornings, sharp espresso, and golden light.</span>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
