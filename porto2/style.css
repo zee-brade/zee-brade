@@ -24,6 +24,90 @@ body {
     overflow-x: hidden;
 }
 
+/* KELAS UNTUK MENGUNCI SCROLL SAAT ANIMASI BERJALAN */
+body.no-scroll {
+    overflow: hidden;
+}
+
+/* ================= WELCOME SCREEN ANIMATION ================= */
+#welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-main);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+}
+
+/* Golden Ratio Typograpy Desktop: 4.236 - 2.618 - 1.618 */
+.welcome-title {
+    font-size: 4.236rem; 
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1.618rem;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0;
+    /* Datang dari Atas */
+    animation: slideInFromTop 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.welcome-link {
+    font-size: 1.618rem;
+    color: var(--accent-cyan);
+    text-decoration: underline;
+    margin-bottom: 2.618rem;
+    opacity: 0;
+    /* Datang dari Kiri */
+    animation: slideInFromLeft 1s cubic-bezier(0.25, 1, 0.5, 1) 0.3s forwards;
+}
+
+.welcome-link:hover {
+    color: var(--text-main);
+}
+
+.welcome-socials {
+    display: flex;
+    gap: 2.618rem;
+    opacity: 0;
+    /* Datang dari Bawah */
+    animation: slideInFromBottom 1s cubic-bezier(0.25, 1, 0.5, 1) 0.6s forwards;
+}
+
+.welcome-socials i {
+    font-size: 2.618rem;
+    color: var(--text-muted);
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.welcome-socials i:hover {
+    color: var(--accent-purple);
+    transform: scale(1.2);
+}
+
+/* Keyframes Translasi Arah */
+@keyframes slideInFromTop {
+    0% { transform: translateY(-100vh); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes slideInFromLeft {
+    0% { transform: translateX(-100vw); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideInFromBottom {
+    0% { transform: translateY(100vh); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+/* ================= END WELCOME SCREEN ================= */
+
 /* Global Styles */
 a {
     text-decoration: none;
