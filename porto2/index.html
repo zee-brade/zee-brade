@@ -1,195 +1,433 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage |Your Jurnal & risk rasio </title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050505" />
+  <meta name="description" content="Interactive Software Engineer Portfolio" />
+  <title>SYAHRUL NIZAM • Software Engineer Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="no-scroll">
+<body data-scene="intro">
+  <div id="introOverlay" class="intro-overlay" aria-hidden="true">
+    <div class="intro-title">ALANGKUN</div>
+  </div>
 
-    <div id="welcome-screen">
-        <div class="ambient-glow"></div>
-        
-        <canvas id="particle-canvas"></canvas>
-        
-        <div class="welcome-ui">
-            <h2 class="falling-board" id="falling-text">Website to organize journals</h2>
-            
-            <div class="loading-wrapper" id="loading-bar">
-                <div class="loading-line"></div>
-            </div>
+  <canvas id="starfieldCanvas" class="starfield-canvas" aria-hidden="true"></canvas>
+
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <span>ALANGKUN</span>
+      </div>
+      <nav class="topnav">
+        <a href="#about">About</a>
+        <a href="#projects">Work</a>
+        <a href="#toolkit">Stack</a>
+        <a href="#journey">Journey</a>
+        <a href="#music">Music</a>
+      </nav>
+    </header>
+
+    <section id="hero" class="hero section scene-hero">
+      <div class="hero-parallax">
+        <div class="mountain mountain-back"></div>
+        <div class="mountain mountain-mid"></div>
+        <div class="mountain mountain-front"></div>
+        <div class="forest-stripes"></div>
+        <div class="hero-glow"></div>
+      </div>
+
+      <div class="hero-content">
+        <div class="eyebrow reveal" data-reveal>SOFTWARE ENGINEER • CREATIVE PORTFOLIO</div>
+        <h1 class="hero-title reveal stagger-1" data-reveal>SYAHRUL NIZAM</h1>
+        <p class="hero-subtitle reveal stagger-2" data-reveal>Crafting interactive digital experiences with motion, systems, and a bit of neon-laced theatre.</p>
+
+        <div class="badge-row reveal stagger-3" data-reveal>
+          <span class="badge">INDONESIA</span>
+          <span class="badge">FRONT END</span>
+          <span class="badge badge-live">AVAILABLE</span>
         </div>
 
-        <div class="black-hole" id="black-hole"></div>
-    </div>
+        <div class="hero-actions reveal stagger-4" data-reveal>
+          <a class="button button-primary" href="#about">
+            <span>EXPLORE PROFILE</span>
+            <span class="button-arrow">→</span>
+          </a>
+          <a class="button button-secondary" href="#projects">
+            <span>SEE PROJECTS</span>
+          </a>
+        </div>
+      </div>
 
-    <nav class="navbar">
-        <div class="logo">Analytics</div>
-        <ul class="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#project">Project</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-        <div class="hamburger">
-            <i class="fas fa-bars"></i>
+      <div class="marquee-wrap reveal stagger-5" data-reveal>
+        <div class="marquee">
+          <div class="marquee-track">
+            <span>INTERACTIVE UI</span>
+            <span>CREATIVE CODING</span>
+            <span>ANIMATION SYSTEMS</span>
+            <span>RESPONSIVE DESIGN</span>
+            <span>JAVASCRIPT ENGINEERING</span>
+            <span>INTERACTIVE UI</span>
+            <span>CREATIVE CODING</span>
+            <span>ANIMATION SYSTEMS</span>
+            <span>RESPONSIVE DESIGN</span>
+            <span>JAVASCRIPT ENGINEERING</span>
+          </div>
         </div>
-    </nav>
-
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <div class="badge">💡 "Avoid or just undertake it"</div>
-            <h1>Hi I'm <span>Faris Edrik Prayoga</span></h1>
-            <p>Pengembang aplikasi dan web yang berfokus pada desain modern, performa tinggi, dan solusi berbasis teknologi terkini. Berpengalaman membangun aplikasi mobile, website interaktif, serta mengintegrasikan AI dan Machine Learning untuk menciptakan inovasi yang bermanfaat.</p>
-            <div class="hero-buttons">
-                <a href="#" class="btn btn-outline">Download CV</a>
-                <a href="#project" class="btn btn-text">Explore My Projects &rarr;</a>
-            </div>
-        </div>
-        <div class="hero-image">
-            <div class="glow-card">
-                <img src="https://ui-avatars.com/api/?name=Faris+Edrik&background=1a1a2e&color=fff&size=300" alt="Profile">
-                <div class="card-info">
-                    <p><strong>Faris Edrik P</strong></p>
-                    <p class="role">Open to Work</p>
-                </div>
-                <div class="card-footer">
-                    <div class="user-status">
-                        <img src="https://ui-avatars.com/api/?name=F&background=random&size=30" alt="avatar">
-                        <div>
-                            <span>@farisedp</span>
-                            <span class="online">🟢 Online</span>
-                        </div>
-                    </div>
-                    <button class="btn-small">Contact Me</button>
-                </div>
-            </div>
-        </div>
+      </div>
     </section>
 
-    <section id="about" class="about">
-        <div class="about-content">
-            <h2>About Me</h2>
-            <p>I'm Faris Edrik Prayoga, a full-stack developer passionate about building modern, high-performance applications with an intuitive user experience. I enjoy working with the latest technologies like Artificial Intelligence, Machine Learning, and cloud-based development, blending creativity with precision to deliver impactful solutions.</p>
-            <div class="stats">
-                <div class="stat-item">
-                    <h3>20+</h3>
-                    <p>Project Finished</p>
-                </div>
-                <div class="stat-item">
-                    <h3>3+</h3>
-                    <p>Years of Experience</p>
-                </div>
-            </div>
-            <p class="tagline">Working with heart, creating with mind.</p>
-        </div>
-        <div class="about-image">
-            <div class="mini-card">
-                <img src="https://ui-avatars.com/api/?name=Full+Stack&background=2a2a3e&color=fff" alt="Full Stack">
-                <p>Full Stack<br>Web Development</p>
-            </div>
-        </div>
+    <section id="about" class="about section scene-about">
+      <div class="section-bg-word" data-parallax-word>ABOUT ME</div>
+      <div class="section-header reveal" data-reveal>
+        <span class="section-kicker">01 / ABOUT</span>
+        <h2>Designing with motion, building with structure.</h2>
+      </div>
+
+      <div class="about-grid">
+        <article class="about-card reveal" data-reveal>
+          <p>
+            Saya suka bikin interface yang terasa hidup: transisi halus, depth, micro-interaction,
+            dan visual yang punya rasa. Fokusnya bukan cuma “kelihatan keren”, tapi juga enak dipakai.
+          </p>
+        </article>
+
+        <article class="about-card reveal stagger-1" data-reveal>
+          <p>
+            Dari landing page sampai dashboard, dari portfolio sampai web experience yang imersif,
+            saya membangun alur yang ngikutin ritme cerita, bukan cuma susunan komponen.
+          </p>
+        </article>
+
+        <article class="about-card reveal stagger-2" data-reveal>
+          <p>
+            Stack favorit saya condong ke front-end modern, animasi berbasis JS, dan arsitektur
+            yang tetap ringan di device. Kecepatan, polish, dan detail itu trio sakti.
+          </p>
+        </article>
+      </div>
+
+      <div class="about-cta reveal" data-reveal>
+        <a class="button button-glow" href="#projects">
+          <span>VIEW EXPERIENCE</span>
+          <span class="button-arrow">→</span>
+        </a>
+      </div>
     </section>
 
-    <section id="tools" class="tools">
-        <h2>Tools & Technologies</h2>
-        <p>My Professional Skills</p>
-        <div class="tools-grid">
-            <div class="tool-card"><i class="fas fa-code"></i> Visual Studio Code</div>
-            <div class="tool-card"><i class="fab fa-react"></i> React JS</div>
-            <div class="tool-card"><i class="fab fa-node-js"></i> Next JS</div>
-            <div class="tool-card"><i class="fab fa-css3-alt"></i> Tailwind CSS</div>
-            <div class="tool-card"><i class="fab fa-bootstrap"></i> Bootstrap</div>
-            <div class="tool-card"><i class="fab fa-js"></i> Javascript</div>
-            <div class="tool-card"><i class="fab fa-node"></i> Node JS</div>
-            <div class="tool-card"><i class="fab fa-github"></i> Github</div>
-        </div>
+    <section id="projects" class="projects section scene-projects">
+      <div class="section-header reveal" data-reveal>
+        <span class="section-kicker">02 / PROJECTS</span>
+        <h2>Selected work cards with motion and depth.</h2>
+      </div>
+
+      <div class="project-grid">
+        <article class="project-card reveal" data-reveal>
+          <div class="project-thumb thumb-cutyo"></div>
+          <div class="project-body">
+            <h3>CutYO</h3>
+            <p>Video cut assistant dengan workflow cepat dan visual clean.</p>
+            <div class="tech-tags">
+              <span>UI</span><span>Motion</span><span>Tools</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal stagger-1" data-reveal>
+          <div class="project-thumb thumb-komiyo"></div>
+          <div class="project-body">
+            <h3>KomiYO</h3>
+            <p>Komunitas digital dengan kartu profil interaktif dan transisi lembut.</p>
+            <div class="tech-tags">
+              <span>Community</span><span>Social</span><span>Cards</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal stagger-2" data-reveal>
+          <div class="project-thumb thumb-roastgram"></div>
+          <div class="project-body">
+            <h3>Roastgram</h3>
+            <p>Social feed satir dengan efek dramatis dan layout yang padat energi.</p>
+            <div class="tech-tags">
+              <span>Feed</span><span>Animation</span><span>Story</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal stagger-3" data-reveal>
+          <div class="project-thumb thumb-roastblox"></div>
+          <div class="project-body">
+            <h3>Roastblox</h3>
+            <p>Game-like interface dengan motion playful dan tone neon cyber.</p>
+            <div class="tech-tags">
+              <span>Game UI</span><span>Neon</span><span>UX</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal" data-reveal>
+          <div class="project-thumb thumb-pixup"></div>
+          <div class="project-body">
+            <h3>PixUP</h3>
+            <p>Uploader visual yang fokus ke speed, clarity, dan feedback instan.</p>
+            <div class="tech-tags">
+              <span>Upload</span><span>Cloud</span><span>Fast</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal stagger-1" data-reveal>
+          <div class="project-thumb thumb-cinefy"></div>
+          <div class="project-body">
+            <h3>Cinefy</h3>
+            <p>Movie discovery dengan layout sinematik dan panel detail yang elegan.</p>
+            <div class="tech-tags">
+              <span>Movies</span><span>Cinematic</span><span>Grid</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal stagger-2" data-reveal>
+          <div class="project-thumb thumb-impostorgram"></div>
+          <div class="project-body">
+            <h3>Impostorgram</h3>
+            <p>Game social experiment dengan visual badge, tasks, dan suspense UI.</p>
+            <div class="tech-tags">
+              <span>Game</span><span>Social</span><span>Logic</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal stagger-3" data-reveal>
+          <div class="project-thumb thumb-alangaep"></div>
+          <div class="project-body">
+            <h3>Alang AEP</h3>
+            <p>Personal ecosystem untuk showcase pengalaman, proses, dan identitas visual.</p>
+            <div class="tech-tags">
+              <span>Portfolio</span><span>Brand</span><span>System</span>
+            </div>
+          </div>
+        </article>
+      </div>
     </section>
 
-    <section id="project" class="projects">
-        <h2>Project</h2>
-        <p>Showcasing a selection of projects that reflect my skills, creativity, and passion for building meaningful digital experiences.</p>
-        <div class="project-grid">
-            <div class="project-card">
-                <img src="https://via.placeholder.com/400x250/1a1a2e/ffffff?text=Website+Sekolah" alt="Project 1">
-                <div class="project-info">
-                    <h3>Website Sekolah</h3>
-                    <p>HTML CSS Javascript PHP</p>
-                </div>
-            </div>
-            <div class="project-card">
-                <img src="https://via.placeholder.com/400x250/1a1a2e/ffffff?text=Company+Profile" alt="Project 2">
-                <div class="project-info">
-                    <h3>Company Profile</h3>
-                    <p>HTML CSS Javascript AOS Swiper</p>
-                </div>
-            </div>
-            <div class="project-card">
-                <img src="https://via.placeholder.com/400x250/1a1a2e/ffffff?text=Web+Perhotelan" alt="Project 3">
-                <div class="project-info">
-                    <h3>Web Perhotelan 2.0</h3>
-                    <p>React, Tailwind, API</p>
-                </div>
-            </div>
+    <section id="toolkit" class="toolkit section scene-toolkit">
+      <div class="section-header reveal" data-reveal>
+        <span class="section-kicker">03 / TOOLKIT</span>
+        <h2>Stack that keeps the wheels humming.</h2>
+      </div>
+
+      <div class="toolkit-grid">
+        <div class="tool-card reveal" data-reveal>
+          <span class="tool-icon">⚛</span>
+          <span>React</span>
         </div>
+        <div class="tool-card reveal stagger-1" data-reveal>
+          <span class="tool-icon">▲</span>
+          <span>Next.js</span>
+        </div>
+        <div class="tool-card reveal stagger-2" data-reveal>
+          <span class="tool-icon">{} </span>
+          <span>TypeScript</span>
+        </div>
+        <div class="tool-card reveal stagger-3" data-reveal>
+          <span class="tool-icon">✦</span>
+          <span>Tailwind</span>
+        </div>
+        <div class="tool-card reveal" data-reveal>
+          <span class="tool-icon">⬢</span>
+          <span>Node.js</span>
+        </div>
+        <div class="tool-card reveal stagger-1" data-reveal>
+          <span class="tool-icon">🐍</span>
+          <span>Python</span>
+        </div>
+        <div class="tool-card reveal stagger-2" data-reveal>
+          <span class="tool-icon">php</span>
+          <span>PHP</span>
+        </div>
+        <div class="tool-card reveal stagger-3" data-reveal>
+          <span class="tool-icon">◈</span>
+          <span>Kotlin</span>
+        </div>
+        <div class="tool-card reveal" data-reveal>
+          <span class="tool-icon">⎇</span>
+          <span>Git</span>
+        </div>
+      </div>
     </section>
 
-    <section id="contact" class="contact">
-        <div class="contact-header">
-            <h2>Contact & Chat</h2>
-            <p>Get in touch with me or chat in real-time.</p>
+    <section id="journey" class="journey section scene-journey">
+      <div class="journey-waves" aria-hidden="true"></div>
+
+      <div class="section-header reveal" data-reveal>
+        <span class="section-kicker">04 / JOURNEY</span>
+        <h2>From sparks to flight path.</h2>
+      </div>
+
+      <div class="journey-layout">
+        <div class="timeline-path">
+          <div class="timeline-line"></div>
+          <div class="paper-plane" id="paperPlane" aria-hidden="true">
+            <svg viewBox="0 0 120 120" role="img" aria-label="Paper airplane">
+              <path d="M7 60 L112 12 L76 108 L58 72 L7 60 Z"></path>
+              <path d="M58 72 L112 12" class="plane-fold"></path>
+            </svg>
+          </div>
+
+          <article class="timeline-card polaroid reveal" data-reveal>
+            <span class="timeline-date">2019</span>
+            <h3>Foundation</h3>
+            <p>Mulai mendalami struktur, UI, dan logika interaktif dari dasar.</p>
+          </article>
+
+          <article class="timeline-card polaroid reveal stagger-1" data-reveal>
+            <span class="timeline-date">2021</span>
+            <h3>Motion</h3>
+            <p>Naik level ke animasi, transisi, dan pengalaman visual yang lebih terasa.</p>
+          </article>
+
+          <article class="timeline-card polaroid reveal stagger-2" data-reveal>
+            <span class="timeline-date">2023</span>
+            <h3>Systems</h3>
+            <p>Fokus ke arsitektur yang stabil, komponen reusable, dan performance.</p>
+          </article>
+
+          <article class="timeline-card polaroid reveal stagger-3" data-reveal>
+            <span class="timeline-date">2026</span>
+            <h3>Portfolio World</h3>
+            <p>Build experience yang punya identitas, suasana, dan alur yang sinematik.</p>
+          </article>
         </div>
-        <div class="contact-container">
-            <div class="chat-room">
-                <h3>💬 Chat Room</h3>
-                <div class="chat-messages">
-                    <div class="msg received">
-                        <p class="sender">Faris (Owner)</p>
-                        <p>Selamat datang di web Portofolio saya! Ada yang bisa dibantu?</p>
-                    </div>
-                    <div class="msg sent">
-                        <p>Halo, ngobrol yuk!</p>
-                    </div>
-                    <div class="msg received">
-                        <p class="sender">Faris (Owner)</p>
-                        <p>Tentu, mau bahas soal project apa nih?</p>
-                    </div>
-                </div>
-                <button class="btn-login-google"><i class="fab fa-google"></i> Login with Google</button>
-            </div>
-            
-            <form class="contact-form">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" placeholder="Input Name...">
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" placeholder="Input Email...">
-                </div>
-                <div class="form-group">
-                    <label>Message</label>
-                    <textarea rows="4" placeholder="Message..."></textarea>
-                </div>
-                <button type="submit" class="btn btn-submit">Send</button>
-            </form>
-        </div>
+      </div>
     </section>
 
-    <footer>
-        <div class="logo">Portofolio</div>
-        <div class="socials">
-            <a href="#"><i class="fab fa-github"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-linkedin"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
+    <section id="github" class="github section scene-github">
+      <div class="section-header reveal" data-reveal>
+        <span class="section-kicker">05 / ACTIVITY</span>
+        <h2>GitHub heatmap with pulse rhythm.</h2>
+      </div>
+
+      <div class="heatmap-shell reveal" data-reveal>
+        <div class="heatmap-legend">
+          <span>Less</span>
+          <span>More</span>
         </div>
+        <div id="heatmapGrid" class="heatmap-grid" aria-label="GitHub activity heatmap"></div>
+      </div>
+    </section>
+
+    <section id="music" class="music section scene-music">
+      <div class="music-overlay"></div>
+
+      <div class="section-header reveal" data-reveal>
+        <span class="section-kicker">06 / MUSIC</span>
+        <h2>Space player with circular spectrum and synced lyrics.</h2>
+      </div>
+
+      <div class="music-layout">
+        <div class="album-stage">
+          <div class="album-orbit" id="albumOrbit" aria-label="Album art selection">
+            <button class="album-card is-selected" type="button" data-track="0" data-title="Neon Drift">
+              <span class="album-art art-1"></span>
+              <span class="album-title">Neon Drift</span>
+            </button>
+            <button class="album-card" type="button" data-track="1" data-title="Orbit Glow">
+              <span class="album-art art-2"></span>
+              <span class="album-title">Orbit Glow</span>
+            </button>
+            <button class="album-card" type="button" data-track="2" data-title="Midnight Pulse">
+              <span class="album-art art-3"></span>
+              <span class="album-title">Midnight Pulse</span>
+            </button>
+            <button class="album-card" type="button" data-track="3" data-title="Aurora Loop">
+              <span class="album-art art-4"></span>
+              <span class="album-title">Aurora Loop</span>
+            </button>
+            <button class="album-card" type="button" data-track="4" data-title="Static Bloom">
+              <span class="album-art art-5"></span>
+              <span class="album-title">Static Bloom</span>
+            </button>
+            <button class="album-card" type="button" data-track="5" data-title="Starlane">
+              <span class="album-art art-6"></span>
+              <span class="album-title">Starlane</span>
+            </button>
+            <button class="album-card" type="button" data-track="6" data-title="Wave Runner">
+              <span class="album-art art-7"></span>
+              <span class="album-title">Wave Runner</span>
+            </button>
+            <button class="album-card" type="button" data-track="7" data-title="Cosmic Tape">
+              <span class="album-art art-8"></span>
+              <span class="album-title">Cosmic Tape</span>
+            </button>
+          </div>
+
+          <div class="music-player reveal" data-reveal>
+            <div class="player-top">
+              <div>
+                <p class="now-playing">NOW PLAYING</p>
+                <h3 id="trackName">Neon Drift</h3>
+              </div>
+              <button id="playBtn" class="play-btn" type="button">PLAY</button>
+            </div>
+
+            <div class="progress-wrap">
+              <div class="progress-track">
+                <div id="progressBar" class="progress-bar"></div>
+              </div>
+              <div class="time-row">
+                <span id="currentTime">00:00</span>
+                <span id="trackDuration">01:03</span>
+              </div>
+            </div>
+
+            <canvas id="visualizerCanvas" class="visualizer-canvas" aria-label="Audio visualizer"></canvas>
+
+            <div id="lyrics" class="lyrics">
+              <div class="lyrics-line is-active">Take off through the static night.</div>
+              <div class="lyrics-line">Let the neon carry the frame.</div>
+              <div class="lyrics-line">Orbit slow, then bloom in light.</div>
+              <div class="lyrics-line">Every pulse remembers your name.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer" class="footer section scene-footer">
+      <div class="done-word reveal" data-reveal>DONE.</div>
+
+      <div class="connect-wrap">
+        <div class="moon-stage" aria-hidden="true">
+          <div class="moon"></div>
+          <div class="moon-glow"></div>
+          <div class="cloud cloud-1"></div>
+          <div class="cloud cloud-2"></div>
+        </div>
+
+        <div class="section-header reveal" data-reveal>
+          <span class="section-kicker">07 / CONNECT</span>
+          <h2>LET'S CONNECT</h2>
+          <p>Open for collaborations, product builds, and interface moonshots.</p>
+        </div>
+      </div>
+
+      <div class="footer-marquee">
+        <div class="marquee">
+          <div class="marquee-track marquee-track-footer">
+            <span>LET'S WORK TOGETHER • AVAILABLE FOR HIRE • LET'S BUILD SOMETHING AMAZING</span>
+            <span>LET'S WORK TOGETHER • AVAILABLE FOR HIRE • LET'S BUILD SOMETHING AMAZING</span>
+            <span>LET'S WORK TOGETHER • AVAILABLE FOR HIRE • LET'S BUILD SOMETHING AMAZING</span>
+            <span>LET'S WORK TOGETHER • AVAILABLE FOR HIRE • LET'S BUILD SOMETHING AMAZING</span>
+          </div>
+        </div>
+      </div>
     </footer>
+  </div>
 
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
-            </html>
-
+                </html>
