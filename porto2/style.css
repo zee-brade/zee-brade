@@ -24,11 +24,6 @@ body {
     overflow-x: hidden;
 }
 
-/* KELAS UNTUK MENGUNCI SCROLL SAAT ANIMASI BERJALAN */
-body.no-scroll {
-    overflow: hidden;
-}
-
 #welcome-screen{
     position:fixed;
     inset:0;
