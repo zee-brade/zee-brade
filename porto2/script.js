@@ -1,620 +1,963 @@
 (() => {
-  const body = document.body;
-  const introOverlay = document.getElementById('introOverlay');
-  const revealTargets = Array.from(document.querySelectorAll('[data-reveal]'));
-  const sceneSections = [
-    'hero', 'about', 'projects', 'toolkit', 'journey', 'github', 'music', 'footer'
-  ].map(id => document.getElementById(id)).filter(Boolean);
-
-  const hero = document.getElementById('hero');
-  const parallaxWord = document.querySelector('[data-parallax-word]');
-  const paperPlane = document.getElementById('paperPlane');
-  const heatmapGrid = document.getElementById('heatmapGrid');
-  const albumOrbit = document.getElementById('albumOrbit');
-  const trackName = document.getElementById('trackName');
-  const playBtn = document.getElementById('playBtn');
-  const progressBar = document.getElementById('progressBar');
-  const currentTimeEl = document.getElementById('currentTime');
-  const trackDurationEl = document.getElementById('trackDuration');
-  const lyricsWrap = document.getElementById('lyrics');
-  const starfieldCanvas = document.getElementById('starfieldCanvas');
-  const visualizerCanvas = document.getElementById('visualizerCanvas');
-
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
-  const lerp = (a, b, t) => a + (b - a) * t;
-  const formatTime = seconds => {
-    const s = Math.max(0, Math.floor(seconds));
-    const m = Math.floor(s / 60);
-    const r = s % 60;
-    return `${String(m).padStart(2, '0')}:${String(r).padStart(2, '0')}`;
+  const state = {
+    heroMouseX: 0,
+    heroMouseY: 0,
+    starfield: null,
+    viz: null,
+    audioCtx: null,
+    analyser: null,
+    sourceNode: null,
+    frequencyData: null,
+    currentTrack: 0,
+    isReady: false,
+    songs: [],
+    starPoints: [],
+    heatActive: false,
+    planeRaf: 0
   };
 
-  // INTRO CURTAIN
-  window.addEventListener('load', () => {
-    const delay = prefersReducedMotion ? 250 : 1800;
+  const projects = [
+    {
+      index: "01",
+      title: "CutYO",
+      subtitle: "Background Remover",
+      description: "A fast, crisp background removal experience built around a clean workflow and punchy visual feedback.",
+      accent: ["#f97316", "#38bdf8"],
+      tags: ["AI", "Canvas", "UX"],
+      glow: "rgba(249, 115, 22, 0.18)"
+    },
+    {
+      index: "02",
+      title: "KomiYO",
+      subtitle: "Manga Reader",
+      description: "A smooth manga reading app with polished navigation, focus-first layouts, and mobile-friendly motion.",
+      accent: ["#38bdf8", "#a78bfa"],
+      tags: ["Reader", "Responsive", "Motion"],
+      glow: "rgba(56, 189, 248, 0.18)"
+    },
+    {
+      index: "03",
+      title: "Roastgram",
+      subtitle: "Instagram Profile Roaster",
+      description: "An entertaining profile commentary engine with playful copy, animated results, and dramatic reveal states.",
+      accent: ["#fb7185", "#f97316"],
+      tags: ["Fun", "Social", "API"],
+      glow: "rgba(251, 113, 133, 0.18)"
+    },
+    {
+      index: "04",
+      title: "Roastblox",
+      subtitle: "Roblox Avatar Roaster",
+      description: "A quirky avatar analyzer that blends bold UI, witty output, and a confident product presentation.",
+      accent: ["#38bdf8", "#22c55e"],
+      tags: ["Games", "Avatar", "Frontend"],
+      glow: "rgba(34, 197, 94, 0.16)"
+    },
+    {
+      index: "05",
+      title: "PixUP",
+      subtitle: "AI Image Enhancer",
+      description: "Image uplift tooling with a modern canvas preview, transform controls, and premium-feeling results.",
+      accent: ["#f97316", "#facc15"],
+      tags: ["Enhance", "Canvas", "AI"],
+      glow: "rgba(250, 204, 21, 0.16)"
+    },
+    {
+      index: "06",
+      title: "Cinefy",
+      subtitle: "Movie & TV Show App",
+      description: "A cinematic browsing experience with dynamic cards, glowing metadata, and a binge-friendly structure.",
+      accent: ["#60a5fa", "#22c55e"],
+      tags: ["Movies", "Search", "UI"],
+      glow: "rgba(96, 165, 250, 0.18)"
+    },
+    {
+      index: "07",
+      title: "Impostorgram",
+      subtitle: "Identity Game",
+      description: "A playful social-style experiment with suspense, reveal moments, and a deceptively simple surface.",
+      accent: ["#a78bfa", "#38bdf8"],
+      tags: ["Game", "Social", "Experiment"],
+      glow: "rgba(167, 139, 250, 0.18)"
+    },
+    {
+      index: "08",
+      title: "Alang AEP",
+      subtitle: "Creative Engine",
+      description: "A polished internal playground for visual ideas, reusable motion, and experimental interface pieces.",
+      accent: ["#f97316", "#38bdf8"],
+      tags: ["System", "Toolkit", "Design"],
+      glow: "rgba(56, 189, 248, 0.14)"
+    }
+  ];
+
+  const tech = [
+    ["React", "Interface building and state flow", "#38bdf8"],
+    ["Next.js", "App structure and routing", "#a78bfa"],
+    ["TypeScript", "Safer logic and clearer contracts", "#60a5fa"],
+    ["Tailwind", "Rapid design systems", "#f97316"],
+    ["Node.js", "Backend and tooling", "#22c55e"],
+    ["Python", "Automation and problem solving", "#facc15"],
+    ["PHP", "Legacy and web integration", "#fb7185"],
+    ["Kotlin", "Android-centric workflows", "#8b5cf6"],
+    ["Git", "Version control and collaboration", "#38bdf8"]
+  ];
+
+  const timeline = [
+    {
+      title: "STUDENT (2020 - 2024)",
+      subtitle: "Politeknik Caltex Riau",
+      text: "Built a foundation in engineering discipline, problem solving, and product thinking while learning how to ship with consistency."
+    },
+    {
+      title: "CONTENT CREATOR & FREELANCE VIDEO EDITOR (2020 - 2024)",
+      subtitle: "Independent Creative Work",
+      text: "Developed a strong eye for pacing, story, and visual rhythm, which now feeds directly into interface motion and presentation."
+    },
+    {
+      title: "FRONT END DEVELOPER (Present)",
+      subtitle: "Assist.id",
+      text: "Focused on building sharp, reliable frontend experiences with scalable UI logic, clean structure, and attention to detail."
+    }
+  ];
+
+  const songSpecs = [
+    {
+      title: "Midnight Orbit",
+      artist: "ALANGKUN SESSION",
+      duration: 34,
+      bpm: 92,
+      root: 220,
+      phase: 0.2,
+      accent: ["#38bdf8", "#f97316"],
+      art: ["#0f172a", "#1e293b", "#38bdf8"],
+      sequence: [1, 1.25, 1.5, 1.75, 1.5, 1.25, 1, 0.75],
+      lyrics: [
+        { time: 0, text: "I let the night breathe through the circuit glow." },
+        { time: 4, text: "Signals drift, and the skyline starts to hum." },
+        { time: 8, text: "Every pulse is a map for the next small leap." },
+        { time: 12, text: "The room turns blue, then gold, then motion." },
+        { time: 17, text: "I keep it moving, even when the silence leans in." },
+        { time: 22, text: "Orbit steady, heart steady, hands on the wheel." },
+        { time: 27, text: "One more spark and the whole frame wakes up." }
+      ]
+    },
+    {
+      title: "Paper Skies",
+      artist: "ALANGKUN SESSION",
+      duration: 34,
+      bpm: 104,
+      root: 196,
+      phase: 0.6,
+      accent: ["#f97316", "#facc15"],
+      art: ["#111827", "#7c2d12", "#f97316"],
+      sequence: [1, 1.33, 1.5, 1.33, 1, 0.88, 1, 1.5],
+      lyrics: [
+        { time: 0, text: "Fold the doubt and let it catch the wind." },
+        { time: 5, text: "A paper plane can still outrun a heavy sky." },
+        { time: 10, text: "Soft edges, sharp direction, zero hesitation." },
+        { time: 15, text: "The path is drawn by motion, not by fear." },
+        { time: 20, text: "A little lift, a little drift, then forward." },
+        { time: 26, text: "Up through the haze and into the clean line." }
+      ]
+    },
+    {
+      title: "Chrome Heart",
+      artist: "ALANGKUN SESSION",
+      duration: 34,
+      bpm: 108,
+      root: 247,
+      phase: 1.1,
+      accent: ["#22c55e", "#38bdf8"],
+      art: ["#0f172a", "#14532d", "#22c55e"],
+      sequence: [1, 1.2, 1.5, 1.8, 1.5, 1.2, 1, 0.9],
+      lyrics: [
+        { time: 0, text: "A chrome reflection, clean and low-key bright." },
+        { time: 4, text: "The bassline marches like a polished engine." },
+        { time: 9, text: "Focus on the frame, polish on the edges." },
+        { time: 14, text: "Nothing wasted, nothing loose, all signal." },
+        { time: 20, text: "When the beat bends, the whole room leans with it." },
+        { time: 26, text: "Sharp lines, soft glow, perfect in motion." }
+      ]
+    },
+    {
+      title: "Afterglow",
+      artist: "ALANGKUN SESSION",
+      duration: 34,
+      bpm: 88,
+      root: 262,
+      phase: 1.7,
+      accent: ["#a78bfa", "#38bdf8"],
+      art: ["#111827", "#312e81", "#a78bfa"],
+      sequence: [1, 1.25, 1.33, 1.5, 1.33, 1.25, 1, 0.75],
+      lyrics: [
+        { time: 0, text: "The afterglow hangs around the last good idea." },
+        { time: 5, text: "A quiet shimmer across the glass and steel." },
+        { time: 10, text: "Every line lands like it knew the answer already." },
+        { time: 16, text: "Slow burn, clean arc, and a gentle return." },
+        { time: 22, text: "The night stays warm where the motion touched it." },
+        { time: 28, text: "Fade out soft, but leave the spark behind." }
+      ]
+    },
+    {
+      title: "Signal Bloom",
+      artist: "ALANGKUN SESSION",
+      duration: 34,
+      bpm: 96,
+      root: 233,
+      phase: 2.3,
+      accent: ["#f97316", "#38bdf8"],
+      art: ["#0b1220", "#1d4ed8", "#38bdf8"],
+      sequence: [1, 1.18, 1.42, 1.68, 1.42, 1.18, 1, 0.84],
+      lyrics: [
+        { time: 0, text: "A signal blooms in the center of the noise." },
+        { time: 5, text: "Tiny sparks gather, then choose a direction." },
+        { time: 11, text: "One clean pulse and the whole thing opens." },
+        { time: 17, text: "Brightness without clutter, motion without stress." },
+        { time: 23, text: "All the scattered pieces come back into shape." },
+        { time: 29, text: "And the bloom stays, even after the beat." }
+      ]
+    }
+  ];
+
+  document.addEventListener("DOMContentLoaded", init);
+
+  function init() {
+    const intro = document.getElementById("intro");
+    document.body.classList.add("loading");
+
+    renderProjects();
+    renderTech();
+    renderTimeline();
+    renderHeatmap();
+    setupSmoothScroll();
+    setupRevealObserver();
+    setupHeroParallax();
+    setupJourneyPlane();
+    setupFooterGlow();
+    setupMusic();
+    setupStarfield();
+
     setTimeout(() => {
-      introOverlay.classList.add('is-hidden');
-      setTimeout(() => {
-        introOverlay.remove();
-      }, 1300);
-    }, delay);
-  });
+      intro.classList.add("is-hidden");
+      document.body.classList.remove("loading");
+      document.body.classList.add("intro-finished");
+      document.querySelector(".hero")?.classList.add("hero-ready");
+    }, 1800);
 
-  // REVEAL ON SCROLL
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        const idx = revealTargets.indexOf(entry.target);
-        if (idx >= 0) entry.target.style.setProperty('--delay', `${Math.min(idx * 85, 420)}ms`);
-
-        if (entry.target.closest('#github')) {
-          animateHeatmap();
-        }
-        if (entry.target.closest('#music')) {
-          layoutAlbums();
-        }
-        if (entry.target.closest('#journey')) {
-          updatePlane();
-        }
-      }
-    });
-  }, { threshold: 0.18 });
-
-  revealTargets.forEach(el => observer.observe(el));
-
-  // SECTION SCENE TRACKING
-  const sceneObserver = new IntersectionObserver((entries) => {
-    const visible = entries
-      .filter(e => e.isIntersecting)
-      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-    if (visible) {
-      body.dataset.scene = visible.target.id;
-      if (visible.target.id === 'music') {
-        layoutAlbums();
-      }
-      if (visible.target.id === 'journey') {
-        updatePlane();
-      }
-      if (visible.target.id === 'github') {
-        animateHeatmap();
-      }
-    }
-  }, { threshold: [0.2, 0.35, 0.55, 0.7] });
-
-  sceneSections.forEach(sec => sceneObserver.observe(sec));
-
-  // PARALLAX
-  const parallax = {
-    x: 0,
-    y: 0,
-    tx: 0,
-    ty: 0
-  };
-
-  window.addEventListener('pointermove', (e) => {
-    const nx = (e.clientX / window.innerWidth) - 0.5;
-    const ny = (e.clientY / window.innerHeight) - 0.5;
-    parallax.tx = nx;
-    parallax.ty = ny;
-  });
-
-  window.addEventListener('scroll', () => {
-    updatePlane();
-    updateSectionWord();
-    updateSceneFromScroll();
-  }, { passive: true });
-
-  function updateSceneFromScroll() {
-    if (!hero) return;
-    const rect = hero.getBoundingClientRect();
-    const center = window.innerHeight * 0.35;
-    const inHero = rect.top <= center && rect.bottom >= center;
-    if (inHero) body.dataset.scene = 'hero';
+    setTimeout(() => {
+      intro.style.display = "none";
+    }, 3100);
   }
 
-  function animateParallax() {
-    parallax.x = lerp(parallax.x, parallax.tx, 0.08);
-    parallax.y = lerp(parallax.y, parallax.ty, 0.08);
-
-    const px = parallax.x * 22;
-    const py = parallax.y * 18;
-    document.documentElement.style.setProperty('--hero-parallax-x', `${px}px`);
-    document.documentElement.style.setProperty('--hero-parallax-y', `${py}px`);
-
-    const layers = document.querySelectorAll('.mountain, .forest-stripes, .hero-glow');
-    layers.forEach((layer, i) => {
-      const depth = (i + 1) * 0.65;
-      layer.style.transform = `translate3d(${px * depth}px, ${py * depth}px, 0)`;
-    });
-
-    if (parallaxWord) {
-      const amount = window.scrollY * 0.16;
-      parallaxWord.style.transform = `translateX(-50%) translate3d(0, ${amount * -0.22}px, 0)`;
-    }
-
-    requestAnimationFrame(animateParallax);
-  }
-  requestAnimationFrame(animateParallax);
-
-  function updateSectionWord() {
-    if (!parallaxWord) return;
-    const about = document.getElementById('about');
-    const rect = about.getBoundingClientRect();
-    const progress = clamp(1 - (rect.top + rect.height * 0.25) / (window.innerHeight + rect.height), 0, 1);
-    parallaxWord.style.opacity = String(0.08 + progress * 0.12);
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
   }
 
-  // HEATMAP
-  const heatCells = [];
-  function buildHeatmap() {
-    if (!heatmapGrid) return;
-    heatmapGrid.innerHTML = '';
-    const total = 16 * 7;
-    for (let i = 0; i < total; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'heat-cell';
-      cell.style.transitionDelay = `${i * 12}ms`;
-      heatmapGrid.appendChild(cell);
-      heatCells.push(cell);
-    }
+  function escapeXml(text) {
+    return text
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll("\"", "&quot;")
+      .replaceAll("'", "&apos;");
   }
 
-  let heatmapAnimated = false;
-  function animateHeatmap() {
-    if (heatmapAnimated || !heatCells.length) return;
-    heatmapAnimated = true;
-    heatCells.forEach((cell, i) => {
-      setTimeout(() => cell.classList.add('active'), i * 18);
-    });
+  function createPreviewSvg(title, a, b) {
+    const safe = escapeXml(title);
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600">
+        <defs>
+          <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="${a}" />
+            <stop offset="100%" stop-color="${b}" />
+          </linearGradient>
+          <radialGradient id="glow" cx="50%" cy="45%" r="58%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.32" />
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+          </radialGradient>
+          <filter id="blur">
+            <feGaussianBlur stdDeviation="18" />
+          </filter>
+        </defs>
+        <rect width="960" height="600" rx="44" fill="url(#bg)"/>
+        <circle cx="200" cy="128" r="82" fill="#fff" fill-opacity="0.18" filter="url(#blur)"/>
+        <circle cx="770" cy="130" r="120" fill="#fff" fill-opacity="0.14" filter="url(#blur)"/>
+        <path d="M0 462 C 170 370, 320 520, 480 430 S 810 350, 960 410 L 960 600 L 0 600 Z" fill="#0b1020" fill-opacity="0.32"/>
+        <path d="M0 390 C 180 300, 330 474, 480 390 S 810 280, 960 350" fill="none" stroke="#ffffff" stroke-opacity="0.2" stroke-width="12" stroke-linecap="round"/>
+        <path d="M 130 408 C 250 270, 390 500, 510 360 S 760 270, 840 372" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="8" stroke-linecap="round"/>
+        <rect x="64" y="68" width="832" height="464" rx="34" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="2"/>
+        <rect x="96" y="102" width="300" height="84" rx="22" fill="#ffffff" fill-opacity="0.14"/>
+        <rect x="96" y="204" width="220" height="14" rx="7" fill="#ffffff" fill-opacity="0.22"/>
+        <rect x="96" y="232" width="286" height="14" rx="7" fill="#ffffff" fill-opacity="0.18"/>
+        <rect x="96" y="260" width="250" height="14" rx="7" fill="#ffffff" fill-opacity="0.18"/>
+        <circle cx="736" cy="276" r="124" fill="url(#glow)"/>
+        <text x="96" y="154" fill="#fff" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="800" letter-spacing="-1.4">${safe}</text>
+        <text x="96" y="314" fill="#fff" fill-opacity="0.78" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="4">INTERACTIVE UI STUDY</text>
+      </svg>
+    `;
+    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
   }
 
-  buildHeatmap();
-
-  // PAPER PLANE PATH
-  function updatePlane() {
-    if (!paperPlane) return;
-    const section = document.getElementById('journey');
-    if (!section) return;
-
-    const rect = section.getBoundingClientRect();
-    const sectionTop = window.scrollY + rect.top;
-    const sectionHeight = rect.height;
-    const scrollCenter = window.scrollY + window.innerHeight * 0.45;
-
-    const t = clamp((scrollCenter - sectionTop) / sectionHeight, 0, 1);
-    const trackWidth = Math.min(window.innerWidth * 0.34, 320);
-    const x = 18 + Math.sin(t * Math.PI * 2) * 22 + t * trackWidth;
-    const y = t * Math.max(sectionHeight - 120, 500);
-    const angle = 18 + Math.cos(t * Math.PI * 2) * 12;
-
-    paperPlane.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle}deg)`;
+  function createAlbumArt(title, a, b) {
+    const safe = escapeXml(title);
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 420">
+        <defs>
+          <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="${a}"/>
+            <stop offset="100%" stop-color="${b}"/>
+          </linearGradient>
+          <radialGradient id="r" cx="50%" cy="40%" r="65%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="420" height="420" rx="36" fill="url(#g)"/>
+        <circle cx="132" cy="104" r="88" fill="#fff" fill-opacity="0.18"/>
+        <circle cx="288" cy="308" r="122" fill="#0b1020" fill-opacity="0.2"/>
+        <circle cx="215" cy="176" r="164" fill="url(#r)"/>
+        <path d="M52 286 C 112 216, 182 340, 242 260 S 360 190, 378 292" fill="none" stroke="#fff" stroke-opacity="0.28" stroke-width="10" stroke-linecap="round"/>
+        <text x="36" y="374" fill="#fff" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="900" letter-spacing="-1">${safe}</text>
+      </svg>
+    `;
+    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
   }
 
-  // ALBUM ORBIT
-  const albums = Array.from(document.querySelectorAll('.album-card'));
-  const albumData = [
-    { title: 'Neon Drift', hue: 28 },
-    { title: 'Orbit Glow', hue: 195 },
-    { title: 'Midnight Pulse', hue: 340 },
-    { title: 'Aurora Loop', hue: 150 },
-    { title: 'Static Bloom', hue: 256 },
-    { title: 'Starlane', hue: 42 },
-    { title: 'Wave Runner', hue: 188 },
-    { title: 'Cosmic Tape', hue: 310 }
-  ];
-
-  let selectedAlbum = 0;
-
-  function layoutAlbums() {
-    if (!albumOrbit || !albums.length) return;
-
-    const radiusX = Math.min(albumOrbit.clientWidth * 0.36, 260);
-    const radiusY = Math.min(albumOrbit.clientHeight * 0.16, 88);
-    const centerX = albumOrbit.clientWidth / 2;
-    const centerY = albumOrbit.clientHeight / 2 + 34;
-    const spread = Math.PI * 1.38;
-    const start = -Math.PI * 0.92;
-
-    albums.forEach((card, i) => {
-      const active = i === selectedAlbum;
-      const n = albums.length;
-      const step = n > 1 ? i / (n - 1) : 0;
-      const angle = start + spread * step;
-      const x = active ? centerX : centerX + Math.cos(angle) * radiusX;
-      const y = active ? centerY - 40 : centerY + Math.sin(angle) * radiusY;
-      const rot = active ? 0 : clamp(Math.cos(angle) * 16, -16, 16);
-      const scale = active ? 1.55 : 0.92 + Math.sin(step * Math.PI) * 0.08;
-      const blur = active ? 0 : 2.4;
-      const opacity = active ? 1 : 0.74;
-
-      card.style.zIndex = active ? 5 : String(1 + i);
-      card.style.opacity = opacity;
-      card.style.filter = `blur(${blur}px) saturate(${active ? 1.15 : 0.7})`;
-      card.style.transform = `translate(-50%, -50%) translate3d(${x - centerX}px, ${y - centerY}px, 0) rotate(${rot}deg) scale(${scale})`;
-    });
-  }
-
-  function selectAlbum(index) {
-    selectedAlbum = index;
-    const selected = albums[index];
-    if (!selected) return;
-
-    albums.forEach((card, i) => card.classList.toggle('is-selected', i === index));
-    const title = selected.dataset.title || albumData[index]?.title || `Track ${index + 1}`;
-    trackName.textContent = title;
-    audioEngine.setTrack(index);
-    layoutAlbums();
-  }
-
-  albums.forEach((card, index) => {
-    card.addEventListener('click', () => selectAlbum(index));
-  });
-
-  window.addEventListener('resize', () => {
-    layoutAlbums();
-    resizeCanvas(starfieldCanvas, starfieldState);
-    resizeCanvas(visualizerCanvas, visualizerState);
-    updatePlane();
-  });
-
-  // AUDIO ENGINE
-  const DURATION = 63;
-  const lyrics = [
-    { t: 0, text: 'Take off through the static night.' },
-    { t: 11, text: 'Let the neon carry the frame.' },
-    { t: 24, text: 'Orbit slow, then bloom in light.' },
-    { t: 37, text: 'Every pulse remembers your name.' },
-    { t: 49, text: 'The sky turns soft electric blue.' },
-    { t: 57, text: 'One more loop and back to you.' }
-  ];
-
-  const trackDur = DURATION;
-  trackDurationEl.textContent = formatTime(trackDur);
-
-  const audioEngine = (() => {
-    let ctx = null;
-    let analyser = null;
-    let master = null;
-    let compressor = null;
-    let lfo = null;
-    let lfoGain = null;
-    let padOscs = [];
-    let bassOsc = null;
-    let beatInterval = null;
-    let melodyInterval = null;
-    let harmonyInterval = null;
-    let started = false;
-    let playing = false;
-    let pausedAt = 0;
-    let startAt = 0;
-    let currentTrack = 0;
-
-    const trackPalettes = [
-      { name: 'Neon Drift', root: 110, chord: [110, 138.59, 164.81], filter: 740 },
-      { name: 'Orbit Glow', root: 123.47, chord: [123.47, 155.56, 185], filter: 820 },
-      { name: 'Midnight Pulse', root: 98, chord: [98, 123.47, 146.83], filter: 680 },
-      { name: 'Aurora Loop', root: 130.81, chord: [130.81, 164.81, 196], filter: 900 },
-      { name: 'Static Bloom', root: 92.5, chord: [92.5, 116.54, 146.83], filter: 700 },
-      { name: 'Starlane', root: 146.83, chord: [146.83, 174.61, 220], filter: 980 },
-      { name: 'Wave Runner', root: 87.31, chord: [87.31, 110, 130.81], filter: 760 },
-      { name: 'Cosmic Tape', root: 103.83, chord: [103.83, 130.81, 155.56], filter: 840 }
-    ];
-
-    function makeNoiseBuffer(ctx) {
-      const len = ctx.sampleRate * 2;
-      const buffer = ctx.createBuffer(1, len, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
-      return buffer;
-    }
-
-    function init() {
-      if (started) return;
-      ctx = new (window.AudioContext || window.webkitAudioContext)();
-      analyser = ctx.createAnalyser();
-      analyser.fftSize = 2048;
-      analyser.smoothingTimeConstant = 0.88;
-
-      compressor = ctx.createDynamicsCompressor();
-      compressor.threshold.value = -18;
-      compressor.knee.value = 20;
-      compressor.ratio.value = 9;
-      compressor.attack.value = 0.004;
-      compressor.release.value = 0.18;
-
-      master = ctx.createGain();
-      master.gain.value = 0.0;
-
-      master.connect(compressor);
-      compressor.connect(analyser);
-      analyser.connect(ctx.destination);
-
-      lfo = ctx.createOscillator();
-      lfo.type = 'sine';
-      lfo.frequency.value = 0.12;
-      lfoGain = ctx.createGain();
-      lfoGain.gain.value = 22;
-      lfo.connect(lfoGain);
-
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.value = trackPalettes[0].filter;
-      filter.Q.value = 0.8;
-
-      lfoGain.connect(filter.frequency);
-      filter.connect(master);
-
-      padOscs = trackPalettes[0].chord.map((freq, index) => {
-        const osc = ctx.createOscillator();
-        osc.type = index === 0 ? 'sine' : 'triangle';
-        osc.frequency.value = freq;
-        osc.detune.value = index * 4 - 4;
-        const g = ctx.createGain();
-        g.gain.value = index === 0 ? 0.16 : 0.08;
-        osc.connect(g);
-        g.connect(filter);
-        osc.start();
-        return { osc, g };
+  function setupSmoothScroll() {
+    document.querySelectorAll('a[href^="#"], [data-scroll]').forEach((el) => {
+      el.addEventListener("click", (event) => {
+        const targetSelector = el.getAttribute("href") || el.getAttribute("data-scroll");
+        if (!targetSelector || !targetSelector.startsWith("#")) return;
+        const target = document.querySelector(targetSelector);
+        if (!target) return;
+        event.preventDefault();
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
       });
+    });
+  }
 
-      bassOsc = ctx.createOscillator();
-      bassOsc.type = 'sine';
-      bassOsc.frequency.value = trackPalettes[0].root / 2;
-      const bassGain = ctx.createGain();
-      bassGain.gain.value = 0.16;
-      const bassFilter = ctx.createBiquadFilter();
-      bassFilter.type = 'lowpass';
-      bassFilter.frequency.value = 220;
-      bassOsc.connect(bassGain);
-      bassGain.connect(bassFilter);
-      bassFilter.connect(master);
-      bassOsc.start();
+  function setupRevealObserver() {
+    const revealItems = document.querySelectorAll(".reveal");
+    const heroItems = document.querySelectorAll(".hero-reveal");
+    const musicSection = document.getElementById("music");
+    const heatmap = document.getElementById("heatmap");
 
-      const noiseSource = ctx.createBufferSource();
-      noiseSource.buffer = makeNoiseBuffer(ctx);
-      noiseSource.loop = true;
-      const noiseFilter = ctx.createBiquadFilter();
-      noiseFilter.type = 'highpass';
-      noiseFilter.frequency.value = 1400;
-      const noiseGain = ctx.createGain();
-      noiseGain.gain.value = 0.02;
-      noiseSource.connect(noiseFilter);
-      noiseFilter.connect(noiseGain);
-      noiseGain.connect(master);
-      noiseSource.start();
-
-      lfo.start();
-      started = true;
-    }
-
-    function pulseBeat() {
-      if (!ctx || !playing) return;
-      const now = ctx.currentTime;
-      const kick = ctx.createOscillator();
-      const kickGain = ctx.createGain();
-      kick.type = 'sine';
-      kick.frequency.setValueAtTime(150, now);
-      kick.frequency.exponentialRampToValueAtTime(45, now + 0.12);
-      kickGain.gain.setValueAtTime(0.22, now);
-      kickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
-      kick.connect(kickGain);
-      kickGain.connect(master);
-      kick.start(now);
-      kick.stop(now + 0.16);
-    }
-
-    function updateHarmony(index = currentTrack) {
-      if (!ctx || !padOscs.length) return;
-      const palette = trackPalettes[index];
-      const now = ctx.currentTime;
-
-      padOscs.forEach((voice, i) => {
-        const target = palette.chord[i];
-        voice.osc.frequency.cancelScheduledValues(now);
-        voice.osc.frequency.setTargetAtTime(target, now, 0.12 + i * 0.03);
-        voice.g.gain.cancelScheduledValues(now);
-        voice.g.gain.setTargetAtTime(i === 0 ? 0.17 : 0.08, now, 0.14);
-      });
-      bassOsc.frequency.setTargetAtTime(palette.root / 2, now, 0.14);
-      master.gain.setTargetAtTime(0.72, now, 0.15);
-
-      if (ctx) {
-        const filterNode = compressor ? compressor : null;
-        if (filterNode) {
-          // no-op; kept for structure clarity
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
         }
-      }
-    }
+      });
+    }, { threshold: 0.14 });
 
-    function scheduleMoodChanges() {
-      clearInterval(harmonyInterval);
-      clearInterval(beatInterval);
-      clearInterval(melodyInterval);
+    revealItems.forEach((item) => observer.observe(item));
+    document.querySelectorAll(".project-card, .tech-card, .timeline-card, .contact-card, .album-card").forEach((item) => observer.observe(item));
 
-      beatInterval = setInterval(() => {
-        pulseBeat();
-      }, 500);
+    heroItems.forEach((item, index) => {
+      item.style.transitionDelay = `${index * 120}ms`;
+    });
 
-      harmonyInterval = setInterval(() => {
-        if (!playing) return;
-        const palette = trackPalettes[currentTrack];
-        const drift = 0.98 + Math.random() * 0.04;
-        padOscs.forEach((voice, i) => {
-          const detune = (i - 1) * 6 + (Math.random() - 0.5) * 4;
-          voice.osc.detune.setTargetAtTime(detune, ctx.currentTime, 0.1);
-          voice.g.gain.setTargetAtTime(i === 0 ? 0.17 : 0.09, ctx.currentTime, 0.1);
+    if (musicSection && heatmap) {
+      const musicObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            heatmap.classList.add("is-active");
+            state.heatActive = true;
+          }
         });
-        bassOsc.frequency.setTargetAtTime((palette.root / 2) * drift, ctx.currentTime, 0.12);
-      }, 2200);
-
-      const leadSequence = [0, 2, 4, 7, 9, 7, 4, 2];
-      let step = 0;
-      melodyInterval = setInterval(() => {
-        if (!playing || !ctx) return;
-        const palette = trackPalettes[currentTrack];
-        const note = leadSequence[step % leadSequence.length];
-        const lead = ctx.createOscillator();
-        const leadGain = ctx.createGain();
-        const leadFilter = ctx.createBiquadFilter();
-        lead.type = 'triangle';
-        lead.frequency.value = palette.root * Math.pow(2, note / 12);
-        leadFilter.type = 'bandpass';
-        leadFilter.frequency.value = 1200 + note * 70;
-        leadFilter.Q.value = 5;
-
-        const now = ctx.currentTime;
-        leadGain.gain.setValueAtTime(0.0001, now);
-        leadGain.gain.exponentialRampToValueAtTime(0.09, now + 0.05);
-        leadGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
-
-        lead.connect(leadFilter);
-        leadFilter.connect(leadGain);
-        leadGain.connect(master);
-        lead.start(now);
-        lead.stop(now + 0.5);
-
-        step++;
-      }, 625);
+      }, { threshold: 0.35 });
+      musicObserver.observe(musicSection);
     }
+  }
 
-    function start() {
-      init();
-      if (!ctx) return;
-      ctx.resume();
-      if (!started) return;
-      playing = true;
-      startAt = ctx.currentTime - pausedAt;
-      master.gain.setTargetAtTime(0.72, ctx.currentTime, 0.15);
-      scheduleMoodChanges();
-      updateHarmony(currentTrack);
-    }
+  function setupHeroParallax() {
+    const hero = document.querySelector(".hero");
+    const visual = document.querySelector(".hero-visual");
+    if (!hero || !visual) return;
 
-    function pause() {
-      if (!ctx) return;
-      playing = false;
-      pausedAt = getTime();
-      master.gain.setTargetAtTime(0.0, ctx.currentTime, 0.08);
-      clearInterval(beatInterval);
-      clearInterval(melodyInterval);
-      clearInterval(harmonyInterval);
-    }
+    hero.addEventListener("pointermove", (event) => {
+      const rect = visual.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      state.heroMouseX = x;
+      state.heroMouseY = y;
+      document.documentElement.style.setProperty("--hero-mx", (x * 24).toFixed(2) + "px");
+      document.documentElement.style.setProperty("--hero-my", (y * 20).toFixed(2) + "px");
+    });
 
-    function toggle() {
-      if (!started || !playing) {
-        start();
-        return true;
-      }
-      pause();
-      return false;
-    }
+    hero.addEventListener("pointerleave", () => {
+      document.documentElement.style.setProperty("--hero-mx", "0px");
+      document.documentElement.style.setProperty("--hero-my", "0px");
+    });
 
-    function setTrack(index) {
-      currentTrack = index % trackPalettes.length;
-      if (trackName) trackName.textContent = trackPalettes[currentTrack].name;
-      updateHarmony(currentTrack);
-    }
+    const onScroll = () => {
+      const scrollY = window.scrollY || window.pageYOffset;
+      document.documentElement.style.setProperty("--scroll-y", `${scrollY}px`);
 
-    function getTime() {
-      if (!ctx) return pausedAt;
-      return playing ? (ctx.currentTime - startAt) : pausedAt;
-    }
-
-    function getAnalyser() {
-      return analyser;
-    }
-
-    function isPlaying() {
-      return playing;
-    }
-
-    return {
-      start,
-      pause,
-      toggle,
-      setTrack,
-      getTime,
-      getAnalyser,
-      isPlaying
-    };
-  })();
-
-  // MUSIC UI
-  let activeLyricIndex = 0;
-
-  function updateLyrics(time) {
-    const idx = lyrics
-      .map((line, i) => ({ i, t: line.t }))
-      .reverse()
-      .find(item => time >= item.t)?.i ?? 0;
-
-    if (idx !== activeLyricIndex) {
-      activeLyricIndex = idx;
-      Array.from(lyricsWrap.children).forEach((node, i) => {
-        node.classList.toggle('is-active', i === idx);
+      const layers = visual.querySelectorAll(".hero-layer");
+      layers.forEach((layer) => {
+        const depth = parseFloat(layer.dataset.depth || "0.1");
+        const translateY = scrollY * depth * -0.16;
+        layer.style.transform = `translate3d(calc(var(--hero-mx) + 0px), calc(var(--hero-my) + ${translateY}px), 0)`;
       });
-    }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
   }
 
-  function updateMusicUI() {
-    const time = audioEngine.getTime();
-    const pct = clamp((time % DURATION) / DURATION, 0, 1);
-    progressBar.style.width = `${pct * 100}%`;
-    currentTimeEl.textContent = formatTime(time % DURATION);
-    updateLyrics(time % DURATION);
+  function renderProjects() {
+    const grid = document.getElementById("projectsGrid");
+    if (!grid) return;
 
-    if (playBtn) {
-      playBtn.textContent = audioEngine.isPlaying() ? 'PAUSE' : 'PLAY';
-    }
-
-    requestAnimationFrame(updateMusicUI);
+    grid.innerHTML = projects.map((project) => {
+      const preview = createPreviewSvg(project.title, project.accent[0], project.accent[1]);
+      return `
+        <article class="project-card reveal">
+          <div class="project-meta">
+            <span class="project-index">${project.index}</span>
+            <span class="project-chip">${project.subtitle}</span>
+          </div>
+          <img class="project-preview" src="${preview}" alt="${project.title} preview">
+          <h4>${project.title}</h4>
+          <p>${project.description}</p>
+          <div class="badge-row">
+            ${project.tags.map((tag) => `<span class="badge">${tag}</span>`).join("")}
+          </div>
+        </article>
+      `;
+    }).join("");
   }
 
-  playBtn?.addEventListener('click', async () => {
-    const playing = audioEngine.toggle();
-    playBtn.textContent = playing ? 'PAUSE' : 'PLAY';
-    if (playing) {
-      await maybeStartVisualizer();
-    }
-  });
+  function renderTech() {
+    const grid = document.getElementById("techGrid");
+    if (!grid) return;
 
-  albums.forEach((btn, idx) => {
-    btn.addEventListener('click', () => {
-      selectAlbum(idx);
-      trackName.textContent = albumData[idx]?.title || btn.dataset.title || 'Track';
-      if (!audioEngine.isPlaying()) {
-        audioEngine.start();
-        playBtn.textContent = 'PAUSE';
-        maybeStartVisualizer();
+    grid.innerHTML = tech.map((item, index) => `
+      <article class="tech-card reveal" data-accent="${item[2]}">
+        <div class="tech-index">${String(index + 1).padStart(2, "0")}</div>
+        <h4>${item[0]}</h4>
+        <p>${item[1]}</p>
+      </article>
+    `).join("");
+
+    grid.querySelectorAll(".tech-card").forEach((card) => {
+      const accent = card.dataset.accent || "#38bdf8";
+      card.style.setProperty("--accent-glow", `${accent}26`);
+
+      const reset = () => {
+        card.style.setProperty("--rx", "0deg");
+        card.style.setProperty("--ry", "0deg");
+      };
+
+      card.addEventListener("pointermove", (event) => {
+        const rect = card.getBoundingClientRect();
+        const px = (event.clientX - rect.left) / rect.width;
+        const py = (event.clientY - rect.top) / rect.height;
+        const rx = (0.5 - py) * 14;
+        const ry = (px - 0.5) * 16;
+        card.style.setProperty("--rx", `${rx.toFixed(2)}deg`);
+        card.style.setProperty("--ry", `${ry.toFixed(2)}deg`);
+      });
+
+      card.addEventListener("pointerleave", reset);
+    });
+  }
+
+  function renderTimeline() {
+    const container = document.getElementById("timelineCards");
+    if (!container) return;
+
+    container.innerHTML = timeline.map((item, index) => {
+      const tilt = (Math.random() * 4.6 - 2.3).toFixed(2);
+      return `
+        <article class="timeline-card reveal" style="--tilt:${tilt}deg">
+          <div class="timeline-thumb"></div>
+          <span class="date">${String(index + 1).padStart(2, "0")}</span>
+          <h4>${item.title}</h4>
+          <p><strong>${item.subtitle}</strong></p>
+          <p>${item.text}</p>
+        </article>
+      `;
+    }).join("");
+  }
+
+  function renderHeatmap() {
+    const heatmap = document.getElementById("heatmap");
+    if (!heatmap) return;
+
+    const cells = [];
+    for (let week = 0; week < 52; week++) {
+      for (let day = 0; day < 7; day++) {
+        const value = Math.floor((Math.sin(week * 0.7 + day * 1.1) + 1) * 2);
+        const level = clamp(value + (Math.random() > 0.75 ? 1 : 0), 0, 4);
+        cells.push(`<div class="heat-cell level-${level}" style="--delay:${week * 7 + day}"></div>`);
+      }
+    }
+    heatmap.innerHTML = cells.join("");
+  }
+
+  function setupJourneyPlane() {
+    const section = document.getElementById("journey");
+    const path = document.getElementById("journeyPath");
+    const plane = document.getElementById("paperPlane");
+    if (!section || !path || !plane) return;
+
+    let pathLength = 0;
+    const measure = () => {
+      pathLength = path.getTotalLength();
+    };
+
+    const update = () => {
+      const rect = section.getBoundingClientRect();
+      const viewHeight = window.innerHeight || document.documentElement.clientHeight;
+      const progress = clamp((viewHeight * 0.72 - rect.top) / (rect.height + viewHeight * 0.4), 0, 1);
+      const point = path.getPointAtLength(pathLength * progress);
+      const nextPoint = path.getPointAtLength(Math.min(pathLength, pathLength * progress + 1));
+      const box = path.getBoundingClientRect();
+      const x = point.x / 1300 * box.width + box.left - section.getBoundingClientRect().left - 18;
+      const y = point.y / 320 * box.height + box.top - section.getBoundingClientRect().top - 22;
+      const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * 180 / Math.PI;
+
+      document.documentElement.style.setProperty("--plane-x", `${x}px`);
+      document.documentElement.style.setProperty("--plane-y", `${y}px`);
+      document.documentElement.style.setProperty("--plane-r", `${angle}deg`);
+    };
+
+    measure();
+    update();
+
+    let scheduled = false;
+    const rafUpdate = () => {
+      scheduled = false;
+      update();
+    };
+
+    const onScroll = () => {
+      if (!scheduled) {
+        scheduled = true;
+        requestAnimationFrame(rafUpdate);
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", () => {
+      measure();
+      update();
+    });
+
+    state.planeRaf = requestAnimationFrame(function loop() {
+      update();
+      state.planeRaf = requestAnimationFrame(loop);
+    });
+  }
+
+  function setupFooterGlow() {
+    const done = document.querySelector(".done-headline");
+    if (!done) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          done.style.animationPlayState = "running";
+        }
+      });
+    }, { threshold: 0.4 });
+    observer.observe(done);
+  }
+
+  function setupMusic() {
+    const audio = document.getElementById("audioElement");
+    const orbit = document.getElementById("albumOrbit");
+    const title = document.getElementById("trackTitle");
+    const artist = document.getElementById("trackArtist");
+    const lyricLine = document.getElementById("lyricLine");
+    const playPause = document.getElementById("playPauseBtn");
+    const progress = document.getElementById("progressBar");
+    const volume = document.getElementById("volumeBar");
+    const vizCanvas = document.getElementById("vizCanvas");
+
+    if (!audio || !orbit || !title || !artist || !lyricLine || !playPause || !progress || !volume || !vizCanvas) return;
+
+    state.songs = songSpecs.map((song) => {
+      const url = createWavUrl(song);
+      return {
+        ...song,
+        url,
+        artUrl: createAlbumArt(song.title, song.art[0], song.art[1])
+      };
+    });
+
+    orbit.innerHTML = state.songs.map((song, index) => {
+      const angle = (index / state.songs.length) * Math.PI * 2 - Math.PI / 2;
+      const radius = 220;
+      const tx = Math.cos(angle) * radius;
+      const ty = Math.sin(angle) * radius * 0.72;
+      return `
+        <button class="album-card ${index === 0 ? "active" : ""}" data-index="${index}" style="--tx:${tx}px;--ty:${ty}px;--rot:${(angle * 8).toFixed(2)}deg">
+          <img class="album-art" src="${song.artUrl}" alt="${song.title}">
+          <strong>${song.title}</strong>
+          <span>${song.artist}</span>
+        </button>
+      `;
+    }).join("");
+
+    const cards = Array.from(orbit.querySelectorAll(".album-card"));
+
+    const selectTrack = (index, shouldPlay = false) => {
+      state.currentTrack = index;
+      const song = state.songs[index];
+      title.textContent = song.title;
+      artist.textContent = song.artist;
+      audio.src = song.url;
+      audio.currentTime = 0;
+      progress.value = 0;
+      setLyric(song, 0, lyricLine);
+      cards.forEach((card, cardIndex) => {
+        card.classList.toggle("active", cardIndex === index);
+        card.classList.toggle("dimmed", cardIndex !== index);
+      });
+      if (shouldPlay) {
+        audio.play().catch(() => {});
+        playPause.textContent = "PAUSE";
+      } else {
+        playPause.textContent = "PLAY";
+      }
+    };
+
+    cards.forEach((card) => {
+      card.addEventListener("click", () => {
+        const index = Number(card.dataset.index || 0);
+        selectTrack(index, true);
+      });
+    });
+
+    progress.addEventListener("input", () => {
+      if (!audio.duration) return;
+      audio.currentTime = (Number(progress.value) / 100) * audio.duration;
+    });
+
+    volume.addEventListener("input", () => {
+      audio.volume = Number(volume.value) / 100;
+    });
+
+    playPause.addEventListener("click", async () => {
+      if (!audio.src) {
+        selectTrack(0, true);
+      }
+
+      try {
+        await ensureAudioGraph(audio);
+      } catch (_) {
+      }
+
+      if (audio.paused) {
+        audio.play().catch(() => {});
+        playPause.textContent = "PAUSE";
+      } else {
+        audio.pause();
+        playPause.textContent = "PLAY";
       }
     });
-  });
 
-  // STARFIELD CANVAS
-  const starfieldState = {
-    ctx: null,
-    w: 0,
-    h: 0,
-    stars: [],
-    ready: false
-  };
+    audio.addEventListener("loadedmetadata", () => {
+      progress.value = 0;
+    });
 
-  function resizeCanvas(canvas, state) {
-    if (!canvas) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = Math.floor(rect.width * dpr);
-    canvas.height = Math.floor(rect.height * dpr);
-    state.w = canvas.width;
-    state.h = canvas.height;
-    state.ctx = canvas.getContext('2d');
-    state.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    state.w = rect.width;
-    state.h = rect.height;
-    state.dpr = dpr;
+    audio.addEventListener("timeupdate", () => {
+      if (audio.duration) {
+        progress.value = String((audio.currentTime / audio.duration) * 100);
+      }
+      setLyric(state.songs[state.currentTrack], audio.currentTime, lyricLine);
+    });
+
+    audio.addEventListener("play", () => {
+      playPause.textContent = "PAUSE";
+    });
+
+    audio.addEventListener("pause", () => {
+      playPause.textContent = "PLAY";
+    });
+
+    audio.addEventListener("ended", () => {
+      const next = (state.currentTrack + 1) % state.songs.length;
+      selectTrack(next, true);
+    });
+
+    audio.volume = Number(volume.value) / 100;
+
+    selectTrack(0, false);
+
+    state.viz = setupVisualizer(vizCanvas, audio);
+    requestAnimationFrame(drawVisualizer);
   }
 
-  function buildStars() {
-    const count =
+  async function ensureAudioGraph(audio) {
+    if (!state.audioCtx) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+      state.audioCtx = new AudioContextClass();
+      state.analyser = state.audioCtx.createAnalyser();
+      state.analyser.fftSize = 256;
+      state.frequencyData = new Uint8Array(state.analyser.frequencyBinCount);
+      if (!state.sourceNode) {
+        state.sourceNode = state.audioCtx.createMediaElementSource(audio);
+        state.sourceNode.connect(state.analyser);
+        state.analyser.connect(state.audioCtx.destination);
+      }
+    }
+    if (state.audioCtx.state === "suspended") {
+      await state.audioCtx.resume();
+    }
+  }
+
+  function setLyric(song, time, output) {
+    if (!song || !output) return;
+    let line = song.lyrics[0].text;
+    for (const lyric of song.lyrics) {
+      if (time >= lyric.time) {
+        line = lyric.text;
+      }
+    }
+    if (output.textContent !== line) {
+      output.classList.add("pop");
+      window.setTimeout(() => {
+        output.textContent = line;
+        output.classList.remove("pop");
+      }, 120);
+    }
+  }
+
+  function setupVisualizer(canvas, audio) {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+
+    const resize = () => {
+      const ratio = Math.max(1, window.devicePixelRatio || 1);
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * ratio;
+      canvas.height = rect.height * ratio;
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    return { canvas, ctx, resize, audio };
+  }
+
+  function drawVisualizer() {
+    if (!state.viz) return;
+    const { ctx, canvas, audio } = state.viz;
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const cx = w / 2;
+    const cy = h / 2;
+    const baseRadius = Math.min(w, h) * 0.18;
+
+    const song = state.songs[state.currentTrack];
+    const spectrum = state.analyser && state.frequencyData ? state.frequencyData : null;
+    let totalBars = 64;
+    let bars = new Array(totalBars).fill(0);
+
+    if (spectrum && state.analyser) {
+      state.analyser.getByteFrequencyData(spectrum);
+      totalBars = Math.min(64, spectrum.length);
+      bars = Array.from({ length: totalBars }, (_, i) => spectrum[i]);
+    } else {
+      const t = performance.now() * 0.001;
+      bars = Array.from({ length: totalBars }, (_, i) => (Math.sin(t * 2 + i * 0.24) + 1) * 92);
+    }
+
+    ctx.save();
+    ctx.translate(cx, cy);
+
+    const rotation = audio && !audio.paused ? audio.currentTime * 0.9 : performance.now() * 0.00025;
+    ctx.rotate(rotation);
+
+    for (let i = 0; i < totalBars; i++) {
+      const value = bars[i] || 0;
+      const angle = (i / totalBars) * Math.PI * 2;
+      const inner = baseRadius + 18;
+      const outer = inner + 16 + value * 0.42;
+
+      const x1 = Math.cos(angle) * inner;
+      const y1 = Math.sin(angle) * inner;
+      const x2 = Math.cos(angle) * outer;
+      const y2 = Math.sin(angle) * outer;
+
+      const alpha = 0.35 + (value / 255) * 0.65;
+      ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+
+    const pulse = audio && !audio.paused ? 1 + Math.sin(audio.currentTime * 8) * 0.06 : 1 + Math.sin(performance.now() * 0.004) * 0.03;
+    const currentGlow = song ? song.accent[0] : "#38bdf8";
+
+    ctx.rotate(-rotation * 0.8);
+    ctx.beginPath();
+    ctx.arc(0, 0, baseRadius * 1.08 * pulse, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,255,255,0.04)";
+    ctx.fill();
+
+    ctx.strokeStyle = currentGlow;
+    ctx.globalAlpha = 0.38;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0, 0, baseRadius * 1.2 * pulse, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    ctx.restore();
+
+    requestAnimationFrame(drawVisualizer);
+  }
+
+  function setupStarfield() {
+    const canvas = document.getElementById("starfieldCanvas");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const stars = [];
+    const starCount = 180;
+
+    const resize = () => {
+      const ratio = Math.max(1, window.devicePixelRatio || 1);
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * ratio;
+      canvas.height = rect.height * ratio;
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+      stars.length = 0;
+      for (let i = 0; i < starCount; i++) {
+        stars.push({
+          x: Math.random() * rect.width,
+          y: Math.random() * rect.height,
+          r: 0.6 + Math.random() * 1.8,
+          speed: 0.08 + Math.random() * 0.42,
+          twinkle: Math.random() * Math.PI * 2,
+          drift: (Math.random() - 0.5) * 0.12
+        });
+      }
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    const render = () => {
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      ctx.clearRect(0, 0, w, h);
+
+      const t = performance.now() * 0.001;
+
+      for (const star of stars) {
+        star.x += star.speed * 0.22;
+        star.y += star.drift;
+
+        if (star.x > w + 12) star.x = -12;
+        if (star.y > h + 12) star.y = -12;
+        if (star.y < -12) star.y = h + 12;
+
+        const twinkle = 0.52 + Math.sin(t * 3 + star.twinkle) * 0.48;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r * twinkle, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${0.28 + twinkle * 0.58})`;
+        ctx.fill();
+      }
+
+      requestAnimationFrame(render);
+    };
+
+    render();
+  }
+
+  function createWavUrl(spec) {
+    const sampleRate = 44100;
+    const duration = spec.duration;
+    const samples = Math.floor(sampleRate * duration);
+    const channels = 2;
+    const bytesPerSample = 2;
+    const blockAlign = channels * bytesPerSample;
+    const buffer = new ArrayBuffer(44 + samples * blockAlign);
+    const view = new DataView(buffer);
+
+    const writeString = (offset, str) => {
+      for (let i = 0; i < str.length; i++) {
+        view.setUint8(offset + i, str.charCodeAt(i));
+      }
+    };
+
+    const clampSample = (value) => Math.max(-1, Math.min(1, value));
+
+    writeString(0, "RIFF");
+    view.setUint32(4, 36 + samples * blockAlign, true);
+    writeString(8, "WAVE");
+    writeString(12, "fmt ");
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, channels, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * blockAlign, true);
+    view.setUint16(32, blockAlign, true);
+    view.setUint16(34, bytesPerSample * 8, true);
+    writeString(36, "data");
+    view.setUint32(40, samples * blockAlign, true);
+
+    let offset = 44;
+
+    const step = 60 / spec.bpm / 2;
+    const beat = 60 / spec.bpm;
+    const bassFreq = spec.root / 2;
+    const melodyBase = spec.root;
+    const scale = spec.sequence;
+    const noise = (n) => {
+      const x = Math.sin(n * 12.9898 + 78.233) * 43758.5453;
+      return x - Math.floor(x);
+    };
+
+    for (let i = 0; i < samples; i++) {
+      const t = i / sampleRate;
+      const stepIndex = Math.floor(t / step);
+      const beatIndex = Math.floor(t / beat);
+      const localStep = (t % step) / step;
+      const localBeat = (t % beat) / beat;
+
+      const env = localStep < 0.14
+        ? localStep / 0.14
+        : localStep > 0.74
+          ? Math.max(0, (1 - localStep) / 0.26)
+          : 1;
+
+      const n = scale[stepIndex % scale.length];
+      const freq = melodyBase * n;
+      const melody = Math.sin(2 * Math.PI * freq * t) * 0.14 * env;
+      const overtone = Math.sin(2 * Math.PI * freq * 2 * t + 0.3) * 0.05 * env;
+      const pad = Math.sin(2 * Math.PI * (melodyBase * 0.5) * t + Math.sin(t * 0.12 + spec.phase)) * 0.06;
+      const bass = Math.sin(2 * Math.PI * bassFreq * t) * (0.16 + (beatIndex % 4 === 3 ? 0.06 : 0));
+      const kick = localBeat < 0.05 ? (1 - localBeat / 0.05) * 0.54 : 0;
+      const hatPhase = (t % (beat / 2)) / (beat / 2);
+      const hat = hatPhase > 0.78 ? (1 - hatPhase) * 0.16 * (noise(stepIndex) - 0.5) : 0;
+      const sweep = Math.sin(2 * Math.PI * 0.08 * t + spec.phase) * 0.05;
+
+      const left = clampSample((melody + overtone + pad + bass + kick + hat + sweep) * 0.8);
+      const right = clampSample((melody * 0.97 + overtone * 1.04 + pad * 1.03 + bass * 0.96 + kick + hat * 0.82 - sweep * 0.5) * 0.8);
+
+      view.setInt16(offset, left < 0 ? left * 0x8000 : left * 0x7fff, true);
+      view.setInt16(offset + 2, right < 0 ? right * 0x8000 : right * 0x7fff, true);
+      offset += 4;
+    }
+
+    const blob = new Blob([buffer], { type: "audio/wav" });
+    return URL.createObjectURL(blob);
+  }
+})();
