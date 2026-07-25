@@ -10,17 +10,23 @@
     <!-- FontAwesome untuk Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
-    
+<body class="no-scroll">
+
     <div id="welcome-screen">
-    <div class="particles"></div>
+        <div class="ambient-glow"></div>
+        
+        <canvas id="particle-canvas"></canvas>
+        
+        <div class="welcome-ui">
+            <h2 class="falling-board" id="falling-text">Portofolio Faris Edrik P</h2>
+            
+            <div class="loading-wrapper" id="loading-bar">
+                <div class="loading-line"></div>
+            </div>
+        </div>
 
-    <div class="welcome-content">
-        <h1>WELCOME</h1>
-        <p>AZRIL'S PORTFOLIO</p>
+        <div class="black-hole" id="black-hole"></div>
     </div>
-    </div>
-
     <!-- Navbar -->
     <nav class="navbar">
         <div class="logo">Portofolio</div>
@@ -196,7 +202,6 @@
         </div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="script.js"></script>
 </body>
   </html>
