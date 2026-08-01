@@ -123,23 +123,10 @@
 
   const songSpecs = [
     {
-      title: "Midnight Orbit",
-      artist: "ALANGKUN SESSION",
-      duration: 34,
-      bpm: 92,
-      root: 220,
-      phase: 0.2,
-      accent: ["#38bdf8", "#f97316"],
-      art: ["#0f172a", "#1e293b", "#38bdf8"],
-      sequence: [1, 1.25, 1.5, 1.75, 1.5, 1.25, 1, 0.75],
-      lyrics: [
-        { time: 0, text: "I let the night breathe through the circuit glow." },
-        { time: 4, text: "Signals drift, and the skyline starts to hum." },
-        { time: 8, text: "Every pulse is a map for the next small leap." },
-        { time: 12, text: "The room turns blue, then gold, then motion." },
-        { time: 17, text: "I keep it moving, even when the silence leans in." },
-        { time: 22, text: "Orbit steady, heart steady, hands on the wheel." },
-        { time: 27, text: "One more spark and the whole frame wakes up." }
+      title: "Judul Lagu 1",
+    artist: "Nama Artis 1",
+    url: "audio/lagu1.mp3",     // Path file MP3 lu
+    cover: "images/cover1.jpg"
       ]
     },
     {
