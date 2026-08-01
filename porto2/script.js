@@ -125,8 +125,8 @@
     {
       title: "Judul Lagu 1",
     artist: "Nama Artis 1",
-    url: "audio/lagu1.mp3",     // Path file MP3 lu
-    cover: "images/cover1.jpg"
+    url: "Simpan Rasa_Tmate.cc_1785055539.mp3",     // Path file MP3 lu
+    cover: "IMG_20260726_155903.jpg"
       ]
     },
     {
