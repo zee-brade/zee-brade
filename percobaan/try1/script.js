@@ -356,7 +356,7 @@ function renderHome() {
           </div>
         </aside>
       </div>
-
+      
       <section class="section">
         <div class="section__head">
           <div>
