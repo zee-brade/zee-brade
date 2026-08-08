@@ -12,7 +12,8 @@ const sidebar = document.getElementById("sidebar");
 const backdrop = document.getElementById("backdrop");
 
 const state = {
-  popunderTriggered: false,
+  popunderReady: true, // Untuk jeda 25 detik popunder
+  smartlinkReady: true, // Untuk jeda 20 detik smartlink
   firstRenderDone: false,
 };
 
@@ -104,13 +105,13 @@ const catalog = {
       subtitle: "Detail view untuk daftar episode 1 sampai 7.",
       desc: "Halaman ini menampilkan tombol episode dalam grid responsif. Tinggal ganti URL tujuan tiap episode sesuai kebutuhan katalog Anda.",
       episodes: [
-        { ep: 1, label: "Bagian 1", url: `${SMARTLINK_URL}&ref=1-102-ep1` },
-        { ep: 2, label: "Bagian 2", url: `${SMARTLINK_URL}&ref=1-102-ep2` },
-        { ep: 3, label: "Bagian 3", url: `${SMARTLINK_URL}&ref=1-102-ep3` },
-        { ep: 4, label: "Bagian 4", url: `${SMARTLINK_URL}&ref=1-102-ep4` },
-        { ep: 5, label: "Bagian 5", url: `${SMARTLINK_URL}&ref=1-102-ep5` },
-        { ep: 6, label: "Bagian 6", url: `${SMARTLINK_URL}&ref=1-102-ep6` },
-        { ep: 7, label: "Bagian 7", url: `${SMARTLINK_URL}&ref=1-102-ep7` },
+        { ep: 1, label: "Bagian 1", url: `${SMARTLINK_URL}&ref=1-102-ep1`, src: "https://raw.githubusercontent.com/username/repo/main/video1.mp4" },
+        { ep: 2, label: "Bagian 2", url: `${SMARTLINK_URL}&ref=1-102-ep2`, src: "https://raw.githubusercontent.com/username/repo/main/video1.mp4" },
+        { ep: 3, label: "Bagian 3", url: `${SMARTLINK_URL}&ref=1-102-ep3`, src: "https://raw.githubusercontent.com/username/repo/main/video1.mp4" },
+        { ep: 4, label: "Bagian 4", url: `${SMARTLINK_URL}&ref=1-102-ep4`, src: "https://raw.githubusercontent.com/username/repo/main/video1.mp4" },
+        { ep: 5, label: "Bagian 5", url: `${SMARTLINK_URL}&ref=1-102-ep5`, src: "https://raw.githubusercontent.com/username/repo/main/video1.mp4" },
+        { ep: 6, label: "Bagian 6", url: `${SMARTLINK_URL}&ref=1-102-ep6`, src: "https://raw.githubusercontent.com/username/repo/main/video1.mp4" },
+        { ep: 7, label: "Bagian 7", url: `${SMARTLINK_URL}&ref=1-102-ep7`, src: "https://raw.githubusercontent.com/username/repo/main/video1.mp4" },
       ],
     },
     "3-627": {
@@ -173,6 +174,7 @@ function makeEpisodeList(slug) {
       ep,
       label: `Bagian ${ep}`,
       url: `${SMARTLINK_URL}&ref=${encodeURIComponent(slug)}-ep${ep}`,
+      src: `https://raw.githubusercontent.com/username/repo/main/${slug}-ep${ep}.mp4` // Link video GitHub kamu
     };
   });
 }
@@ -191,18 +193,24 @@ function navigate(route) {
   closeSidebar();
 }
 
-function triggerPopunderOnce() {
-  if (state.popunderTriggered) return;
-  state.popunderTriggered = true;
+function triggerPopunder() {
+  // Jika jeda 25 detik belum selesai, hentikan fungsi
+  if (!state.popunderReady) return;
 
-  // Placeholder popunder. Ganti dengan script resmi dari network Anda.
-  if (!POPUNDER_URL || POPUNDER_URL.includes("example.com")) return;
-
-  const popup = window.open(POPUNDER_URL, "_blank", "noopener,noreferrer");
-  if (popup) {
-    popup.blur();
-    window.focus();
+  // Eksekusi popunder
+  if (POPUNDER_URL && !POPUNDER_URL.includes("example.com")) {
+    const popup = window.open(POPUNDER_URL, "_blank", "noopener,noreferrer");
+    if (popup) {
+      popup.blur();
+      window.focus();
+    }
   }
+
+  // Iklan aktif, mulai jeda 25 detik
+  state.popunderReady = false;
+  setTimeout(() => {
+    state.popunderReady = true; // Setelah 25 detik, iklan siap lagi
+  }, 25000);
 }
 
 function openSmartlink(url) {
@@ -410,7 +418,7 @@ function renderDetail(slug) {
   };
 
   const episodes = data.episodes.map((ep) => `
-    <button class="episode-btn primary" type="button" data-smartlink="${ep.url}">
+    <button class="episode-btn primary" type="button" data-smartlink="${ep.url}" data-src="${ep.src}">
       <strong>EP ${ep.ep}</strong>
       <span>${ep.label}</span>
     </button>
@@ -489,6 +497,7 @@ function syncActiveNav(route) {
 document.addEventListener("click", (event) => {
   const routeEl = event.target.closest("[data-route]");
   const smartlinkEl = event.target.closest("[data-smartlink]");
+  const episodeBtn = event.target.closest(".episode-btn"); // Deteksi khusus tombol episode
   const openSidebarBtn = event.target.closest("[data-toggle-sidebar]");
   const closeSidebarBtn = event.target.closest("[data-close-sidebar]");
 
@@ -502,17 +511,42 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  if (routeEl) {
-    event.preventDefault();
-    triggerPopunderOnce();
-    navigate(routeEl.getAttribute("data-route"));
-    return;
+  // Setiap kali ada klik pada area konten/tombol, cek dan panggil popunder (Popunder akan mengecek sendiri apakah jeda 25 detik sudah selesai)
+  if (routeEl || smartlinkEl || episodeBtn) {
+    triggerPopunder();
   }
 
+  // --- LOGIKA SMARTLINK (Tonton, Lanjut, Episode) ---
   if (smartlinkEl) {
     event.preventDefault();
-    triggerPopunderOnce();
-    openSmartlink(smartlinkEl.getAttribute("data-smartlink"));
+
+    if (state.smartlinkReady) {
+      // Buka iklan Smartlink
+      openSmartlink(smartlinkEl.getAttribute("data-smartlink"));
+
+      // Mulai jeda 20 detik. Tombol dikunci dari iklan selama waktu ini.
+      state.smartlinkReady = false;
+      setTimeout(() => {
+        state.smartlinkReady = true;
+      }, 20000);
+
+      } else if (episodeBtn) {
+        // Ambil link dari atribut data-src (link github) lalu buka video
+        const videoSrc = episodeBtn.getAttribute("data-src");
+        if (videoSrc) window.open(videoSrc, "_blank");
+
+      } else if (routeEl) {
+        // Jika yang diklik tombol Tonton/Lanjut, jalankan navigasi antar halaman SPA
+        navigate(routeEl.getAttribute("data-route"));
+      }
+    }
+    return; // Stop eksekusi agar tidak bentrok dengan rute normal di bawah
+  }
+
+  // --- LOGIKA KLIK NORMAL (Hanya pindah halaman, tanpa tombol iklan) ---
+  if (routeEl) {
+    event.preventDefault();
+    navigate(routeEl.getAttribute("data-route"));
   }
 });
 
