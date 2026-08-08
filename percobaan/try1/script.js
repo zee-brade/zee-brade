@@ -3,7 +3,7 @@
   - SMARTLINK_URL: tautan tujuan tombol "Lanjut" / "Tonton"
   - POPUNDER_URL : tautan popunder / ad network Anda
 */
-const SMARTLINK_URL = "https://ignoringexcepting.com/tirmtkpyi?key=f05059565202e05f940b6a84b893c584/smartlink?utm_source=enjoywatch";
+const SMARTLINK_URL = "https://example.com/smartlink?utm_source=enjoywatch";
 const POPUNDER_URL = "https://example.com/popunder?utm_source=enjoywatch";
 
 const app = document.getElementById("app");
