@@ -450,51 +450,164 @@ function renderTerbaru() {
   `;
 }
 
-function renderDetail(slug) {
-  const data = catalog.details[slug] || {
-    title: `Urutan ${slug}`,
-    subtitle: "Detail view generik",
-    desc: "Gunakan template ini untuk membuat halaman episode dengan rute yang berbeda.",
-    episodes: makeEpisodeList(slug),
-  };
+function renderDetail(id) {
+  const item = findItem(id);
 
-  const episodes = data.episodes.map((ep) => `
-    <button class="episode-btn primary" type="button" data-smartlink="${ep.url}" data-src="${ep.src}">
-      <strong>EP ${ep.ep}</strong>
-      <span>${ep.label}</span>
+  if (!item) {
+    app.innerHTML = `
+      <section class="view active">
+        <div class="empty">
+          <h2>Konten tidak ditemukan</h2>
+          <button class="btn primary" data-nav="home">
+            Kembali ke Home
+          </button>
+        </div>
+      </section>
+    `;
+    return;
+  }
+
+  const episodes = (item.episodes || []).map(e => `
+    <button
+      class="episode-btn primary"
+      data-episode="${e.ep}"
+      data-src="${e.src || ""}"
+    >
+      EP ${e.ep}
+      <span>${e.label || `Bagian ${e.ep}`}</span>
     </button>
   `).join("");
 
-  return `
-    <section class="view active" data-view="detail">
-      <div class="detail-box">
-        <div class="detail-head">
-          <div class="badge-row">
-            <span class="badge"><strong>Detail</strong> View</span>
-            <span class="badge"><strong>${slug}</strong></span>
+  app.innerHTML = `
+    <section class="view active detail-view">
+
+      <div class="detail-header">
+        <button class="btn ghost" data-nav="home">
+          ← Kembali
+        </button>
+
+        <div>
+          <span class="eyebrow">DETAIL</span>
+          <h1>${item.title}</h1>
+          <p>${item.desc || ""}</p>
+        </div>
+      </div>
+
+      <!-- =========================
+           VIDEO PLAYER
+           ========================= -->
+
+      <div class="video-player">
+        <div class="video-player__shell">
+
+          <video
+            id="mainVideo"
+            class="main-video"
+            controls
+            playsinline
+            preload="metadata"
+          >
+            <p>
+              Browser Anda tidak mendukung video HTML5.
+            </p>
+          </video>
+
+        </div>
+
+        <div id="videoStatus" class="video-status">
+          Pilih episode untuk mulai menonton.
+        </div>
+      </div>
+
+      <!-- =========================
+           EPISODE LIST
+           ========================= -->
+
+      <div class="episode-section">
+
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">EPISODE</span>
+            <h2>Pilih Bagian</h2>
           </div>
-          <h2>${data.title}</h2>
-          <p>${data.subtitle}</p>
-          <p>${data.desc}</p>
+
+          <span class="count">
+            ${(item.episodes || []).length} Episode
+          </span>
         </div>
 
         <div class="episode-grid">
           ${episodes}
         </div>
 
-        <div class="detail-actions">
-          <button class="action-btn primary" type="button" data-smartlink="${SMARTLINK_URL}&ref=${encodeURIComponent(slug)}-main">Lanjut -></button>
-          <button class="action-btn secondary" type="button" data-route="terbaru">Terbaru</button>
-          <button class="action-btn" type="button" data-route="home">Home</button>
-        </div>
-
-        <div class="ad-slot">
-          <strong>Slot Episode</strong>
-          <p>Setiap tombol episode bisa diarahkan ke link tujuan berbeda. Tinggal update URL di array data JavaScript.</p>
-        </div>
       </div>
+
     </section>
   `;
+
+  /* =====================================================
+     VIDEO PLAYER
+     ===================================================== */
+
+  const video = document.getElementById("mainVideo");
+  const videoStatus = document.getElementById("videoStatus");
+
+  document.querySelectorAll(".episode-btn").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      const src = button.dataset.src;
+
+      if (!src) {
+        videoStatus.textContent =
+          "Video untuk episode ini belum dipasang.";
+        return;
+      }
+
+      /* Hentikan video sebelumnya */
+      video.pause();
+
+      /* Ganti video */
+      video.src = src;
+
+      /* Muat video baru */
+      video.load();
+
+      videoStatus.textContent =
+        `Memuat EP ${button.dataset.episode}...`;
+
+      /* Tandai episode aktif */
+      document.querySelectorAll(".episode-btn")
+        .forEach(btn => btn.classList.remove("active"));
+
+      button.classList.add("active");
+
+      /* Coba play */
+      video.play()
+        .then(() => {
+          videoStatus.textContent =
+            `Sedang memutar EP ${button.dataset.episode}`;
+        })
+        .catch(() => {
+          videoStatus.textContent =
+            `EP ${button.dataset.episode} siap diputar. Tekan Play.`;
+        });
+
+    });
+
+  });
+
+  /* =====================================================
+     VIDEO ERROR HANDLER
+     ===================================================== */
+
+  video.addEventListener("error", () => {
+
+    videoStatus.textContent =
+      "Video gagal dimuat. Periksa URL video atau pastikan file dapat diakses publik.";
+
+  });
+
 }
 
 function render() {
