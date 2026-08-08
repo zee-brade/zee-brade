@@ -105,7 +105,7 @@ const catalog = {
       subtitle: "Detail view untuk daftar episode 1 sampai 7.",
       desc: "Halaman ini menampilkan tombol episode dalam grid responsif. Tinggal ganti URL tujuan tiap episode sesuai kebutuhan katalog Anda.",
       episodes: [
-        { ep: 1, label: "Bagian 1", url: `${SMARTLINK_URL}&ref=1-102-ep1`, src: "https://raw.githubusercontent.com/username/repo/main/1-102-ep1.mp4" },
+        { ep: 1, label: "Bagian 1", url: `${SMARTLINK_URL}&ref=1-102-ep1`, src: "https://raw.githubusercontent.com/zee-brade.github.io/zee-brade/percobaanzee-brade.github.io/zee-brade/percobaan/Screenrecorder-2026-07-06-06-33-56-618.mp4" },
         { ep: 2, label: "Bagian 2", url: `${SMARTLINK_URL}&ref=1-102-ep2`, src: "https://raw.githubusercontent.com/username/repo/main/1-102-ep2.mp4" },
         { ep: 3, label: "Bagian 3", url: `${SMARTLINK_URL}&ref=1-102-ep3`, src: "https://raw.githubusercontent.com/username/repo/main/1-102-ep3.mp4" },
         { ep: 4, label: "Bagian 4", url: `${SMARTLINK_URL}&ref=1-102-ep4`, src: "https://raw.githubusercontent.com/username/repo/main/1-102-ep4.mp4" },
