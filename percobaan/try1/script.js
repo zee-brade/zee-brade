@@ -351,13 +351,6 @@ function renderHome() {
             </div>
           </div>
 
-          <div class="ad-slot">
-            <strong>Slot Monetisasi</strong>
-            <p>Pasang script ad network Anda di sini, atau gunakan area CTA untuk smartlink agar lebih natural.</p>
-          </div>
-        </aside>
-      </div>
-
       <section class="section">
         <div class="section__head">
           <div>
