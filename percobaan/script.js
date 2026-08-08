@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     button.textContent = "Loading...";
 
     setTimeout(() => {
-      window.location.href = "https://google.com";
+      window.location.href = "https://zee-brade.github.io/zee-brade/percobaan/try1";
     }, 500);
   });
 });
