@@ -3,8 +3,8 @@
   - SMARTLINK_URL: tautan tujuan tombol "Lanjut" / "Tonton"
   - POPUNDER_URL : tautan popunder / ad network Anda
 */
-const SMARTLINK_URL = "https://pinurl.to/IvNPs8Y/smartlink?utm_source=enjoywatch";
-const POPUNDER_URL = "https://ignoringexcepting.com/4a/cb/b5/4acbb59e6479fb9b932669d8538f995e.js/popunder?utm_source=enjoywatch";
+const SMARTLINK_URL = "https://example.com/smartlink?utm_source=enjoywatch";
+const POPUNDER_URL = "https://example.com/popunder?utm_source=enjoywatch";
 
 const app = document.getElementById("app");
 const loader = document.getElementById("loader");
@@ -105,13 +105,13 @@ const catalog = {
       subtitle: "Detail view untuk daftar episode 1 sampai 7.",
       desc: "Halaman ini menampilkan tombol episode dalam grid responsif. Tinggal ganti URL tujuan tiap episode sesuai kebutuhan katalog Anda.",
       episodes: [
-        { ep: 1, label: "Bagian 1", url: `${SMARTLINK_URL}&ref=1-102-ep1`, src: "https://raw.githubusercontent.com/username/repo/main/video1.mp4" },
-        { ep: 2, label: "Bagian 2", url: `${SMARTLINK_URL}&ref=1-102-ep2`, src: "https://raw.githubusercontent.com/username/repo/main/video1.mp4" },
-        { ep: 3, label: "Bagian 3", url: `${SMARTLINK_URL}&ref=1-102-ep3`, src: "https://raw.githubusercontent.com/username/repo/main/video1.mp4" },
-        { ep: 4, label: "Bagian 4", url: `${SMARTLINK_URL}&ref=1-102-ep4`, src: "https://raw.githubusercontent.com/username/repo/main/video1.mp4" },
-        { ep: 5, label: "Bagian 5", url: `${SMARTLINK_URL}&ref=1-102-ep5`, src: "https://raw.githubusercontent.com/username/repo/main/video1.mp4" },
-        { ep: 6, label: "Bagian 6", url: `${SMARTLINK_URL}&ref=1-102-ep6`, src: "https://raw.githubusercontent.com/username/repo/main/video1.mp4" },
-        { ep: 7, label: "Bagian 7", url: `${SMARTLINK_URL}&ref=1-102-ep7`, src: "https://raw.githubusercontent.com/username/repo/main/video1.mp4" },
+        { ep: 1, label: "Bagian 1", url: `${SMARTLINK_URL}&ref=1-102-ep1`, src: "https://raw.githubusercontent.com/username/repo/main/1-102-ep1.mp4" },
+        { ep: 2, label: "Bagian 2", url: `${SMARTLINK_URL}&ref=1-102-ep2`, src: "https://raw.githubusercontent.com/username/repo/main/1-102-ep2.mp4" },
+        { ep: 3, label: "Bagian 3", url: `${SMARTLINK_URL}&ref=1-102-ep3`, src: "https://raw.githubusercontent.com/username/repo/main/1-102-ep3.mp4" },
+        { ep: 4, label: "Bagian 4", url: `${SMARTLINK_URL}&ref=1-102-ep4`, src: "https://raw.githubusercontent.com/username/repo/main/1-102-ep4.mp4" },
+        { ep: 5, label: "Bagian 5", url: `${SMARTLINK_URL}&ref=1-102-ep5`, src: "https://raw.githubusercontent.com/username/repo/main/1-102-ep5.mp4" },
+        { ep: 6, label: "Bagian 6", url: `${SMARTLINK_URL}&ref=1-102-ep6`, src: "https://raw.githubusercontent.com/username/repo/main/1-102-ep6.mp4" },
+        { ep: 7, label: "Bagian 7", url: `${SMARTLINK_URL}&ref=1-102-ep7`, src: "https://raw.githubusercontent.com/username/repo/main/1-102-ep7.mp4" },
       ],
     },
     "3-627": {
@@ -119,13 +119,13 @@ const catalog = {
       subtitle: "Detail view untuk range katalog yang lebih besar.",
       desc: "Gunakan halaman ini untuk menaruh daftar episode, klip, atau link tujuan lain sesuai struktur katalog Anda.",
       episodes: [
-        { ep: 1, label: "Bagian 1", url: `${SMARTLINK_URL}&ref=3-627-ep1` },
-        { ep: 2, label: "Bagian 2", url: `${SMARTLINK_URL}&ref=3-627-ep2` },
-        { ep: 3, label: "Bagian 3", url: `${SMARTLINK_URL}&ref=3-627-ep3` },
-        { ep: 4, label: "Bagian 4", url: `${SMARTLINK_URL}&ref=3-627-ep4` },
-        { ep: 5, label: "Bagian 5", url: `${SMARTLINK_URL}&ref=3-627-ep5` },
-        { ep: 6, label: "Bagian 6", url: `${SMARTLINK_URL}&ref=3-627-ep6` },
-        { ep: 7, label: "Bagian 7", url: `${SMARTLINK_URL}&ref=3-627-ep7` },
+        { ep: 1, label: "Bagian 1", url: `${SMARTLINK_URL}&ref=3-627-ep1`, src: "https://raw.githubusercontent.com/username/repo/main/3-627-ep1.mp4" },
+        { ep: 2, label: "Bagian 2", url: `${SMARTLINK_URL}&ref=3-627-ep2`, src: "https://raw.githubusercontent.com/username/repo/main/3-627-ep2.mp4" },
+        { ep: 3, label: "Bagian 3", url: `${SMARTLINK_URL}&ref=3-627-ep3`, src: "https://raw.githubusercontent.com/username/repo/main/3-627-ep3.mp4" },
+        { ep: 4, label: "Bagian 4", url: `${SMARTLINK_URL}&ref=3-627-ep4`, src: "https://raw.githubusercontent.com/username/repo/main/3-627-ep4.mp4" },
+        { ep: 5, label: "Bagian 5", url: `${SMARTLINK_URL}&ref=3-627-ep5`, src: "https://raw.githubusercontent.com/username/repo/main/3-627-ep5.mp4" },
+        { ep: 6, label: "Bagian 6", url: `${SMARTLINK_URL}&ref=3-627-ep6`, src: "https://raw.githubusercontent.com/username/repo/main/3-627-ep6.mp4" },
+        { ep: 7, label: "Bagian 7", url: `${SMARTLINK_URL}&ref=3-627-ep7`, src: "https://raw.githubusercontent.com/username/repo/main/3-627-ep7.mp4" },
       ],
     },
     "Prime Pack": {
@@ -174,7 +174,7 @@ function makeEpisodeList(slug) {
       ep,
       label: `Bagian ${ep}`,
       url: `${SMARTLINK_URL}&ref=${encodeURIComponent(slug)}-ep${ep}`,
-      src: `https://raw.githubusercontent.com/username/repo/main/${encodeURIComponent(slug)}-ep${ep}.mp4` // Link video GitHub kamu
+      src: `https://raw.githubusercontent.com/username/repo/main/${slug}-ep${ep}.mp4` // Link video GitHub kamu
     };
   });
 }
@@ -198,12 +198,14 @@ function triggerPopunder() {
   if (!state.popunderReady) return;
 
   // Eksekusi popunder
+  // Catatan: "noopener,noreferrer" dipertahankan demi keamanan (URL iklan
+  // pihak ketiga tidak bisa mengontrol tab ini lewat window.opener). Efek
+  // sampingnya, window.open() akan mengembalikan null di banyak browser
+  // modern, jadi trik blur()/focus() untuk "menyembunyikan" tab baru di
+  // belakang tidak bisa diandalkan lagi -- kalau efek itu wajib ada, flag
+  // noopener/noreferrer perlu dilepas dengan risiko keamanan di atas.
   if (POPUNDER_URL && !POPUNDER_URL.includes("example.com")) {
-    const popup = window.open(POPUNDER_URL, "_blank", "noopener,noreferrer");
-    if (popup) {
-      popup.blur();
-      window.focus();
-    }
+    window.open(POPUNDER_URL, "_blank", "noopener,noreferrer");
   }
 
   // Iklan aktif, mulai jeda 25 detik
@@ -495,9 +497,9 @@ function syncActiveNav(route) {
 }
 
 document.addEventListener("click", (event) => {
-  const episodeBtn = event.target.closest(".episode-btn");
-  const smartlinkEl = event.target.closest("[data-smartlink]");
   const routeEl = event.target.closest("[data-route]");
+  const smartlinkEl = event.target.closest("[data-smartlink]");
+  const episodeBtn = event.target.closest(".episode-btn"); // Deteksi khusus tombol episode
   const openSidebarBtn = event.target.closest("[data-toggle-sidebar]");
   const closeSidebarBtn = event.target.closest("[data-close-sidebar]");
 
@@ -511,44 +513,11 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  // Setiap kali ada klik pada area konten/tombol, cek dan panggil popunder (Popunder akan mengecek sendiri apakah jeda 25 detik sudah selesai)
   if (routeEl || smartlinkEl || episodeBtn) {
     triggerPopunder();
   }
 
-  if (episodeBtn) {
-    event.preventDefault();
-    const videoSrc = episodeBtn.getAttribute("data-src");
-    if (videoSrc) window.open(videoSrc, "_blank", "noopener,noreferrer");
-    return;
-  }
-
-  if (smartlinkEl) {
-    event.preventDefault();
-    if (state.smartlinkReady) {
-      openSmartlink(smartlinkEl.getAttribute("data-smartlink"));
-      state.smartlinkReady = false;
-      setTimeout(() => {
-        state.smartlinkReady = true;
-      }, 20000);
-    }
-    return;
-  }
-
-  if (routeEl) {
-    event.preventDefault();
-    navigate(routeEl.getAttribute("data-route"));
-  }
-});
-
-window.addEventListener("hashchange", render);
-window.addEventListener("DOMContentLoaded", render);
-
-/* Tutup sidebar ketika resize ke desktop */
-window.addEventListener("resize", () => {
-  if (window.innerWidth > 768) closeSidebar();
-});
-
-/* Escape untuk menutup sidebar */
-window.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closeSidebar();
-});
+  // --- LOGIKA SMARTLINK & EPISODE ---
+  // Siklusnya: klik pertama -> smartlink siap -> buka iklan, mulai jeda 20 detik.
+  // Klik berikutnya SELAGI jeda -> iklan dilewati, langsung 
