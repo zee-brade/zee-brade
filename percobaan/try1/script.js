@@ -350,6 +350,8 @@ function renderHome() {
               <span>Slot popunder dan smartlink siap pakai</span>
             </div>
           </div>
+        </aside>
+      </div>
 
       <section class="section">
         <div class="section__head">
