@@ -214,7 +214,7 @@ function makeEpisodeList(slug) {
       ep,
       label: `Bagian ${ep}`,
       url: `${SMARTLINK_URL}&ref=${encodeURIComponent(slug)}-ep${ep}`,
-      src: `zee-brade.github.io/zee-brade/percobaan/${slug}-ep${ep}.mp4` // Link video GitHub kamu
+      src: `https://zee-brade.github.io/zee-brade/percobaan/${slug}-ep${ep}.mp4` // Link video GitHub kamu
     };
   });
 }
