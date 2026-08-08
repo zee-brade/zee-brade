@@ -174,7 +174,7 @@ function makeEpisodeList(slug) {
       ep,
       label: `Bagian ${ep}`,
       url: `${SMARTLINK_URL}&ref=${encodeURIComponent(slug)}-ep${ep}`,
-      src: `https://raw.githubusercontent.com/username/repo/main/${slug}-ep${ep}.mp4` // Link video GitHub kamu
+      src: `https://raw.githubusercontent.com/username/repo/main/${encodeURIComponent(slug)}-ep${ep}.mp4` // Link video GitHub kamu
     };
   });
 }
@@ -495,9 +495,9 @@ function syncActiveNav(route) {
 }
 
 document.addEventListener("click", (event) => {
-  const routeEl = event.target.closest("[data-route]");
+  const episodeBtn = event.target.closest(".episode-btn");
   const smartlinkEl = event.target.closest("[data-smartlink]");
-  const episodeBtn = event.target.closest(".episode-btn"); // Deteksi khusus tombol episode
+  const routeEl = event.target.closest("[data-route]");
   const openSidebarBtn = event.target.closest("[data-toggle-sidebar]");
   const closeSidebarBtn = event.target.closest("[data-close-sidebar]");
 
@@ -511,39 +511,29 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  // Setiap kali ada klik pada area konten/tombol, cek dan panggil popunder (Popunder akan mengecek sendiri apakah jeda 25 detik sudah selesai)
   if (routeEl || smartlinkEl || episodeBtn) {
     triggerPopunder();
   }
 
-  // --- LOGIKA SMARTLINK (Tonton, Lanjut, Episode) ---
+  if (episodeBtn) {
+    event.preventDefault();
+    const videoSrc = episodeBtn.getAttribute("data-src");
+    if (videoSrc) window.open(videoSrc, "_blank", "noopener,noreferrer");
+    return;
+  }
+
   if (smartlinkEl) {
     event.preventDefault();
-
     if (state.smartlinkReady) {
-      // Buka iklan Smartlink
       openSmartlink(smartlinkEl.getAttribute("data-smartlink"));
-
-      // Mulai jeda 20 detik. Tombol dikunci dari iklan selama waktu ini.
       state.smartlinkReady = false;
       setTimeout(() => {
         state.smartlinkReady = true;
       }, 20000);
-
-      } else if (episodeBtn) {
-        // Ambil link dari atribut data-src (link github) lalu buka video
-        const videoSrc = episodeBtn.getAttribute("data-src");
-        if (videoSrc) window.open(videoSrc, "_blank");
-
-      } else if (routeEl) {
-        // Jika yang diklik tombol Tonton/Lanjut, jalankan navigasi antar halaman SPA
-        navigate(routeEl.getAttribute("data-route"));
-      }
     }
-    return; // Stop eksekusi agar tidak bentrok dengan rute normal di bawah
+    return;
   }
 
-  // --- LOGIKA KLIK NORMAL (Hanya pindah halaman, tanpa tombol iklan) ---
   if (routeEl) {
     event.preventDefault();
     navigate(routeEl.getAttribute("data-route"));
