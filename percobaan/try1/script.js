@@ -3,7 +3,7 @@
   - SMARTLINK_URL: tautan tujuan tombol "Lanjut" / "Tonton"
   - POPUNDER_URL : tautan popunder / ad network Anda
 */
-const SMARTLINK_URL = "https://example.com/smartlink?utm_source=enjoywatch";
+const SMARTLINK_URL = "https://ignoringexcepting.com/tirmtkpyi?key=f05059565202e05f940b6a84b893c584/smartlink?utm_source=enjoywatch";
 const POPUNDER_URL = "https://example.com/popunder?utm_source=enjoywatch";
 
 const app = document.getElementById("app");
@@ -521,3 +521,45 @@ document.addEventListener("click", (event) => {
   // --- LOGIKA SMARTLINK & EPISODE ---
   // Siklusnya: klik pertama -> smartlink siap -> buka iklan, mulai jeda 20 detik.
   // Klik berikutnya SELAGI jeda -> iklan dilewati, langsung 
+  if (smartlinkEl) {
+    event.preventDefault();
+
+    if (state.smartlinkReady) {
+      // Buka iklan Smartlink
+      openSmartlink(smartlinkEl.getAttribute("data-smartlink"));
+
+      // Mulai jeda 20 detik. Tombol dikunci dari iklan selama waktu ini.
+      state.smartlinkReady = false;
+      setTimeout(() => {
+        state.smartlinkReady = true;
+      }, 20000);
+    } else if (episodeBtn) {
+      // Smartlink lagi jeda -> ambil link dari data-src (link github) lalu buka video
+      const videoSrc = episodeBtn.getAttribute("data-src");
+      if (videoSrc) window.open(videoSrc, "_blank");
+    } else if (routeEl) {
+      // Smartlink lagi jeda -> jalankan navigasi antar halaman SPA
+      navigate(routeEl.getAttribute("data-route"));
+    }
+    return;
+  }
+
+  // --- LOGIKA KLIK NORMAL (Hanya pindah halaman, tanpa tombol iklan) ---
+  if (routeEl) {
+    event.preventDefault();
+    navigate(routeEl.getAttribute("data-route"));
+  }
+});
+
+window.addEventListener("hashchange", render);
+window.addEventListener("DOMContentLoaded", render);
+
+/* Tutup sidebar ketika resize ke desktop */
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 768) closeSidebar();
+});
+
+/* Escape untuk menutup sidebar */
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeSidebar();
+});
