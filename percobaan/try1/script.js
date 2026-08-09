@@ -1368,17 +1368,6 @@ function renderDetail(slug) {
             Browser Anda tidak mendukung pemutaran video HTML5.
         </video>
 
-        <!-- SLOT SMARTLINK AREA VIDEO -->
-        <div class="video-smartlink-slot">
-            <button
-                class="video-smartlink-btn"
-                type="button"
-                data-smartlink="${SMARTLINK_URL}&ref=${encodeURIComponent(slug)}-video"
-            >
-                Tonton / Lanjut →
-            </button>
-        </div>
-
     </div>
 
     <div id="videoStatus" class="video-status">
@@ -1648,6 +1637,40 @@ function setupVideoEvents() {
 
 }
 
+function setupVideoSmartlinkArea() {
+  const video = document.getElementById("mainVideo");
+
+  if (!video) return;
+
+  // Hindari event terpasang berkali-kali
+  if (video.dataset.smartlinkReady === "1") return;
+
+  video.dataset.smartlinkReady = "1";
+
+  video.addEventListener("click", () => {
+    // Masih cooldown
+    if (!state.smartlinkReady) return;
+
+    // Smartlink belum diisi
+    if (!SMARTLINK_URL || SMARTLINK_URL.includes("example.com")) {
+      console.warn("SMARTLINK_URL belum diisi.");
+      return;
+    }
+
+    const url =
+      `${SMARTLINK_URL}&ref=video-area`;
+
+    // Jalankan Smartlink
+    triggerSmartlink(url);
+
+    // Cooldown 20 detik
+    state.smartlinkReady = false;
+
+    setTimeout(() => {
+      state.smartlinkReady = true;
+    }, 20000);
+  });
+}
 /* =========================================================
    RENDER
    ========================================================= */
@@ -1720,6 +1743,7 @@ function render() {
   if (route.name === "detail") {
 
     setupVideoEvents();
+    setupVideoSmartlinkArea();
 
   }
 
