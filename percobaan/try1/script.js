@@ -175,7 +175,7 @@ const catalog = {
           ep: 1,
           label: "Bagian 1",
           url: `${SMARTLINK_URL}&ref=1-102-ep1`,
-          src: "../percobaan/try1/Screenrecorder-2026-07-06-06-33-56-618.mp4"
+          src: "../Screenrecorder-2026-07-06-06-33-56-618.mp4"
         },
         {
           ep: 2,
