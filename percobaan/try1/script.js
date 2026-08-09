@@ -1662,13 +1662,6 @@ function setupVideoSmartlinkArea() {
 
     // Jalankan Smartlink
     triggerSmartlink(url);
-
-    // Cooldown 20 detik
-    state.smartlinkReady = false;
-
-    setTimeout(() => {
-      state.smartlinkReady = true;
-    }, 20000);
   });
 }
 /* =========================================================
