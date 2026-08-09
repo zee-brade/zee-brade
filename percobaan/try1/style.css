@@ -1050,3 +1050,75 @@ body::after{
   }
 
 }
+
+.episode-btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease, color .25s ease;
+}
+
+.episode-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(0,245,160,.18), rgba(0,217,245,.18));
+  opacity: 0;
+  transform: scale(.98);
+  transition: opacity .25s ease, transform .25s ease;
+  pointer-events: none;
+}
+
+.episode-btn::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.episode-btn.active {
+  border-color: rgba(0,245,160,.95);
+  color: #ffffff;
+  box-shadow:
+    0 0 0 1px rgba(0,245,160,.35) inset,
+    0 0 18px rgba(0,245,160,.25),
+    0 0 34px rgba(0,217,245,.14);
+  transform: translateY(-2px);
+}
+
+.episode-btn.active::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.episode-btn.active::after {
+  opacity: 1;
+  background: #00f5a0;
+  box-shadow:
+    0 0 8px rgba(0,245,160,.95),
+    0 0 18px rgba(0,217,245,.55);
+  animation: epPulse 1.2s ease-in-out infinite;
+}
+
+.episode-btn.active strong,
+.episode-btn.active span {
+  color: inherit;
+}
+
+@keyframes epPulse {
+  0%, 100% {
+    transform: scale(.88);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.2);
+    filter: brightness(1.25);
+  }
+}
