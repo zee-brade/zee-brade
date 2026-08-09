@@ -1103,3 +1103,18 @@ body::after{
     filter: brightness(1.25);
   }
 }
+
+.video-player__shell {
+  position: relative;
+}
+
+.video-smartlink-slot {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.video-smartlink-btn {
+  width: 100%;
+  max-width: 260px;
+}
