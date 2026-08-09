@@ -175,7 +175,7 @@ const catalog = {
           ep: 1,
           label: "Bagian 1",
           url: `${SMARTLINK_URL}&ref=1-102-ep1`,
-          src: "telusurkultur[HD]_Tmate.cc_1785941453.mp4"
+          src: "https://raw.githubusercontent.com/zee-brade/zee-brade/main/percobaan/try1/@telusurkultur[HD]_Tmate.cc_1785941453.mp4"
         },
         {
           ep: 2,
