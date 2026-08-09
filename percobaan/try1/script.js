@@ -1509,16 +1509,11 @@ function playEpisode(button) {
     Tandai tombol aktif
   */
 
-  document
-    .querySelectorAll(".episode-btn")
-    .forEach((btn) => {
+  document.querySelectorAll(".episode-btn").forEach((btn) => {
+  btn.classList.remove("active");
+});
 
-      btn.classList.remove("active");
-
-    });
-
-
-  button.classList.add("active");
+button.classList.add("active");
 
 
   /*
