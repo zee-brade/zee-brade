@@ -104,7 +104,7 @@
       padding: 12px;
     }
 
-    .video-shell{
+    .video-frame{
       width:100%;
       border-radius: 20px;
       overflow:hidden;
@@ -113,6 +113,7 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
       position:relative;
       aspect-ratio: 16 / 9;
+      cursor:pointer;
     }
 
     video{
@@ -121,32 +122,6 @@
       display:block;
       object-fit:cover;
       background:#000;
-    }
-
-    .video-hitbox{
-      position:absolute;
-      inset:0;
-      z-index:2;
-      background: transparent;
-      cursor:pointer;
-    }
-
-    .video-hint{
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%, -50%);
-      z-index:1;
-      pointer-events:none;
-      padding: 10px 14px;
-      border-radius:999px;
-      background: rgba(0,0,0,0.28);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.9);
-      font-size: 0.76rem;
-      letter-spacing:0.08em;
-      text-transform:uppercase;
-      backdrop-filter: blur(8px);
     }
 
     .description{
@@ -346,13 +321,11 @@
     <div class="brand">Be.flex</div>
 
     <section class="hero-card" aria-label="Pemutar video dan episode">
-      <div class="video-shell" id="videoShell" data-ad-url="https://example.com/smartlink-video-area">
-        <video id="mainVideo" playsinline muted preload="metadata" poster="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1200&q=80">
+      <div class="video-frame" id="videoFrame" data-ad-url="https://example.com/smartlink-video-area" aria-label="Area video smartlink">
+        <video id="mainVideo" controls playsinline muted preload="metadata" poster="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1200&q=80">
           <source src="" type="video/mp4">
           Browser kamu tidak mendukung video HTML5.
         </video>
-        <div class="video-hint">Tap area video</div>
-        <div class="video-hitbox" id="videoHitbox" aria-label="Area video klik iklan"></div>
       </div>
     </section>
 
@@ -368,7 +341,7 @@
         data-title="Terpopuler"
         data-desc="Episode paling ramai ditonton. Cocok sebagai pembuka sebelum lanjut ke episode lain."
         data-src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
-        data-ad-url="https://example.com/smartlink-episode-0">
+        data-ad-url="https://example.com/smartlink-video-1">
         Terpopuler
       </button>
 
@@ -427,8 +400,7 @@
 
   <script>
     const video = document.getElementById('mainVideo');
-    const videoShell = document.getElementById('videoShell');
-    const videoHitbox = document.getElementById('videoHitbox');
+    const videoFrame = document.getElementById('videoFrame');
     const titleEl = document.getElementById('descTitle');
     const descEl = document.getElementById('descText');
     const cooldownBadge = document.getElementById('cooldownBadge');
@@ -464,6 +436,7 @@
 
       if (cooldownInterval) clearInterval(cooldownInterval);
       cooldownInterval = setInterval(updateCooldownUI, 250);
+
       setTimeout(updateCooldownUI, COOLDOWN_MS + 50);
     };
 
@@ -536,20 +509,25 @@
       });
     });
 
-    videoHitbox.addEventListener('click', () => {
-      const videoAdUrl = videoShell.dataset.adUrl;
+    videoFrame.addEventListener('click', function(e) {
 
-      if (canShowAd()) {
-        openSmartlink(videoAdUrl);
-        return;
-      }
+  const adUrl = this.dataset.adUrl;
 
-      if (video.paused) {
-        video.play().catch(() => {});
-      } else {
-        video.pause();
-      }
-    });
+  if (!adUrl || adUrl === "PASTE_SMARTLINK_LU_DISINI") {
+    console.warn("Smartlink video belum dipasang.");
+    return;
+  }
+
+  if (canShowAd()) {
+    openSmartlink(adUrl);
+    return;
+  }
+
+  if (video.paused) {
+    video.play().catch(() => {});
+  } else {
+    video.pause();
+  }
 
     updateCooldownUI();
   </script>
