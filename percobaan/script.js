@@ -12,4 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "https://zee-brade.github.io/zee-brade/percobaan/try1";
     }, 500);
   });
+
+  window.addEventListener("pageshow", () => {
+    button.disabled = false;
+    button.textContent = "Lanjutkan ->";
+  });
 });
