@@ -113,6 +113,7 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
       position:relative;
       aspect-ratio: 16 / 9;
+      cursor:pointer;
     }
 
     video{
@@ -121,20 +122,6 @@
       display:block;
       object-fit:cover;
       background:#000;
-    }
-
-    .glow{
-      position:absolute;
-      inset:auto 10px 10px auto;
-      font-size: 11px;
-      letter-spacing: 0.16em;
-      text-transform:uppercase;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(0,0,0,0.35);
-      border:1px solid rgba(255,255,255,0.12);
-      backdrop-filter: blur(8px);
-      color: rgba(255,255,255,0.9);
     }
 
     .description{
@@ -234,20 +221,20 @@
     }
 
     .footer{
-  width:100%;
-  margin-top: 2px;
-  text-align:center;
-  font-family: "Bangers", system-ui;
-  font-size: clamp(2rem, 10vw, 3.1rem);
-  letter-spacing: 0.08em;
-  line-height:1;
-  color:#fff;
-  text-shadow:
-    0 0 12px rgba(255,145,77,0.45),
-    0 0 28px rgba(255,49,49,0.30);
-  user-select:none;
-  padding: 4px 0 0;
-}
+      width:100%;
+      margin-top: 2px;
+      text-align:center;
+      font-family: "Bangers", system-ui;
+      font-size: clamp(2rem, 10vw, 3.1rem);
+      letter-spacing: 0.08em;
+      line-height:1;
+      color:#fff;
+      text-shadow:
+        0 0 12px rgba(255,145,77,0.45),
+        0 0 28px rgba(255,49,49,0.30);
+      user-select:none;
+      padding: 4px 0 0;
+    }
 
     .small-note{
       font-size: 0.74rem;
@@ -255,6 +242,23 @@
       margin-top: -6px;
       text-align:center;
       letter-spacing: 0.04em;
+    }
+
+    .cooldown-badge{
+      width:100%;
+      text-align:center;
+      font-size:0.74rem;
+      letter-spacing:0.05em;
+      color: rgba(255,255,255,0.78);
+      background: rgba(0,0,0,0.16);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      padding: 8px 12px;
+      display:none;
+    }
+
+    .cooldown-badge.show{
+      display:block;
     }
 
     @keyframes perjelas{
@@ -280,33 +284,6 @@
         opacity:1;
         clip-path: inset(0 0 0 0);
         transform: translateX(0);
-      }
-    }
-
-    @keyframes explode{
-      0%, 100%{
-        transform: scale(1);
-        letter-spacing: 0.08em;
-      }
-      20%{
-        transform: scale(1.08);
-        letter-spacing: 0.13em;
-      }
-      38%{
-        transform: scale(0.98);
-        letter-spacing: 0.09em;
-      }
-      55%{
-        transform: scale(1.15);
-        letter-spacing: 0.18em;
-      }
-      70%{
-        transform: scale(1.02);
-        letter-spacing: 0.10em;
-      }
-      86%{
-        transform: scale(1.06);
-        letter-spacing: 0.14em;
       }
     }
 
@@ -344,12 +321,11 @@
     <div class="brand">Be.flex</div>
 
     <section class="hero-card" aria-label="Pemutar video dan episode">
-      <div class="video-frame">
+      <div class="video-frame" id="videoFrame" aria-label="Area video smartlink">
         <video id="mainVideo" controls playsinline muted preload="metadata" poster="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1200&q=80">
           <source src="" type="video/mp4">
           Browser kamu tidak mendukung video HTML5.
         </video>
-        <div class="glow">Streaming Mode</div>
       </div>
     </section>
 
@@ -358,50 +334,78 @@
       <p class="desc-text wipe" id="descText">Episode paling ramai ditonton. Tekan tombol episode di bawah untuk mengganti video dan deskripsinya secara instan.</p>
     </section>
 
+    <div class="cooldown-badge" id="cooldownBadge">Smartlink aktif lagi dalam <span id="cooldownTimer">20</span> detik</div>
+
     <section class="episode-list" aria-label="Daftar episode">
-      <button class="episode-btn active" data-title="Terpopuler" 
-        data-desc="Episode paling ramai ditonton. Cocok sebagai pembuka sebelum lanjut ke episode lain." 
-        data-src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4">Terpopuler
-      </button>
-      <button class="episode-btn" data-title="eps1 ->" 
-        data-desc="Episode 1: suasana mulai masuk ke alur utama. Video langsung berpindah saat tombol ini ditekan." 
-        data-src="https://media.w3.org/2010/05/sintel/trailer.mp4">eps1 -&gt;
-      </button>
-      <button class="episode-btn" data-title="eps2 ->" 
-        data-desc="Episode 2: transisi terasa lebih cepat, cocok untuk mode nonton santai di layar mobile." 
-        data-src="https://www.w3schools.com/html/mov_bbb.mp4">eps2 -&gt;
-      </button>
-      <button class="episode-btn" data-title="eps3 ->" 
-        data-desc="Episode 3: pemutar mengganti sumber video dan memutar otomatis setelah tombol dipilih." 
-        data-src="https://media.w3.org/2010/05/bunny/movie.mp4">eps3 -&gt;
-      </button>
-      <button class="episode-btn" data-title="eps4 ->" 
-        data-desc="Episode 4: tampilan tombol kapsul tetap nyaman disentuh dengan jari di smartphone." 
-        data-src="https://filesamples.com/samples/video/mp4/sample_640x360.mp4">eps4 -&gt;
-      </button>
-      <button class="episode-btn" data-title="eps5 ->" 
-        data-desc="Episode 5: kotak deskripsi ikut berubah dengan animasi wipe dari kiri ke kanan." 
-        data-src="https://filesamples.com/samples/video/mp4/sample_960x400_ocean_with_audio.mp4">eps5 -&gt;
-      </button>
-      <button class="episode-btn" data-title="eps6 ->" 
-        data-desc="Episode 6: penutup yang tetap responsif, modern, dan enak dilihat di layar kecil maupun besar." 
-        data-src="https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4">eps6 -&gt;
-      </button>
+      <button class="episode-btn active" data-title="Terpopuler" data-desc="Episode paling ramai ditonton. Cocok sebagai pembuka sebelum lanjut ke episode lain." data-src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" data-ad-url="https://example.com/smartlink-video-1">Terpopuler</button>
+      <button class="episode-btn" data-title="eps1 ->" data-desc="Episode 1: suasana mulai masuk ke alur utama. Video langsung berpindah saat tombol ini ditekan." data-src="https://media.w3.org/2010/05/sintel/trailer.mp4" data-ad-url="https://example.com/smartlink-episode-1">eps1 -&gt;</button>
+      <button class="episode-btn" data-title="eps2 ->" data-desc="Episode 2: transisi terasa lebih cepat, cocok untuk mode nonton santai di layar mobile." data-src="https://www.w3schools.com/html/mov_bbb.mp4" data-ad-url="https://example.com/smartlink-episode-2">eps2 -&gt;</button>
+      <button class="episode-btn" data-title="eps3 ->" data-desc="Episode 3: pemutar mengganti sumber video dan memutar otomatis setelah tombol dipilih." data-src="https://media.w3.org/2010/05/bunny/movie.mp4" data-ad-url="https://example.com/smartlink-episode-3">eps3 -&gt;</button>
+      <button class="episode-btn" data-title="eps4 ->" data-desc="Episode 4: tampilan tombol kapsul tetap nyaman disentuh dengan jari di smartphone." data-src="https://filesamples.com/samples/video/mp4/sample_640x360.mp4" data-ad-url="https://example.com/smartlink-episode-4">eps4 -&gt;</button>
+      <button class="episode-btn" data-title="eps5 ->" data-desc="Episode 5: kotak deskripsi ikut berubah dengan animasi wipe dari kiri ke kanan." data-src="https://filesamples.com/samples/video/mp4/sample_960x400_ocean_with_audio.mp4" data-ad-url="https://example.com/smartlink-episode-5">eps5 -&gt;</button>
+      <button class="episode-btn" data-title="eps6 ->" data-desc="Episode 6: penutup yang tetap responsif, modern, dan enak dilihat di layar kecil maupun besar." data-src="https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4" data-ad-url="https://example.com/smartlink-episode-6">eps6 -&gt;</button>
     </section>
 
     <div class="footer">THANKS FOR WATCHING</div>
-    <div class="small-note">Mobile-first • Stream-like UI • One-file build</div>
+    <div class="small-note">Mobile-first • Smartlink Gate • One-file build</div>
   </main>
 
   <script>
     const video = document.getElementById('mainVideo');
+    const videoFrame = document.getElementById('videoFrame');
     const titleEl = document.getElementById('descTitle');
     const descEl = document.getElementById('descText');
+    const cooldownBadge = document.getElementById('cooldownBadge');
+    const cooldownTimer = document.getElementById('cooldownTimer');
     const buttons = document.querySelectorAll('.episode-btn');
 
-    const setActiveButton = (button) => {
-      buttons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
+    const COOLDOWN_MS = 20000;
+    let adCooldownUntil = 0;
+    let cooldownInterval = null;
+
+    const getRemainingSeconds = () => {
+      return Math.max(0, Math.ceil((adCooldownUntil - Date.now()) / 1000));
+    };
+
+    const updateCooldownUI = () => {
+      const remaining = getRemainingSeconds();
+      if (remaining > 0) {
+        cooldownBadge.classList.add('show');
+        cooldownTimer.textContent = remaining;
+      } else {
+        cooldownBadge.classList.remove('show');
+        cooldownTimer.textContent = '20';
+        if (cooldownInterval) {
+          clearInterval(cooldownInterval);
+          cooldownInterval = null;
+        }
+      }
+    };
+
+    const startCooldown = () => {
+      adCooldownUntil = Date.now() + COOLDOWN_MS;
+      updateCooldownUI();
+
+      if (cooldownInterval) clearInterval(cooldownInterval);
+      cooldownInterval = setInterval(updateCooldownUI, 250);
+      setTimeout(updateCooldownUI, COOLDOWN_MS + 50);
+    };
+
+    const canShowAd = () => Date.now() >= adCooldownUntil;
+
+    const openSmartlink = (url) => {
+      if (!url) return false;
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      startCooldown();
+      return true;
     };
 
     const animateWipe = () => {
@@ -418,29 +422,59 @@
       try {
         await video.play();
       } catch (err) {
-        // Autoplay bisa dibatasi browser, jadi kita biarkan user tetap bisa tekan play.
         console.log('Playback blocked by browser policy:', err);
       }
     };
 
-    const firstBtn = document.querySelector('.episode-btn.active');
-    if (firstBtn) {
-      const initialSrc = firstBtn.dataset.src;
-      const initialDesc = firstBtn.dataset.desc;
-      titleEl.textContent = firstBtn.dataset.title;
-      descEl.textContent = initialDesc;
-      playSelected(initialSrc);
+    const setActiveButton = (button) => {
+      buttons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+    };
+
+    const loadEpisodeFromButton = async (button) => {
+      setActiveButton(button);
+      titleEl.textContent = button.dataset.title;
+      descEl.textContent = button.dataset.desc;
+      animateWipe();
+      await playSelected(button.dataset.src);
+    };
+
+    const initialBtn = document.querySelector('.episode-btn.active');
+    if (initialBtn) {
+      titleEl.textContent = initialBtn.dataset.title;
+      descEl.textContent = initialBtn.dataset.desc;
+      playSelected(initialBtn.dataset.src);
     }
 
     buttons.forEach(button => {
-      button.addEventListener('click', () => {
-        setActiveButton(button);
-        titleEl.textContent = button.dataset.title;
-        descEl.textContent = button.dataset.desc;
-        animateWipe();
-        playSelected(button.dataset.src);
+      button.addEventListener('click', async () => {
+        const adUrl = button.dataset.adUrl;
+
+        if (canShowAd()) {
+          openSmartlink(adUrl);
+          return;
+        }
+
+        await loadEpisodeFromButton(button);
       });
     });
+
+    videoFrame.addEventListener('click', () => {
+      const videoAdUrl = 'https://example.com/smartlink-video-area';
+
+      if (canShowAd()) {
+        openSmartlink(videoAdUrl);
+        return;
+      }
+
+      if (video.paused) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
+
+    updateCooldownUI();
   </script>
 </body>
 </html>
