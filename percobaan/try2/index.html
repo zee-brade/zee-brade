@@ -104,7 +104,7 @@
       padding: 12px;
     }
 
-    .video-frame{
+    .video-shell{
       width:100%;
       border-radius: 20px;
       overflow:hidden;
@@ -113,7 +113,6 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
       position:relative;
       aspect-ratio: 16 / 9;
-      cursor:pointer;
     }
 
     video{
@@ -122,6 +121,32 @@
       display:block;
       object-fit:cover;
       background:#000;
+    }
+
+    .video-hitbox{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      background: transparent;
+      cursor:pointer;
+    }
+
+    .video-hint{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%, -50%);
+      z-index:1;
+      pointer-events:none;
+      padding: 10px 14px;
+      border-radius:999px;
+      background: rgba(0,0,0,0.28);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.9);
+      font-size: 0.76rem;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      backdrop-filter: blur(8px);
     }
 
     .description{
@@ -321,11 +346,13 @@
     <div class="brand">Be.flex</div>
 
     <section class="hero-card" aria-label="Pemutar video dan episode">
-      <div class="video-frame" id="videoFrame" aria-label="Area video smartlink">
-        <video id="mainVideo" controls playsinline muted preload="metadata" poster="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1200&q=80">
+      <div class="video-shell" id="videoShell" data-ad-url="https://example.com/smartlink-video-area">
+        <video id="mainVideo" playsinline muted preload="metadata" poster="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1200&q=80">
           <source src="" type="video/mp4">
           Browser kamu tidak mendukung video HTML5.
         </video>
+        <div class="video-hint">Tap area video</div>
+        <div class="video-hitbox" id="videoHitbox" aria-label="Area video klik iklan"></div>
       </div>
     </section>
 
@@ -334,16 +361,64 @@
       <p class="desc-text wipe" id="descText">Episode paling ramai ditonton. Tekan tombol episode di bawah untuk mengganti video dan deskripsinya secara instan.</p>
     </section>
 
-    <div class="cooldown-badge" id="cooldownBadge">Smartlink aktif lagi dalam <span id="cooldownTimer">20</span> detik</div>
+    <div class="cooldown-badge" id="cooldownBadge">Smartlink aktif lagi dalam <span id="cooldownTimer">15</span> detik</div>
 
     <section class="episode-list" aria-label="Daftar episode">
-      <button class="episode-btn active" data-title="Terpopuler" data-desc="Episode paling ramai ditonton. Cocok sebagai pembuka sebelum lanjut ke episode lain." data-src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" data-ad-url="https://example.com/smartlink-video-1">Terpopuler</button>
-      <button class="episode-btn" data-title="eps1 ->" data-desc="Episode 1: suasana mulai masuk ke alur utama. Video langsung berpindah saat tombol ini ditekan." data-src="https://media.w3.org/2010/05/sintel/trailer.mp4" data-ad-url="https://example.com/smartlink-episode-1">eps1 -&gt;</button>
-      <button class="episode-btn" data-title="eps2 ->" data-desc="Episode 2: transisi terasa lebih cepat, cocok untuk mode nonton santai di layar mobile." data-src="https://www.w3schools.com/html/mov_bbb.mp4" data-ad-url="https://example.com/smartlink-episode-2">eps2 -&gt;</button>
-      <button class="episode-btn" data-title="eps3 ->" data-desc="Episode 3: pemutar mengganti sumber video dan memutar otomatis setelah tombol dipilih." data-src="https://media.w3.org/2010/05/bunny/movie.mp4" data-ad-url="https://example.com/smartlink-episode-3">eps3 -&gt;</button>
-      <button class="episode-btn" data-title="eps4 ->" data-desc="Episode 4: tampilan tombol kapsul tetap nyaman disentuh dengan jari di smartphone." data-src="https://filesamples.com/samples/video/mp4/sample_640x360.mp4" data-ad-url="https://example.com/smartlink-episode-4">eps4 -&gt;</button>
-      <button class="episode-btn" data-title="eps5 ->" data-desc="Episode 5: kotak deskripsi ikut berubah dengan animasi wipe dari kiri ke kanan." data-src="https://filesamples.com/samples/video/mp4/sample_960x400_ocean_with_audio.mp4" data-ad-url="https://example.com/smartlink-episode-5">eps5 -&gt;</button>
-      <button class="episode-btn" data-title="eps6 ->" data-desc="Episode 6: penutup yang tetap responsif, modern, dan enak dilihat di layar kecil maupun besar." data-src="https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4" data-ad-url="https://example.com/smartlink-episode-6">eps6 -&gt;</button>
+      <button class="episode-btn active"
+        data-title="Terpopuler"
+        data-desc="Episode paling ramai ditonton. Cocok sebagai pembuka sebelum lanjut ke episode lain."
+        data-src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+        data-ad-url="https://example.com/smartlink-episode-0">
+        Terpopuler
+      </button>
+
+      <button class="episode-btn"
+        data-title="eps1 ->"
+        data-desc="Episode 1: suasana mulai masuk ke alur utama. Video langsung berpindah saat tombol ini ditekan."
+        data-src="https://media.w3.org/2010/05/sintel/trailer.mp4"
+        data-ad-url="https://example.com/smartlink-episode-1">
+        eps1 -&gt;
+      </button>
+
+      <button class="episode-btn"
+        data-title="eps2 ->"
+        data-desc="Episode 2: transisi terasa lebih cepat, cocok untuk mode nonton santai di layar mobile."
+        data-src="https://www.w3schools.com/html/mov_bbb.mp4"
+        data-ad-url="https://example.com/smartlink-episode-2">
+        eps2 -&gt;
+      </button>
+
+      <button class="episode-btn"
+        data-title="eps3 ->"
+        data-desc="Episode 3: pemutar mengganti sumber video dan memutar otomatis setelah tombol dipilih."
+        data-src="https://media.w3.org/2010/05/bunny/movie.mp4"
+        data-ad-url="https://example.com/smartlink-episode-3">
+        eps3 -&gt;
+      </button>
+
+      <button class="episode-btn"
+        data-title="eps4 ->"
+        data-desc="Episode 4: tampilan tombol kapsul tetap nyaman disentuh dengan jari di smartphone."
+        data-src="https://filesamples.com/samples/video/mp4/sample_640x360.mp4"
+        data-ad-url="https://example.com/smartlink-episode-4">
+        eps4 -&gt;
+      </button>
+
+      <button class="episode-btn"
+        data-title="eps5 ->"
+        data-desc="Episode 5: kotak deskripsi ikut berubah dengan animasi wipe dari kiri ke kanan."
+        data-src="https://filesamples.com/samples/video/mp4/sample_960x400_ocean_with_audio.mp4"
+        data-ad-url="https://example.com/smartlink-episode-5">
+        eps5 -&gt;
+      </button>
+
+      <button class="episode-btn"
+        data-title="eps6 ->"
+        data-desc="Episode 6: penutup yang tetap responsif, modern, dan enak dilihat di layar kecil maupun besar."
+        data-src="https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"
+        data-ad-url="https://example.com/smartlink-episode-6">
+        eps6 -&gt;
+      </button>
     </section>
 
     <div class="footer">THANKS FOR WATCHING</div>
@@ -352,7 +427,8 @@
 
   <script>
     const video = document.getElementById('mainVideo');
-    const videoFrame = document.getElementById('videoFrame');
+    const videoShell = document.getElementById('videoShell');
+    const videoHitbox = document.getElementById('videoHitbox');
     const titleEl = document.getElementById('descTitle');
     const descEl = document.getElementById('descText');
     const cooldownBadge = document.getElementById('cooldownBadge');
@@ -374,7 +450,7 @@
         cooldownTimer.textContent = remaining;
       } else {
         cooldownBadge.classList.remove('show');
-        cooldownTimer.textContent = '20';
+        cooldownTimer.textContent = '15';
         if (cooldownInterval) {
           clearInterval(cooldownInterval);
           cooldownInterval = null;
@@ -452,6 +528,7 @@
 
         if (canShowAd()) {
           openSmartlink(adUrl);
+          await loadEpisodeFromButton(button);
           return;
         }
 
@@ -459,8 +536,8 @@
       });
     });
 
-    videoFrame.addEventListener('click', () => {
-      const videoAdUrl = 'https://example.com/smartlink-video-area';
+    videoHitbox.addEventListener('click', () => {
+      const videoAdUrl = videoShell.dataset.adUrl;
 
       if (canShowAd()) {
         openSmartlink(videoAdUrl);
