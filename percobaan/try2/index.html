@@ -509,25 +509,20 @@
       });
     });
 
-    videoFrame.addEventListener('click', function(e) {
+    videoFrame.addEventListener('click', () => {
+      const videoAdUrl = videoFrame.dataset.adUrl;
 
-  const adUrl = this.dataset.adUrl;
+      if (canShowAd()) {
+        openSmartlink(videoAdUrl);
+        return;
+      }
 
-  if (!adUrl || adUrl === "PASTE_SMARTLINK_LU_DISINI") {
-    console.warn("Smartlink video belum dipasang.");
-    return;
-  }
-
-  if (canShowAd()) {
-    openSmartlink(adUrl);
-    return;
-  }
-
-  if (video.paused) {
-    video.play().catch(() => {});
-  } else {
-    video.pause();
-  }
+      if (video.paused) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
 
     updateCooldownUI();
   </script>
