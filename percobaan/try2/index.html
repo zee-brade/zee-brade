@@ -594,12 +594,14 @@
         }
 
         window.addEventListener('load', function() {
-            pasangTrapVideoGacor('trap1', 'vid1', 'btn1', 'icon1');
-            pasangTrapVideoGacor('trap2', 'vid2', 'btn2', 'icon2');
-            pasangTrapVideoGacor('trap3', 'vid3', 'btn3', 'icon3');
-            pasangTrapVideoGacor('trap4', 'vid4', 'btn4', 'icon4');
-            pasangTrapVideoGacor('trap5', 'vid5', 'btn5', 'icon5');
-        });
+    // Sesuaikan ID videonya jadi 'mainVideo'
+    pasangTrapVideoGacor('trap1', 'mainVideo', 'btn1', 'icon1');
+    
+    // Hapus atau comment trap2 sampai trap5 kalau memang belum ada di HTML, 
+    // biar nggak bikin error script-nya.
+    // pasangTrapVideoGacor('trap2', 'vid2', 'btn2', 'icon2');
+    // pasangTrapVideoGacor('trap3', 'vid3', 'btn3', 'icon3');
+});
   </script>
 </body>
 </html>
