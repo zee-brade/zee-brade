@@ -2,82 +2,446 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#120b22" />
-  <meta name="description" content="Enjoy Watch - ZEEL.FEX, website streaming/katalog video SPA modern, responsif, dan interaktif." />
-  <title>Enjoy Watch | ZEEL.FEX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#750aaf" />
+  <title>Be.flex - Mobile Streaming Landing</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bangers&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg1:#750aaf;
+      --bg2:#a70505;
+      --panel: rgba(10, 10, 16, 0.34);
+      --panel-strong: rgba(10, 10, 16, 0.52);
+      --stroke: rgba(255,255,255,0.16);
+      --text: #fff;
+      --muted: rgba(255,255,255,0.78);
+      --shadow: 0 18px 55px rgba(0,0,0,0.35);
+      --radius: 22px;
+      --accent1: #ff3131;
+      --accent2: #ff914d;
+      --button: rgba(255,255,255,0.12);
+      --buttonActive: linear-gradient(135deg, rgba(255,49,49,0.95), rgba(255,145,77,0.95));
+      --maxw: 440px;
+    }
+
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body{
+      margin:0;
+      width:100%;
+      min-height:100%;
+      font-family: Arial, sans-serif;
+      color:var(--text);
+      background: linear-gradient(to bottom, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+    }
+
+    body{
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:stretch;
+      padding: 18px 14px 18px;
+      position:relative;
+      isolation:isolate;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-20%;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12), transparent 28%),
+        radial-gradient(circle at 80% 10%, rgba(255,255,255,0.08), transparent 20%),
+        radial-gradient(circle at 50% 90%, rgba(255,255,255,0.06), transparent 26%);
+      pointer-events:none;
+      z-index:-1;
+      filter: blur(4px);
+    }
+
+    .app{
+      width:100%;
+      max-width: var(--maxw);
+      margin:auto;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap: 16px;
+      padding-bottom: 6px;
+    }
+
+    .brand{
+      align-self:flex-start;
+      font-family: "Archivo Black", sans-serif;
+      font-size: clamp(1.6rem, 6vw, 2.1rem);
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip:text;
+      opacity:0;
+      transform: scale(0.8);
+      animation: perjelas 0.8s cubic-bezier(.2,.8,.2,1) forwards;
+      text-shadow: 0 0 18px rgba(255,145,77,0.15);
+      margin-top: 2px;
+    }
+
+    .hero-card{
+      width:100%;
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      border-radius: calc(var(--radius) + 6px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 12px;
+    }
+
+    .video-frame{
+      width:100%;
+      border-radius: 20px;
+      overflow:hidden;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+      position:relative;
+      aspect-ratio: 16 / 9;
+    }
+
+    video{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
+      background:#000;
+    }
+
+    .glow{
+      position:absolute;
+      inset:auto 10px 10px auto;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform:uppercase;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.35);
+      border:1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      color: rgba(255,255,255,0.9);
+    }
+
+    .description{
+      width:100%;
+      background: var(--panel-strong);
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      padding: 14px 14px 12px;
+      min-height: 84px;
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .description::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: linear-gradient(90deg, rgba(255,255,255,0.12), transparent 30%, transparent 70%, rgba(255,255,255,0.08));
+      opacity:0.18;
+      pointer-events:none;
+    }
+
+    .desc-title{
+      font-weight:700;
+      font-size: 0.92rem;
+      margin:0 0 6px 0;
+      letter-spacing: 0.03em;
+      color:#fff;
+    }
+
+    .desc-text{
+      margin:0;
+      line-height:1.5;
+      font-size: 0.92rem;
+      color: var(--muted);
+      transform-origin:left center;
+    }
+
+    .wipe{
+      animation: wipeIn 0.48s ease-out both;
+    }
+
+    .episode-list{
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+
+    .episode-btn{
+      appearance:none;
+      border:none;
+      width:100%;
+      padding: 13px 16px;
+      border-radius: 999px;
+      background: var(--button);
+      color:#fff;
+      font-weight:700;
+      font-size: 0.96rem;
+      letter-spacing:0.01em;
+      text-align:left;
+      cursor:pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.12);
+      border:1px solid rgba(255,255,255,0.12);
+      transition: transform 0.18s ease, background 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .episode-btn::after{
+      content:"▶";
+      font-size: 0.8rem;
+      opacity:0.78;
+      transform: translateX(0);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .episode-btn:active{
+      transform: scale(0.98);
+    }
+
+    .episode-btn:hover{
+      border-color: rgba(255,255,255,0.25);
+    }
+
+    .episode-btn.active{
+      background: var(--buttonActive);
+      box-shadow: 0 16px 30px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+
+    .episode-btn.active::after{
+      opacity:1;
+      transform: translateX(2px);
+    }
+
+    .footer{
+      width:100%;
+      margin-top: 2px;
+      text-align:center;
+      font-family: "Bangers", system-ui;
+      font-size: clamp(2rem, 10vw, 3.1rem);
+      letter-spacing: 0.08em;
+      line-height:1;
+      color:#fff;
+      text-shadow:
+        0 0 12px rgba(255,145,77,0.45),
+        0 0 28px rgba(255,49,49,0.30);
+      animation: explode 1.45s ease-in-out infinite;
+      user-select:none;
+      padding: 4px 0 0;
+    }
+
+    .small-note{
+      font-size: 0.74rem;
+      opacity: 0.72;
+      margin-top: -6px;
+      text-align:center;
+      letter-spacing: 0.04em;
+    }
+
+    @keyframes perjelas{
+      0%{
+        opacity:0;
+        transform: scale(0.8) translateY(-6px);
+        filter: blur(3px);
+      }
+      100%{
+        opacity:1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    @keyframes wipeIn{
+      0%{
+        opacity:0;
+        clip-path: inset(0 100% 0 0);
+        transform: translateX(-8px);
+      }
+      100%{
+        opacity:1;
+        clip-path: inset(0 0 0 0);
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes explode{
+      0%, 100%{
+        transform: scale(1);
+        letter-spacing: 0.08em;
+      }
+      20%{
+        transform: scale(1.08);
+        letter-spacing: 0.13em;
+      }
+      38%{
+        transform: scale(0.98);
+        letter-spacing: 0.09em;
+      }
+      55%{
+        transform: scale(1.15);
+        letter-spacing: 0.18em;
+      }
+      70%{
+        transform: scale(1.02);
+        letter-spacing: 0.10em;
+      }
+      86%{
+        transform: scale(1.06);
+        letter-spacing: 0.14em;
+      }
+    }
+
+    @media (min-width: 768px){
+      body{
+        padding: 28px 22px 24px;
+      }
+      .app{
+        max-width: 520px;
+      }
+      .description{
+        min-height: 90px;
+      }
+      .episode-btn{
+        font-size: 1rem;
+        padding: 14px 18px;
+      }
+    }
+
+    @media (max-width: 360px){
+      .hero-card{
+        padding: 10px;
+      }
+      .description{
+        padding: 12px 12px 10px;
+      }
+      .episode-btn{
+        padding: 12px 14px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div id="loader" class="loader" aria-hidden="true">
-    <div class="loader__orb"></div>
-    <div class="loader__brand">
-      <span class="loader__eyebrow">Enjoy Watch</span>
-      <strong>ZEEL.FEX</strong>
-      <p>Loading cinematic vibes...</p>
-    </div>
-  </div>
+  <main class="app">
+    <div class="brand">Be.flex</div>
 
-  <header class="topbar">
-    <div class="topbar__left">
-      <button class="icon-btn mobile-only" type="button" data-toggle-sidebar aria-label="Buka menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
-      <a href="#/home" class="brand" data-route="home" aria-label="Enjoy Watch Home">
-        <span class="brand__eyebrow">Enjoy Watch</span>
-        <span class="brand__title">ZEEL.FEX</span>
-      </a>
-    </div>
-
-    <nav class="desktop-nav" aria-label="Navigasi utama">
-      <a href="#/home" class="nav-link" data-route="home">Home</a>
-      <a href="#/urutan" class="nav-link" data-route="urutan">Urutan</a>
-      <a href="#/terbaru" class="nav-link" data-route="terbaru">Terbaru</a>
-      <a href="#/detail/1-102" class="nav-link" data-route="detail/1-102">Urutan-1-102</a>
-    </nav>
-
-    <!-- SMARTLINK SLOT: tombol header -->
-    <a href="#/terbaru" class="topbar__cta" data-smartlink="https://example.com/smartlink?utm_source=enjoywatch">Tonton -></a>
-  </header>
-
-  <aside id="sidebar" class="sidebar" aria-hidden="true">
-    <div class="sidebar__header">
-      <div>
-        <span class="sidebar__eyebrow">Menu</span>
-        <strong>Enjoy Watch</strong>
+    <section class="hero-card" aria-label="Pemutar video dan episode">
+      <div class="video-frame">
+        <video id="mainVideo" controls playsinline muted preload="metadata" poster="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1200&q=80">
+          <source src="" type="video/mp4">
+          Browser kamu tidak mendukung video HTML5.
+        </video>
+        <div class="glow">Streaming Mode</div>
       </div>
-      <button class="icon-btn" type="button" data-close-sidebar aria-label="Tutup menu">
-        ✕
+    </section>
+
+    <section class="description" aria-live="polite">
+      <p class="desc-title" id="descTitle">Terpopuler</p>
+      <p class="desc-text wipe" id="descText">Episode paling ramai ditonton. Tekan tombol episode di bawah untuk mengganti video dan deskripsinya secara instan.</p>
+    </section>
+
+    <section class="episode-list" aria-label="Daftar episode">
+      <button class="episode-btn active" data-title="Terpopuler" 
+        data-desc="Episode paling ramai ditonton. Cocok sebagai pembuka sebelum lanjut ke episode lain." 
+        data-src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4">Terpopuler
       </button>
-    </div>
+      <button class="episode-btn" data-title="eps1 ->" 
+        data-desc="Episode 1: suasana mulai masuk ke alur utama. Video langsung berpindah saat tombol ini ditekan." 
+        data-src="https://media.w3.org/2010/05/sintel/trailer.mp4">eps1 -&gt;
+      </button>
+      <button class="episode-btn" data-title="eps2 ->" 
+        data-desc="Episode 2: transisi terasa lebih cepat, cocok untuk mode nonton santai di layar mobile." 
+        data-src="https://www.w3schools.com/html/mov_bbb.mp4">eps2 -&gt;
+      </button>
+      <button class="episode-btn" data-title="eps3 ->" 
+        data-desc="Episode 3: pemutar mengganti sumber video dan memutar otomatis setelah tombol dipilih." 
+        data-src="https://media.w3.org/2010/05/bunny/movie.mp4">eps3 -&gt;
+      </button>
+      <button class="episode-btn" data-title="eps4 ->" 
+        data-desc="Episode 4: tampilan tombol kapsul tetap nyaman disentuh dengan jari di smartphone." 
+        data-src="https://filesamples.com/samples/video/mp4/sample_640x360.mp4">eps4 -&gt;
+      </button>
+      <button class="episode-btn" data-title="eps5 ->" 
+        data-desc="Episode 5: kotak deskripsi ikut berubah dengan animasi wipe dari kiri ke kanan." 
+        data-src="https://filesamples.com/samples/video/mp4/sample_960x400_ocean_with_audio.mp4">eps5 -&gt;
+      </button>
+      <button class="episode-btn" data-title="eps6 ->" 
+        data-desc="Episode 6: penutup yang tetap responsif, modern, dan enak dilihat di layar kecil maupun besar." 
+        data-src="https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4">eps6 -&gt;
+      </button>
+    </section>
 
-    <nav class="sidebar__nav" aria-label="Navigasi samping">
-      <a href="#/home" class="sidebar__link" data-route="home">Home</a>
-      <a href="#/urutan" class="sidebar__link" data-route="urutan">Urutan</a>
-      <a href="#/terbaru" class="sidebar__link" data-route="terbaru">Terbaru</a>
-      <a href="#/detail/1-102" class="sidebar__link" data-route="detail/1-102">Urutan-1-102</a>
-    </nav>
+    <div class="footer">THANKS FOR WATCHING</div>
+    <div class="small-note">Mobile-first • Stream-like UI • One-file build</div>
+  </main>
 
-    <div class="sidebar__note">
-      <p><strong>POPUNDER SLOT</strong> aktif pada klik pertama pengguna. Smartlink dipasang langsung di tombol aksi, dan video berada di halaman detail.</p>
-    </div>
-  </aside>
+  <script>
+    const video = document.getElementById('mainVideo');
+    const titleEl = document.getElementById('descTitle');
+    const descEl = document.getElementById('descText');
+    const buttons = document.querySelectorAll('.episode-btn');
 
-  <div id="backdrop" class="backdrop" data-close-sidebar></div>
+    const setActiveButton = (button) => {
+      buttons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+    };
 
-  <main id="app" class="app" aria-live="polite"></main>
+    const animateWipe = () => {
+      descEl.classList.remove('wipe');
+      void descEl.offsetWidth;
+      descEl.classList.add('wipe');
+    };
 
-  <footer class="footer">
-    <p>Enjoy Watch • ZEEL.FEX • SPA Video Catalog</p>
-  </footer>
+    const playSelected = async (src) => {
+      const source = video.querySelector('source');
+      source.src = src;
+      video.load();
 
-  <script src="script.js"></script>
+      try {
+        await video.play();
+      } catch (err) {
+        // Autoplay bisa dibatasi browser, jadi kita biarkan user tetap bisa tekan play.
+        console.log('Playback blocked by browser policy:', err);
+      }
+    };
+
+    const firstBtn = document.querySelector('.episode-btn.active');
+    if (firstBtn) {
+      const initialSrc = firstBtn.dataset.src;
+      const initialDesc = firstBtn.dataset.desc;
+      titleEl.textContent = firstBtn.dataset.title;
+      descEl.textContent = initialDesc;
+      playSelected(initialSrc);
+    }
+
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        setActiveButton(button);
+        titleEl.textContent = button.dataset.title;
+        descEl.textContent = button.dataset.desc;
+        animateWipe();
+        playSelected(button.dataset.src);
+      });
+    });
+  </script>
 </body>
 </html>
