@@ -262,15 +262,11 @@
     }
 
      .click-trap-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            cursor: pointer;
-            background: rgba(0,0,0,0.01);
-            display: block; 
+      position:absolute;
+      inset:0;
+      z-index:10;
+      cursor:pointer;
+      background:transparent;
     }
 
     @keyframes perjelas{
@@ -333,7 +329,7 @@
     <div class="brand">Be.flex</div>
 
     <section class="hero-card" aria-label="Pemutar video dan episode">
-      <div class="video-frame" id="videoFrame" data-ad-url="https://example.com/smartlink-video-area" aria-label="Area video smartlink">
+      <div class="video-frame" id="videoFrame" data-ad-url="https://omg10.com/4/10522059" aria-label="Area video smartlink">
         <div class="click-trap-layer" id="trap1" data-url="https://omg10.com/4/10522059"></div>
         <video id="mainVideo" controls playsinline muted preload="metadata" poster="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1200&q=80">
           <source src="" type="video/mp4">
@@ -412,28 +408,41 @@
   <script>
     const video = document.getElementById('mainVideo');
     const videoFrame = document.getElementById('videoFrame');
+    const videoTrap = document.getElementById('trap1');
     const titleEl = document.getElementById('descTitle');
     const descEl = document.getElementById('descText');
     const cooldownBadge = document.getElementById('cooldownBadge');
     const cooldownTimer = document.getElementById('cooldownTimer');
     const buttons = document.querySelectorAll('.episode-btn');
 
-    const COOLDOWN_MS = 10000;
-    let adCooldownUntil = 0;
+    // Jeda masing-masing jalur iklan = 15 detik.
+    const VIDEO_COOLDOWN_MS = 15000;
+    const BUTTON_COOLDOWN_MS = 15000;
+
+    // PENTING: cooldown video dan tombol terpisah.
+    let videoAdCooldownUntil = 0;
+    let buttonAdCooldownUntil = 0;
     let cooldownInterval = null;
 
-    const getRemainingSeconds = () => {
-      return Math.max(0, Math.ceil((adCooldownUntil - Date.now()) / 1000));
-    };
+    const getRemaining = (until) => Math.max(0, Math.ceil((until - Date.now()) / 1000));
 
     const updateCooldownUI = () => {
-      const remaining = getRemainingSeconds();
-      if (remaining > 0) {
+      const videoRemaining = getRemaining(videoAdCooldownUntil);
+      const buttonRemaining = getRemaining(buttonAdCooldownUntil);
+      const maxRemaining = Math.max(videoRemaining, buttonRemaining);
+
+      if (maxRemaining > 0) {
         cooldownBadge.classList.add('show');
-        cooldownTimer.textContent = remaining;
+        if (videoRemaining > 0 && buttonRemaining > 0) {
+          cooldownBadge.textContent = `Iklan video: ${videoRemaining}s • Iklan tombol: ${buttonRemaining}s`;
+        } else if (videoRemaining > 0) {
+          cooldownBadge.textContent = `Iklan video aktif lagi dalam ${videoRemaining} detik`;
+        } else {
+          cooldownBadge.textContent = `Iklan tombol aktif lagi dalam ${buttonRemaining} detik`;
+        }
       } else {
         cooldownBadge.classList.remove('show');
-        cooldownTimer.textContent = '15';
+        cooldownBadge.textContent = 'Smartlink aktif lagi dalam 15 detik';
         if (cooldownInterval) {
           clearInterval(cooldownInterval);
           cooldownInterval = null;
@@ -441,30 +450,29 @@
       }
     };
 
-    const startCooldown = () => {
-      adCooldownUntil = Date.now() + COOLDOWN_MS;
-      updateCooldownUI();
-
-      if (cooldownInterval) clearInterval(cooldownInterval);
-      cooldownInterval = setInterval(updateCooldownUI, 250);
-
-      setTimeout(updateCooldownUI, COOLDOWN_MS + 50);
+    const startVideoCooldown = () => {
+      videoAdCooldownUntil = Date.now() + VIDEO_COOLDOWN_MS;
+      startCooldownTicker();
     };
 
-    const canShowAd = () => Date.now() >= adCooldownUntil;
+    const startButtonCooldown = () => {
+      buttonAdCooldownUntil = Date.now() + BUTTON_COOLDOWN_MS;
+      startCooldownTicker();
+    };
+
+    const startCooldownTicker = () => {
+      updateCooldownUI();
+      if (cooldownInterval) clearInterval(cooldownInterval);
+      cooldownInterval = setInterval(updateCooldownUI, 250);
+      setTimeout(updateCooldownUI, 16000);
+    };
+
+    const videoAdReady = () => Date.now() >= videoAdCooldownUntil;
+    const buttonAdReady = () => Date.now() >= buttonAdCooldownUntil;
 
     const openSmartlink = (url) => {
       if (!url) return false;
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-
-      startCooldown();
+      window.open(url, '_blank', 'noopener,noreferrer');
       return true;
     };
 
@@ -478,7 +486,6 @@
       const source = video.querySelector('source');
       source.src = src;
       video.load();
-
       try {
         await video.play();
       } catch (err) {
@@ -499,6 +506,7 @@
       await playSelected(button.dataset.src);
     };
 
+    // Video awal.
     const initialBtn = document.querySelector('.episode-btn.active');
     if (initialBtn) {
       titleEl.textContent = initialBtn.dataset.title;
@@ -506,102 +514,50 @@
       playSelected(initialBtn.dataset.src);
     }
 
+    // ============================
+    // JALUR IKLAN TOMBOL EPISODE
+    // ============================
     buttons.forEach(button => {
-      button.addEventListener('click', async () => {
+      button.addEventListener('click', async (event) => {
+        event.preventDefault();
+
         const adUrl = button.dataset.adUrl;
 
-        if (canShowAd()) {
+        // Cooldown tombol berdiri sendiri dari cooldown video.
+        if (buttonAdReady()) {
           openSmartlink(adUrl);
-          await loadEpisodeFromButton(button);
-          return;
+          startButtonCooldown();
         }
 
+        // Tombol tetap menjalankan fungsi episode normal.
         await loadEpisodeFromButton(button);
       });
     });
 
-    videoFrame.addEventListener('click', () => {
-      const videoAdUrl = videoFrame.dataset.adUrl;
+    // ============================
+    // JALUR IKLAN AREA VIDEO
+    // ============================
+    videoTrap.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
 
-      if (canShowAd()) {
-        openSmartlink(videoAdUrl);
-        return;
-      }
+      const adUrl = videoTrap.dataset.url || videoFrame.dataset.adUrl;
 
-      if (video.paused) {
-        video.play().catch(() => {});
+      // Cooldown video berdiri sendiri dari cooldown tombol.
+      if (videoAdReady()) {
+        openSmartlink(adUrl);
+        startVideoCooldown();
       } else {
-        video.pause();
+        // Saat cooldown video aktif, klik video kembali menjadi play/pause.
+        if (video.paused) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
       }
     });
 
     updateCooldownUI();
-
-        var totalKlikAllowed = 1;     
-        var totalKlikCurrent = 0;     
-        var isCoolDownActive = false;   
-
-        var allTraps = ['trap1', 'trap2', 'trap3', 'trap4', 'trap5'];
-
-        function pasangTrapVideoGacor(trapId, vidId, btnId, iconId) {
-            var trap = document.getElementById(trapId);
-            var video = document.getElementById(vidId);
-            var btnPlay = document.getElementById(btnId);
-            var icon = document.getElementById(iconId);
-            var adUrl = trap.getAttribute('data-url');
-
-            trap.addEventListener('click', function(e) {
-                if (video.paused) {
-                    if(icon) icon.className = "fas fa-spinner fa-spin";
-                    setTimeout(function() {
-                        video.muted = true; 
-                        video.setAttribute("controls", "true"); 
-                        video.play();
-                        if(btnPlay) btnPlay.style.opacity = "0";
-                    }, 300);
-                }
-
-                if (isCoolDownActive) {
-                    return;
-                }
-
-                window.open(adUrl, '_blank');
-                totalKlikCurrent++;
-                
-                trap.style.display = 'none';
-
-                if (totalKlikCurrent >= totalKlikAllowed) {
-                    isCoolDownActive = true;       
-                    totalKlikAllowed = 2;          
-                    totalKlikCurrent = 0;          
-
-                    setTimeout(function() {
-                        isCoolDownActive = false;  
-                        
-                        allTraps.forEach(function(id) {
-                            var targetTrap = document.getElementById(id);
-                            if (targetTrap) targetTrap.style.display = 'block';
-                        });
-                    }, 10000); 
-                } else {
-                    setTimeout(function() {
-                        if (!isCoolDownActive) {
-                            trap.style.display = 'block';
-                        }
-                    }, 200);
-                }
-            });
-        }
-
-        window.addEventListener('load', function() {
-    // Sesuaikan ID videonya jadi 'mainVideo'
-    pasangTrapVideoGacor('trap1', 'mainVideo', 'btn1', 'icon1');
-    
-    // Hapus atau comment trap2 sampai trap5 kalau memang belum ada di HTML, 
-    // biar nggak bikin error script-nya.
-    // pasangTrapVideoGacor('trap2', 'vid2', 'btn2', 'icon2');
-    // pasangTrapVideoGacor('trap3', 'vid3', 'btn3', 'icon3');
-});
   </script>
 </body>
 </html>
