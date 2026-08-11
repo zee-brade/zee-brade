@@ -261,12 +261,17 @@
       display:block;
     }
 
-     .click-trap-layer {
+     .click-trap-layer{
       position:absolute;
       inset:0;
-      z-index:10;
+      z-index:9999;
       cursor:pointer;
-      background:transparent;
+      background:rgba(0,0,0,0.01);
+      display:block;
+    }
+
+    .click-trap-layer.is-hidden{
+      display:none;
     }
 
     @keyframes perjelas{
@@ -329,7 +334,7 @@
     <div class="brand">Be.flex</div>
 
     <section class="hero-card" aria-label="Pemutar video dan episode">
-      <div class="video-frame" id="videoFrame" data-ad-url="https://omg10.com/4/10522059" aria-label="Area video smartlink">
+      <div class="video-frame" id="videoFrame" data-ad-url="https://example.com/smartlink-video-area" aria-label="Area video smartlink">
         <div class="click-trap-layer" id="trap1" data-url="https://omg10.com/4/10522059"></div>
         <video id="mainVideo" controls playsinline muted preload="metadata" poster="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1200&q=80">
           <source src="" type="video/mp4">
@@ -408,155 +413,207 @@
   <script>
     const video = document.getElementById('mainVideo');
     const videoFrame = document.getElementById('videoFrame');
-    const videoTrap = document.getElementById('trap1');
+    const trap = document.getElementById('trap1');
+
     const titleEl = document.getElementById('descTitle');
     const descEl = document.getElementById('descText');
-    const cooldownBadge = document.getElementById('cooldownBadge');
-    const cooldownTimer = document.getElementById('cooldownTimer');
     const buttons = document.querySelectorAll('.episode-btn');
 
-    // Jeda masing-masing jalur iklan = 15 detik.
+    const videoCooldownBadge = document.getElementById('videoCooldownBadge');
+    const videoCooldownTimer = document.getElementById('videoCooldownTimer');
+    const buttonCooldownBadge = document.getElementById('buttonCooldownBadge');
+    const buttonCooldownTimer = document.getElementById('buttonCooldownTimer');
+
     const VIDEO_COOLDOWN_MS = 15000;
     const BUTTON_COOLDOWN_MS = 15000;
 
-    // PENTING: cooldown video dan tombol terpisah.
-    let videoAdCooldownUntil = 0;
-    let buttonAdCooldownUntil = 0;
+    let videoCooldownUntil = 0;
+    let buttonCooldownUntil = 0;
     let cooldownInterval = null;
 
-    const getRemaining = (until) => Math.max(0, Math.ceil((until - Date.now()) / 1000));
+    function remainingSeconds(until){
+      return Math.max(0, Math.ceil((until - Date.now()) / 1000));
+    }
 
-    const updateCooldownUI = () => {
-      const videoRemaining = getRemaining(videoAdCooldownUntil);
-      const buttonRemaining = getRemaining(buttonAdCooldownUntil);
-      const maxRemaining = Math.max(videoRemaining, buttonRemaining);
+    function updateCooldownUI(){
+      const videoRemaining = remainingSeconds(videoCooldownUntil);
+      const buttonRemaining = remainingSeconds(buttonCooldownUntil);
 
-      if (maxRemaining > 0) {
-        cooldownBadge.classList.add('show');
-        if (videoRemaining > 0 && buttonRemaining > 0) {
-          cooldownBadge.textContent = `Iklan video: ${videoRemaining}s • Iklan tombol: ${buttonRemaining}s`;
-        } else if (videoRemaining > 0) {
-          cooldownBadge.textContent = `Iklan video aktif lagi dalam ${videoRemaining} detik`;
-        } else {
-          cooldownBadge.textContent = `Iklan tombol aktif lagi dalam ${buttonRemaining} detik`;
-        }
-      } else {
-        cooldownBadge.classList.remove('show');
-        cooldownBadge.textContent = 'Smartlink aktif lagi dalam 15 detik';
-        if (cooldownInterval) {
-          clearInterval(cooldownInterval);
-          cooldownInterval = null;
-        }
+      if(videoRemaining > 0){
+        videoCooldownBadge.classList.add('show');
+        videoCooldownTimer.textContent = videoRemaining;
+      }else{
+        videoCooldownBadge.classList.remove('show');
+        videoCooldownTimer.textContent = '15';
+        // Saat cooldown video habis, trap aktif lagi.
+        trap.classList.remove('is-hidden');
       }
-    };
 
-    const startVideoCooldown = () => {
-      videoAdCooldownUntil = Date.now() + VIDEO_COOLDOWN_MS;
-      startCooldownTicker();
-    };
+      if(buttonRemaining > 0){
+        buttonCooldownBadge.classList.add('show');
+        buttonCooldownTimer.textContent = buttonRemaining;
+      }else{
+        buttonCooldownBadge.classList.remove('show');
+        buttonCooldownTimer.textContent = '15';
+      }
 
-    const startButtonCooldown = () => {
-      buttonAdCooldownUntil = Date.now() + BUTTON_COOLDOWN_MS;
-      startCooldownTicker();
-    };
+      if(videoRemaining <= 0 && buttonRemaining <= 0 && cooldownInterval){
+        clearInterval(cooldownInterval);
+        cooldownInterval = null;
+      }
+    }
 
-    const startCooldownTicker = () => {
+    function keepCooldownUIRunning(){
+      if(!cooldownInterval){
+        cooldownInterval = setInterval(updateCooldownUI, 250);
+      }
       updateCooldownUI();
-      if (cooldownInterval) clearInterval(cooldownInterval);
-      cooldownInterval = setInterval(updateCooldownUI, 250);
-      setTimeout(updateCooldownUI, 16000);
-    };
+    }
 
-    const videoAdReady = () => Date.now() >= videoAdCooldownUntil;
-    const buttonAdReady = () => Date.now() >= buttonAdCooldownUntil;
+    function startVideoCooldown(){
+      videoCooldownUntil = Date.now() + VIDEO_COOLDOWN_MS;
 
-    const openSmartlink = (url) => {
-      if (!url) return false;
-      window.open(url, '_blank', 'noopener,noreferrer');
+      // Begitu smartlink dibuka, trap langsung hilang.
+      // Semua kontrol native video kembali bisa disentuh.
+      trap.classList.add('is-hidden');
+
+      keepCooldownUIRunning();
+    }
+
+    function startButtonCooldown(){
+      buttonCooldownUntil = Date.now() + BUTTON_COOLDOWN_MS;
+      keepCooldownUIRunning();
+    }
+
+    function videoAdIsReady(){
+      return Date.now() >= videoCooldownUntil;
+    }
+
+    function buttonAdIsReady(){
+      return Date.now() >= buttonCooldownUntil;
+    }
+
+    function openSmartlink(url){
+      if(!url) return false;
+
+      const newTab = window.open(url, '_blank', 'noopener,noreferrer');
+
+      if(!newTab){
+        // Fallback kalau browser memblokir popup.
+        window.location.href = url;
+      }
+
       return true;
-    };
+    }
 
-    const animateWipe = () => {
+    function animateWipe(){
       descEl.classList.remove('wipe');
       void descEl.offsetWidth;
       descEl.classList.add('wipe');
-    };
+    }
 
-    const playSelected = async (src) => {
+    async function playSelected(src){
       const source = video.querySelector('source');
       source.src = src;
       video.load();
-      try {
+
+      try{
         await video.play();
-      } catch (err) {
+      }catch(err){
         console.log('Playback blocked by browser policy:', err);
       }
-    };
+    }
 
-    const setActiveButton = (button) => {
+    function setActiveButton(button){
       buttons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
-    };
+    }
 
-    const loadEpisodeFromButton = async (button) => {
+    async function loadEpisode(button){
       setActiveButton(button);
       titleEl.textContent = button.dataset.title;
       descEl.textContent = button.dataset.desc;
       animateWipe();
       await playSelected(button.dataset.src);
-    };
+    }
 
-    // Video awal.
+    /*
+      =========================================================
+      VIDEO CLICK TRAP
+      =========================================================
+      Trap hanya aktif ketika cooldown video selesai.
+      Begitu diklik:
+      1. Smartlink video dibuka.
+      2. Cooldown video 15 detik dimulai.
+      3. Trap langsung disembunyikan.
+      4. Semua kontrol native video kembali normal.
+      =========================================================
+    */
+    trap.addEventListener('click', async function(){
+      if(!videoAdIsReady()) return;
+
+      const adUrl = this.dataset.url;
+
+      // Buka iklan dari gesture klik user.
+      openSmartlink(adUrl);
+
+      // Setelah klik, lepaskan trap agar:
+      // fullscreen, volume, timeline, play/pause, dll tetap normal.
+      startVideoCooldown();
+
+      // Pastikan video tetap bisa berjalan.
+      try{
+        if(video.paused){
+          await video.play();
+        }
+      }catch(err){
+        console.log('Playback blocked by browser policy:', err);
+      }
+    });
+
+    /*
+      =========================================================
+      BUTTON SMARTLINK
+      =========================================================
+      Semua tombol berbagi SATU cooldown tombol.
+      Cooldown ini TERPISAH dari cooldown video.
+      =========================================================
+    */
+    buttons.forEach(button => {
+      button.addEventListener('click', async function(){
+        const adUrl = this.dataset.adUrl;
+
+        if(buttonAdIsReady()){
+          // Smartlink tombol aktif.
+          openSmartlink(adUrl);
+
+          // Hanya cooldown tombol yang dimulai.
+          startButtonCooldown();
+        }
+
+        // Tombol tetap berfungsi normal untuk mengganti episode.
+        await loadEpisode(this);
+      });
+    });
+
+    /*
+      =========================================================
+      INITIAL VIDEO
+      =========================================================
+    */
     const initialBtn = document.querySelector('.episode-btn.active');
-    if (initialBtn) {
+
+    if(initialBtn){
       titleEl.textContent = initialBtn.dataset.title;
       descEl.textContent = initialBtn.dataset.desc;
       playSelected(initialBtn.dataset.src);
     }
 
-    // ============================
-    // JALUR IKLAN TOMBOL EPISODE
-    // ============================
-    buttons.forEach(button => {
-      button.addEventListener('click', async (event) => {
-        event.preventDefault();
-
-        const adUrl = button.dataset.adUrl;
-
-        // Cooldown tombol berdiri sendiri dari cooldown video.
-        if (buttonAdReady()) {
-          openSmartlink(adUrl);
-          startButtonCooldown();
-        }
-
-        // Tombol tetap menjalankan fungsi episode normal.
-        await loadEpisodeFromButton(button);
-      });
-    });
-
-    // ============================
-    // JALUR IKLAN AREA VIDEO
-    // ============================
-    videoTrap.addEventListener('click', (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      const adUrl = videoTrap.dataset.url || videoFrame.dataset.adUrl;
-
-      // Cooldown video berdiri sendiri dari cooldown tombol.
-      if (videoAdReady()) {
-        openSmartlink(adUrl);
-        startVideoCooldown();
-      } else {
-        // Saat cooldown video aktif, klik video kembali menjadi play/pause.
-        if (video.paused) {
-          video.play().catch(() => {});
-        } else {
-          video.pause();
-        }
-      }
-    });
-
+    /*
+      Trap aktif pada awal halaman karena video belum pernah
+      memicu smartlink dan cooldown video masih 0.
+    */
+    trap.classList.remove('is-hidden');
     updateCooldownUI();
   </script>
 </body>
