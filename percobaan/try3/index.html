@@ -1,0 +1,2915 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#08111f"
+    >
+
+    <title>Skybound - 8Bit Music Experience</title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        :root {
+            --sky-top: #07101d;
+            --sky-mid: #123053;
+            --sky-bottom: #4d8fa7;
+
+            --sun: #ffd978;
+            --sun-glow: rgba(255, 214, 120, 0.45);
+
+            --white: #ffffff;
+            --soft-white: rgba(255, 255, 255, 0.75);
+
+            --panel: rgba(7, 12, 23, 0.72);
+            --panel-border: rgba(255, 255, 255, 0.12);
+
+            --accent: #ffcf66;
+            --accent-2: #8ed6ff;
+
+            --pixel-shadow:
+                4px 4px 0 rgba(0, 0, 0, 0.28);
+
+            --ui-radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            min-height: 100svh;
+
+            overflow-x: hidden;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    var(--sky-top) 0%,
+                    var(--sky-mid) 47%,
+                    var(--sky-bottom) 100%
+                );
+
+            color: var(--white);
+
+            font-family:
+                "VT323",
+                monospace;
+
+            position: relative;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* =========================================================
+           BACKGROUND
+        ========================================================= */
+
+        .scene {
+            position: fixed;
+            inset: 0;
+
+            overflow: hidden;
+
+            z-index: 0;
+
+            pointer-events: none;
+        }
+
+        .sky-gradient {
+            position: absolute;
+            inset: 0;
+
+            background:
+                radial-gradient(
+                    circle at 50% 44%,
+                    rgba(255, 218, 137, 0.16),
+                    transparent 27%
+                ),
+                linear-gradient(
+                    180deg,
+                    #060b14 0%,
+                    #0c1b31 34%,
+                    #21496a 62%,
+                    #5f98a8 100%
+                );
+        }
+
+        /* Pixel grid */
+
+        .pixel-grid {
+            position: absolute;
+            inset: 0;
+
+            opacity: 0.08;
+
+            background-image:
+                linear-gradient(
+                    rgba(255,255,255,.12) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,.12) 1px,
+                    transparent 1px
+                );
+
+            background-size: 8px 8px;
+
+            mask-image:
+                linear-gradient(
+                    to bottom,
+                    black 0%,
+                    transparent 78%
+                );
+        }
+
+        /* Stars */
+
+        .stars {
+            position: absolute;
+            inset: 0;
+        }
+
+        .star {
+            position: absolute;
+
+            width: 3px;
+            height: 3px;
+
+            background: #fff;
+
+            box-shadow:
+                0 0 5px rgba(255,255,255,.8);
+
+            animation:
+                twinkle
+                var(--duration)
+                ease-in-out
+                infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: .18;
+                transform: scale(.7);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1.3);
+            }
+        }
+
+        /* Moon */
+
+        .moon {
+            position: absolute;
+
+            width: clamp(70px, 9vw, 150px);
+            aspect-ratio: 1;
+
+            right: 7%;
+            top: 8%;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle at 34% 30%,
+                    rgba(255,255,255,.8),
+                    transparent 18%
+                ),
+                #c7e0ed;
+
+            opacity: .9;
+
+            box-shadow:
+                0 0 40px rgba(198,226,242,.18);
+        }
+
+        .moon::after {
+            content: "";
+
+            position: absolute;
+
+            width: 100%;
+            height: 100%;
+
+            inset: 0;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle at 68% 32%,
+                    rgba(0,0,0,.08) 0 8%,
+                    transparent 9%
+                ),
+                radial-gradient(
+                    circle at 40% 68%,
+                    rgba(0,0,0,.08) 0 11%,
+                    transparent 12%
+                );
+        }
+
+        /* =========================================================
+           SUN
+        ========================================================= */
+
+        .sun-wrapper {
+            position: absolute;
+
+            left: 50%;
+            top: 41%;
+
+            transform:
+                translate(-50%, -50%);
+
+            width: clamp(120px, 18vw, 260px);
+            aspect-ratio: 1;
+        }
+
+        .sun-glow {
+            position: absolute;
+            inset: -80%;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    var(--sun-glow) 0%,
+                    rgba(255,216,123,.1) 34%,
+                    transparent 70%
+                );
+
+            filter: blur(12px);
+
+            animation:
+                sunPulse
+                5s
+                ease-in-out
+                infinite;
+        }
+
+        @keyframes sunPulse {
+            0%,100% {
+                transform: scale(.95);
+                opacity: .7;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+        }
+
+        .sun {
+            position: absolute;
+            inset: 0;
+
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    #ffe28c 0 8px,
+                    #ffd06c 8px 16px
+                );
+
+            clip-path:
+                polygon(
+                    10% 10%,
+                    90% 10%,
+                    90% 18%,
+                    96% 18%,
+                    96% 82%,
+                    90% 82%,
+                    90% 90%,
+                    10% 90%,
+                    10% 84%,
+                    4% 84%,
+                    4% 18%,
+                    10% 18%
+                );
+
+            box-shadow:
+                0 0 40px rgba(255,217,126,.5);
+        }
+
+        /* =========================================================
+           CLOUDS
+        ========================================================= */
+
+        .cloud {
+            position: absolute;
+
+            display: flex;
+            align-items: flex-end;
+
+            width: 220px;
+            height: 70px;
+
+            filter:
+                drop-shadow(
+                    10px 10px 0 rgba(0,0,0,.07)
+                );
+
+            opacity: .88;
+
+            animation:
+                cloudMove
+                var(--cloud-speed)
+                linear
+                infinite;
+        }
+
+        .cloud-piece {
+            position: absolute;
+
+            background:
+                #e5f4f6;
+
+            image-rendering: pixelated;
+        }
+
+        .cloud-piece.a {
+            width: 120px;
+            height: 36px;
+
+            left: 40px;
+            bottom: 0;
+        }
+
+        .cloud-piece.b {
+            width: 65px;
+            height: 58px;
+
+            left: 73px;
+            bottom: 20px;
+        }
+
+        .cloud-piece.c {
+            width: 78px;
+            height: 45px;
+
+            left: 118px;
+            bottom: 12px;
+        }
+
+        @keyframes cloudMove {
+            from {
+                transform:
+                    translateX(-30vw);
+            }
+
+            to {
+                transform:
+                    translateX(135vw);
+            }
+        }
+
+        /* =========================================================
+           FLYING CHARACTER
+        ========================================================= */
+
+        .flyer {
+            position: absolute;
+
+            left: 50%;
+            top: 46%;
+
+            width: clamp(150px, 18vw, 260px);
+
+            transform:
+                translate(-50%, -50%);
+
+            animation:
+                floating
+                3.6s
+                ease-in-out
+                infinite;
+
+            z-index: 5;
+        }
+
+        @keyframes floating {
+            0%,100% {
+                transform:
+                    translate(-50%, -50%)
+                    translateY(-7px)
+                    rotate(-1deg);
+            }
+
+            50% {
+                transform:
+                    translate(-50%, -50%)
+                    translateY(12px)
+                    rotate(2deg);
+            }
+        }
+
+        .flyer-shadow {
+            position: absolute;
+
+            left: 10%;
+            bottom: -4px;
+
+            width: 80%;
+            height: 10px;
+
+            background:
+                rgba(0,0,0,.14);
+
+            filter: blur(4px);
+
+            border-radius: 50%;
+        }
+
+        .broom {
+            position: absolute;
+
+            width: 100%;
+            height: 12px;
+
+            left: 0;
+            bottom: 25px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #8e5528 0%,
+                    #d19a54 65%,
+                    #7b421d 100%
+                );
+
+            border:
+                3px solid #3b2117;
+
+            image-rendering: pixelated;
+
+            transform:
+                rotate(-5deg);
+        }
+
+        .broom::after {
+            content: "";
+
+            position: absolute;
+
+            right: -25px;
+            top: -12px;
+
+            width: 65px;
+            height: 38px;
+
+            background:
+                repeating-linear-gradient(
+                    90deg,
+                    #dba959 0 6px,
+                    #bd8337 6px 12px
+                );
+
+            border:
+                3px solid #5d381d;
+
+            clip-path:
+                polygon(
+                    8% 10%,
+                    100% 0,
+                    86% 100%,
+                    0% 88%
+                );
+        }
+
+        .character {
+            position: relative;
+
+            width: 95px;
+            height: 110px;
+
+            margin:
+                0 auto
+                0 42px;
+        }
+
+        .body {
+            position: absolute;
+
+            width: 48px;
+            height: 46px;
+
+            left: 22px;
+            top: 39px;
+
+            background:
+                #5c6bc0;
+
+            border:
+                4px solid #1d2037;
+
+            border-radius:
+                12px 12px 7px 7px;
+        }
+
+        .head {
+            position: absolute;
+
+            width: 48px;
+            height: 48px;
+
+            left: 20px;
+            top: 1px;
+
+            background:
+                #f0b78c;
+
+            border:
+                4px solid #1d2037;
+
+            border-radius: 50%;
+
+            z-index: 2;
+        }
+
+        .hair {
+            position: absolute;
+
+            left: 17px;
+            top: -4px;
+
+            width: 53px;
+            height: 25px;
+
+            background:
+                #24243e;
+
+            border:
+                4px solid #171728;
+
+            border-bottom: none;
+
+            border-radius:
+                50% 50% 40% 40%;
+        }
+
+        .eye {
+            position: absolute;
+
+            width: 5px;
+            height: 7px;
+
+            background:
+                #1e2232;
+
+            top: 21px;
+        }
+
+        .eye.left {
+            left: 13px;
+        }
+
+        .eye.right {
+            right: 13px;
+        }
+
+        .cloak {
+            position: absolute;
+
+            width: 62px;
+            height: 58px;
+
+            left: 15px;
+            top: 35px;
+
+            background:
+                #7f7de0;
+
+            clip-path:
+                polygon(
+                    10% 0,
+                    90% 0,
+                    100% 100%,
+                    0 100%
+                );
+
+            border:
+                4px solid #1d2037;
+
+            z-index: -1;
+        }
+
+        .leg {
+            position: absolute;
+
+            width: 19px;
+            height: 30px;
+
+            background:
+                #2f355d;
+
+            border:
+                3px solid #171728;
+
+            bottom: 5px;
+        }
+
+        .leg.left {
+            left: 27px;
+            transform: rotate(15deg);
+        }
+
+        .leg.right {
+            left: 49px;
+            transform: rotate(-19deg);
+        }
+
+        /* Pet */
+
+        .pet {
+            position: absolute;
+
+            right: -28px;
+            top: -25px;
+
+            width: 68px;
+            height: 48px;
+
+            animation:
+                petFloat
+                2.8s
+                ease-in-out
+                infinite;
+        }
+
+        @keyframes petFloat {
+            0%,100% {
+                transform:
+                    translateY(0)
+                    rotate(-4deg);
+            }
+
+            50% {
+                transform:
+                    translateY(-8px)
+                    rotate(4deg);
+            }
+        }
+
+        .pet-body {
+            position: absolute;
+
+            width: 50px;
+            height: 32px;
+
+            left: 8px;
+            top: 15px;
+
+            background:
+                #f0d1a4;
+
+            border:
+                4px solid #392a2c;
+
+            border-radius:
+                50% 55% 45% 48%;
+        }
+
+        .pet-head {
+            position: absolute;
+
+            width: 34px;
+            height: 32px;
+
+            left: 0;
+            top: 5px;
+
+            background:
+                #f3d9b3;
+
+            border:
+                4px solid #392a2c;
+
+            border-radius: 50%;
+        }
+
+        .pet-ear {
+            position: absolute;
+
+            width: 13px;
+            height: 16px;
+
+            background:
+                #d7aa76;
+
+            border:
+                3px solid #392a2c;
+        }
+
+        .pet-ear.one {
+            left: 1px;
+            top: -5px;
+
+            transform:
+                rotate(-20deg);
+        }
+
+        .pet-ear.two {
+            right: 1px;
+            top: -5px;
+
+            transform:
+                rotate(20deg);
+        }
+
+        .pet-eye {
+            position: absolute;
+
+            width: 4px;
+            height: 5px;
+
+            background:
+                #1f2029;
+
+            top: 13px;
+        }
+
+        .pet-eye.one {
+            left: 8px;
+        }
+
+        .pet-eye.two {
+            right: 8px;
+        }
+
+        /* =========================================================
+           MOUNTAINS / HORIZON
+        ========================================================= */
+
+        .horizon {
+            position: absolute;
+
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            height: 28%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    transparent 0 15%,
+                    #152b3f 15% 32%,
+                    transparent 32%
+                ),
+                linear-gradient(
+                    225deg,
+                    transparent 0 10%,
+                    #18364b 10% 29%,
+                    transparent 29%
+                ),
+                #162c3f;
+
+            clip-path:
+                polygon(
+                    0 45%,
+                    8% 38%,
+                    17% 50%,
+                    26% 25%,
+                    35% 45%,
+                    47% 18%,
+                    60% 44%,
+                    69% 28%,
+                    82% 47%,
+                    92% 25%,
+                    100% 43%,
+                    100% 100%,
+                    0 100%
+                );
+
+            opacity: .92;
+        }
+
+        .mist {
+            position: absolute;
+
+            left: 0;
+            right: 0;
+            bottom: 18%;
+
+            height: 12%;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    transparent,
+                    rgba(180,224,225,.22),
+                    transparent
+                );
+
+            filter: blur(7px);
+
+            animation:
+                mistMove
+                8s
+                ease-in-out
+                infinite alternate;
+        }
+
+        @keyframes mistMove {
+            from {
+                transform: translateX(-2%);
+            }
+
+            to {
+                transform: translateX(2%);
+            }
+        }
+
+        /* =========================================================
+           APP LAYER
+        ========================================================= */
+
+        .app {
+            position: relative;
+
+            z-index: 10;
+
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100svh;
+
+            display: flex;
+            flex-direction: column;
+
+            padding:
+                clamp(18px, 3vw, 42px);
+        }
+
+        /* =========================================================
+           NAV
+        ========================================================= */
+
+        .topbar {
+            width: 100%;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom:
+                clamp(20px, 4vh, 60px);
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+
+            gap: 9px;
+
+            font-family:
+                "Press Start 2P",
+                monospace;
+
+            font-size:
+                clamp(10px, 1vw, 15px);
+
+            text-shadow:
+                var(--pixel-shadow);
+        }
+
+        .brand-dot {
+            width: 10px;
+            height: 10px;
+
+            background:
+                var(--accent);
+
+            box-shadow:
+                4px 4px 0 rgba(0,0,0,.2);
+        }
+
+        .status {
+            padding: 10px 14px;
+
+            border:
+                1px solid rgba(255,255,255,.13);
+
+            background:
+                rgba(5,10,18,.34);
+
+            backdrop-filter:
+                blur(8px);
+
+            border-radius:
+                999px;
+
+            font-size:
+                20px;
+
+            color:
+                rgba(255,255,255,.78);
+        }
+
+        /* =========================================================
+           MAIN
+        ========================================================= */
+
+        .main {
+            width: 100%;
+            max-width: 1450px;
+
+            margin:
+                0 auto;
+
+            display:
+                grid;
+
+            grid-template-columns:
+                minmax(0, 1.1fr)
+                minmax(310px, .75fr);
+
+            gap:
+                clamp(24px, 5vw, 80px);
+
+            align-items:
+                end;
+
+            flex: 1;
+        }
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero {
+            padding-bottom:
+                clamp(30px, 5vh, 80px);
+
+            max-width:
+                750px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+
+            gap: 8px;
+
+            font-family:
+                "Press Start 2P",
+                monospace;
+
+            font-size:
+                clamp(8px, .8vw, 12px);
+
+            color:
+                var(--accent);
+
+            margin-bottom:
+                22px;
+
+            text-shadow:
+                3px 3px 0 rgba(0,0,0,.2);
+        }
+
+        .eyebrow::before {
+            content: "";
+
+            width: 8px;
+            height: 8px;
+
+            background:
+                var(--accent);
+        }
+
+        .hero-title {
+            font-family:
+                "Press Start 2P",
+                monospace;
+
+            font-size:
+                clamp(29px, 6vw, 90px);
+
+            line-height:
+                1.17;
+
+            max-width:
+                800px;
+
+            letter-spacing:
+                -2px;
+
+            text-shadow:
+                5px 5px 0 rgba(0,0,0,.23);
+        }
+
+        .hero-title span {
+            color:
+                var(--accent);
+        }
+
+        .hero-copy {
+            max-width:
+                580px;
+
+            margin-top:
+                22px;
+
+            font-size:
+                clamp(19px, 2vw, 27px);
+
+            line-height:
+                1.1;
+
+            color:
+                rgba(255,255,255,.79);
+        }
+
+        .hero-buttons {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 12px;
+
+            margin-top: 28px;
+        }
+
+        .pixel-button {
+            border: none;
+
+            padding:
+                13px 18px;
+
+            border-radius:
+                8px;
+
+            font-family:
+                "Press Start 2P",
+                monospace;
+
+            font-size:
+                9px;
+
+            background:
+                var(--accent);
+
+            color:
+                #19130a;
+
+            box-shadow:
+                4px 4px 0 rgba(0,0,0,.3);
+
+            transition:
+                transform .18s ease,
+                box-shadow .18s ease;
+        }
+
+        .pixel-button:hover {
+            transform:
+                translate(2px, 2px);
+
+            box-shadow:
+                2px 2px 0 rgba(0,0,0,.3);
+        }
+
+        .pixel-button.secondary {
+            background:
+                rgba(255,255,255,.1);
+
+            color:
+                white;
+
+            border:
+                1px solid rgba(255,255,255,.15);
+        }
+
+        /* =========================================================
+           PLAYER
+        ========================================================= */
+
+        .player {
+            width: 100%;
+
+            background:
+                var(--panel);
+
+            border:
+                1px solid var(--panel-border);
+
+            border-radius:
+                var(--ui-radius);
+
+            padding:
+                clamp(16px, 2vw, 26px);
+
+            backdrop-filter:
+                blur(16px);
+
+            box-shadow:
+                0 20px 70px rgba(0,0,0,.24);
+
+            overflow: hidden;
+        }
+
+        .album {
+            display: grid;
+
+            grid-template-columns:
+                115px
+                1fr;
+
+            gap:
+                17px;
+
+            align-items:
+                center;
+        }
+
+        .album-cover {
+            width: 115px;
+            aspect-ratio: 1;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #26354b,
+                    #b87235
+                );
+
+            border:
+                4px solid #101927;
+
+            box-shadow:
+                6px 6px 0 rgba(0,0,0,.3);
+
+            position: relative;
+
+            overflow: hidden;
+
+            image-rendering:
+                pixelated;
+        }
+
+        .album-cover::before {
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    transparent 60%,
+                    rgba(0,0,0,.28)
+                );
+        }
+
+        .album-cover::after {
+            content: "SKY";
+
+            position: absolute;
+
+            left: 10px;
+            bottom: 9px;
+
+            font-family:
+                "Press Start 2P",
+                monospace;
+
+            font-size: 9px;
+
+            color:
+                white;
+
+            text-shadow:
+                3px 3px 0 rgba(0,0,0,.45);
+        }
+
+        .album-meta {
+            min-width: 0;
+        }
+
+        .album-label {
+            font-family:
+                "Press Start 2P",
+                monospace;
+
+            font-size: 8px;
+
+            color:
+                var(--accent);
+
+            margin-bottom: 10px;
+        }
+
+        .song-title {
+            font-family:
+                "Press Start 2P",
+                monospace;
+
+            font-size:
+                clamp(12px, 1.25vw, 18px);
+
+            line-height: 1.45;
+        }
+
+        .artist {
+            margin-top: 8px;
+
+            font-size: 20px;
+
+            color:
+                var(--soft-white);
+        }
+
+        .audio-ui {
+            margin-top:
+                22px;
+        }
+
+        .progress {
+            width: 100%;
+
+            height: 8px;
+
+            background:
+                rgba(255,255,255,.1);
+
+            border-radius:
+                999px;
+
+            overflow: hidden;
+
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            width: 0%;
+
+            height: 100%;
+
+            background:
+                var(--accent);
+
+            box-shadow:
+                0 0 12px rgba(255,210,102,.4);
+
+            transition:
+                width .08s linear;
+        }
+
+        .time-row {
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-top: 8px;
+
+            color:
+                rgba(255,255,255,.55);
+
+            font-size:
+                17px;
+        }
+
+        .controls {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin-top: 16px;
+        }
+
+        .control-button {
+            width: 48px;
+            height: 48px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            display: grid;
+            place-items: center;
+
+            background:
+                rgba(255,255,255,.11);
+
+            color:
+                white;
+
+            transition:
+                transform .15s ease,
+                background .15s ease;
+        }
+
+        .control-button:hover {
+            transform:
+                scale(1.05);
+
+            background:
+                rgba(255,255,255,.18);
+        }
+
+        .control-button.play {
+            width: 58px;
+            height: 58px;
+
+            background:
+                var(--accent);
+
+            color:
+                #1c160d;
+        }
+
+        .control-icon {
+            font-family:
+                Arial,
+                sans-serif;
+
+            font-weight:
+                900;
+
+            font-size: 20px;
+        }
+
+        .volume {
+            margin-left: auto;
+
+            width: 100px;
+        }
+
+        .volume input {
+            width: 100%;
+        }
+
+        input[type="range"] {
+            appearance: none;
+
+            height: 4px;
+
+            border-radius: 999px;
+
+            background:
+                rgba(255,255,255,.16);
+
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+
+            width: 12px;
+            height: 12px;
+
+            border-radius: 50%;
+
+            background:
+                var(--accent);
+        }
+
+        /* =========================================================
+           LYRICS
+        ========================================================= */
+
+        .lyrics {
+            margin-top: 22px;
+
+            border-top:
+                1px solid rgba(255,255,255,.1);
+
+            padding-top: 17px;
+        }
+
+        .lyrics-head {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 10px;
+
+            margin-bottom: 12px;
+        }
+
+        .lyrics-head strong {
+            font-family:
+                "Press Start 2P",
+                monospace;
+
+            font-size:
+                8px;
+
+            color:
+                rgba(255,255,255,.65);
+        }
+
+        .lyrics-window {
+            max-height:
+                190px;
+
+            overflow:
+                auto;
+
+            scroll-behavior:
+                smooth;
+
+            padding-right: 7px;
+        }
+
+        .lyrics-window::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .lyrics-window::-webkit-scrollbar-thumb {
+            background:
+                rgba(255,255,255,.2);
+        }
+
+        .line {
+            opacity:
+                .28;
+
+            transform:
+                translateY(8px);
+
+            transition:
+                opacity .35s ease,
+                transform .35s ease,
+                color .35s ease;
+
+            font-size:
+                clamp(18px, 1.7vw, 23px);
+
+            padding:
+                5px 0;
+
+            cursor:
+                pointer;
+        }
+
+        .line.active {
+            opacity:
+                1;
+
+            color:
+                var(--accent);
+
+            transform:
+                translateY(0);
+
+            text-shadow:
+                3px 3px 0 rgba(0,0,0,.2);
+        }
+
+        .line.past {
+            opacity:
+                .5;
+        }
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 1050px) {
+            .main {
+                grid-template-columns:
+                    1fr;
+
+                align-items:
+                    end;
+
+                padding-bottom:
+                    20px;
+            }
+
+            .hero {
+                max-width:
+                    760px;
+
+                padding-bottom:
+                    10px;
+            }
+
+            .player {
+                max-width:
+                    680px;
+            }
+
+            .flyer {
+                top: 39%;
+            }
+
+            .sun-wrapper {
+                top: 34%;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .app {
+                padding:
+                    14px;
+            }
+
+            .topbar {
+                margin-bottom:
+                    20px;
+            }
+
+            .status {
+                font-size: 16px;
+                padding: 8px 10px;
+            }
+
+            .main {
+                gap:
+                    16px;
+            }
+
+            .hero {
+                padding-bottom:
+                    0;
+            }
+
+            .hero-title {
+                letter-spacing:
+                    -1px;
+
+                text-shadow:
+                    3px 3px 0 rgba(0,0,0,.23);
+            }
+
+            .hero-copy {
+                margin-top:
+                    14px;
+
+                font-size:
+                    19px;
+            }
+
+            .hero-buttons {
+                margin-top:
+                    18px;
+            }
+
+            .pixel-button {
+                font-size:
+                    8px;
+
+                padding:
+                    11px 13px;
+            }
+
+            .player {
+                padding:
+                    14px;
+
+                border-radius:
+                    14px;
+            }
+
+            .album {
+                grid-template-columns:
+                    82px
+                    1fr;
+
+                gap:
+                    13px;
+            }
+
+            .album-cover {
+                width: 82px;
+                border-width:
+                    3px;
+            }
+
+            .song-title {
+                font-size:
+                    10px;
+            }
+
+            .artist {
+                font-size:
+                    18px;
+            }
+
+            .volume {
+                width:
+                    75px;
+            }
+
+            .lyrics-window {
+                max-height:
+                    155px;
+            }
+
+            .flyer {
+                top: 28%;
+
+                width:
+                    135px;
+
+                left:
+                    50%;
+            }
+
+            .sun-wrapper {
+                top:
+                    26%;
+
+                width:
+                    100px;
+            }
+
+            .moon {
+                top:
+                    6%;
+
+                right:
+                    6%;
+            }
+
+            .cloud {
+                opacity:
+                    .62;
+            }
+
+            .horizon {
+                height:
+                    21%;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .brand {
+                font-size:
+                    8px;
+            }
+
+            .status {
+                font-size:
+                    14px;
+            }
+
+            .hero-title {
+                font-size:
+                    26px;
+            }
+
+            .hero-copy {
+                font-size:
+                    17px;
+            }
+
+            .album {
+                grid-template-columns:
+                    72px
+                    1fr;
+            }
+
+            .album-cover {
+                width:
+                    72px;
+            }
+
+            .control-button {
+                width:
+                    42px;
+                height:
+                    42px;
+            }
+
+            .control-button.play {
+                width:
+                    52px;
+                height:
+                    52px;
+            }
+
+            .volume {
+                width:
+                    60px;
+            }
+
+            .lyrics-window {
+                max-height:
+                    130px;
+            }
+
+            .line {
+                font-size:
+                    17px;
+            }
+        }
+
+        /* Landscape phone */
+
+        @media (
+            max-height: 600px
+        ) and (
+            orientation: landscape
+        ) {
+            .app {
+                padding:
+                    12px 20px;
+            }
+
+            .topbar {
+                margin-bottom:
+                    8px;
+            }
+
+            .main {
+                grid-template-columns:
+                    1fr 360px;
+
+                gap:
+                    25px;
+            }
+
+            .hero-title {
+                font-size:
+                    31px;
+            }
+
+            .hero-copy {
+                font-size:
+                    17px;
+            }
+
+            .hero-buttons {
+                margin-top:
+                    12px;
+            }
+
+            .sun-wrapper {
+                top:
+                    32%;
+            }
+
+            .flyer {
+                top:
+                    38%;
+            }
+
+            .lyrics-window {
+                max-height:
+                    95px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================================================
+         PIXEL ART SCENE
+    ========================================================== -->
+
+    <div class="scene">
+
+        <div class="sky-gradient"></div>
+
+        <div class="pixel-grid"></div>
+
+        <div class="stars" id="stars"></div>
+
+        <div class="moon"></div>
+
+        <div class="sun-wrapper">
+            <div class="sun-glow"></div>
+            <div class="sun"></div>
+        </div>
+
+        <!-- Clouds -->
+
+        <div
+            class="cloud"
+            style="
+                top: 18%;
+                left: -20%;
+                --cloud-speed: 38s;
+            "
+        >
+            <span class="cloud-piece a"></span>
+            <span class="cloud-piece b"></span>
+            <span class="cloud-piece c"></span>
+        </div>
+
+        <div
+            class="cloud"
+            style="
+                top: 28%;
+                left: -30%;
+                --cloud-speed: 54s;
+                transform: scale(.7);
+            "
+        >
+            <span class="cloud-piece a"></span>
+            <span class="cloud-piece b"></span>
+            <span class="cloud-piece c"></span>
+        </div>
+
+        <div
+            class="cloud"
+            style="
+                top: 11%;
+                left: -35%;
+                --cloud-speed: 66s;
+                transform: scale(.5);
+            "
+        >
+            <span class="cloud-piece a"></span>
+            <span class="cloud-piece b"></span>
+            <span class="cloud-piece c"></span>
+        </div>
+
+        <!-- Flying character -->
+
+        <div class="flyer">
+
+            <div class="flyer-shadow"></div>
+
+            <div class="broom"></div>
+
+            <div class="character">
+
+                <div class="hair"></div>
+
+                <div class="head">
+                    <span class="eye left"></span>
+                    <span class="eye right"></span>
+                </div>
+
+                <div class="body"></div>
+
+                <div class="cloak"></div>
+
+                <div class="leg left"></div>
+                <div class="leg right"></div>
+
+            </div>
+
+            <!-- Pet -->
+
+            <div class="pet">
+
+                <div class="pet-body"></div>
+
+                <div class="pet-head">
+
+                    <div class="pet-ear one"></div>
+                    <div class="pet-ear two"></div>
+
+                    <span class="pet-eye one"></span>
+                    <span class="pet-eye two"></span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mist"></div>
+
+        <div class="horizon"></div>
+
+    </div>
+
+
+    <!-- =========================================================
+         MAIN APP
+    ========================================================== -->
+
+    <div class="app">
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div class="brand">
+
+                <span class="brand-dot"></span>
+
+                SKYBOUND
+
+            </div>
+
+            <div class="status">
+                MUSIC / 8BIT
+            </div>
+
+        </header>
+
+
+        <!-- MAIN CONTENT -->
+
+        <main class="main">
+
+            <!-- HERO -->
+
+            <section class="hero">
+
+                <div class="eyebrow">
+                    A SONG ABOVE THE CLOUDS
+                </div>
+
+                <h1 class="hero-title">
+                    FLYING<br>
+                    <span>THROUGH</span><br>
+                    THE SKY
+                </h1>
+
+                <p class="hero-copy">
+                    Put your headphones on, sit back,
+                    and let the song carry you somewhere
+                    above the clouds.
+                </p>
+
+                <div class="hero-buttons">
+
+                    <button
+                        class="pixel-button"
+                        id="heroPlay"
+                    >
+                        ▶ PLAY SONG
+                    </button>
+
+                    <button
+                        class="pixel-button secondary"
+                        id="scrollLyrics"
+                    >
+                        ↓ LYRICS
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- PLAYER -->
+
+            <aside
+                class="player"
+                id="musicPlayer"
+            >
+
+                <div class="album">
+
+                    <div
+                        class="album-cover"
+                        id="albumCover"
+                    ></div>
+
+                    <div class="album-meta">
+
+                        <div class="album-label">
+                            NOW PLAYING
+                        </div>
+
+                        <h2 class="song-title">
+                            SKY ABOVE THE CLOUDS
+                        </h2>
+
+                        <div class="artist">
+                            Your Artist
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="audio-ui">
+
+                    <div
+                        class="progress"
+                        id="progress"
+                    >
+                        <div
+                            class="progress-bar"
+                            id="progressBar"
+                        ></div>
+                    </div>
+
+                    <div class="time-row">
+
+                        <span id="currentTime">
+                            0:00
+                        </span>
+
+                        <span id="duration">
+                            0:00
+                        </span>
+
+                    </div>
+
+                    <div class="controls">
+
+                        <button
+                            class="control-button"
+                            id="backButton"
+                            aria-label="Previous"
+                        >
+                            <span class="control-icon">
+                                ‹
+                            </span>
+                        </button>
+
+                        <button
+                            class="control-button play"
+                            id="playButton"
+                            aria-label="Play"
+                        >
+                            <span
+                                class="control-icon"
+                                id="playIcon"
+                            >
+                                ▶
+                            </span>
+                        </button>
+
+                        <button
+                            class="control-button"
+                            id="nextButton"
+                            aria-label="Next"
+                        >
+                            <span class="control-icon">
+                                ›
+                            </span>
+                        </button>
+
+                        <div class="volume">
+
+                            <input
+                                id="volume"
+                                type="range"
+                                min="0"
+                                max="1"
+                                step="0.01"
+                                value="0.8"
+                                aria-label="Volume"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LYRICS -->
+
+                <div
+                    class="lyrics"
+                    id="lyricsSection"
+                >
+
+                    <div class="lyrics-head">
+
+                        <strong>
+                            LYRICS
+                        </strong>
+
+                        <span
+                            id="lyricsStatus"
+                            style="
+                                color: rgba(255,255,255,.4);
+                                font-size: 14px;
+                            "
+                        >
+                            WAITING...
+                        </span>
+
+                    </div>
+
+                    <div
+                        class="lyrics-window"
+                        id="lyricsWindow"
+                    >
+
+                        <!--
+                            LIRIK AKAN DIBUAT DARI JAVASCRIPT
+                        -->
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </main>
+
+    </div>
+
+
+    <!-- =========================================================
+         AUDIO
+    ========================================================== -->
+
+    <audio
+        id="audio"
+        preload="metadata"
+    ></audio>
+
+
+    <script>
+
+        /* =========================================================
+           CONFIG
+        ========================================================= */
+
+        /*
+            GANTI INI DENGAN FILE LAGU KAMU
+
+            Contoh:
+
+            const audioSrc =
+                "assets/song.mp3";
+
+            atau:
+
+            const audioSrc =
+                "music/lagu-kamu.mp3";
+        */
+
+        const audioSrc =
+            "assets/song.mp3";
+
+
+        /*
+            OPTIONAL:
+            Kalau mau album cover berupa file gambar,
+            tambahkan:
+
+            const albumImage =
+                "assets/album.jpg";
+
+            lalu background albumCover akan memakai gambar itu.
+        */
+
+        const albumImage =
+            "";
+
+
+        /* =========================================================
+           LYRICS
+        ========================================================== */
+
+        /*
+            Format:
+
+            {
+                time: 0,
+                text: "Lirik..."
+            }
+
+            time menggunakan detik.
+
+            Contoh:
+
+            0       = 0:00
+            5.2     = 0:05
+            10      = 0:10
+        */
+
+        const lyrics = [
+
+            {
+                time: 4.38,
+                text: "karna kamu cantik"
+            },
+
+            {
+                time: 7.4,
+                text: "Kan ku beri semuanya apa yang kupunya"
+            },
+
+            {
+                time: 11.5,
+                text: "Dan hatimuu baik"
+            },
+
+            {
+                time: 14.5,
+                text: "Sempurnalah duniakuu saat kau disisiku"
+            },
+
+            {
+                time: 19,
+                text: "Bukan karna make up di wajah mu"
+            },
+
+            {
+                time: 22.4,
+                text: "Atau lipstik merah itu"
+            },
+
+            {
+                time: 26,
+                text: "Lembut hati turur kata"
+            },
+
+            {
+                time: 29,
+                text: "Terciptalah cinta yang kupuja :>"
+            }
+
+        ];
+
+
+        /* =========================================================
+           DOM
+        ========================================================== */
+
+        const audio =
+            document.getElementById("audio");
+
+        const playButton =
+            document.getElementById("playButton");
+
+        const playIcon =
+            document.getElementById("playIcon");
+
+        const heroPlay =
+            document.getElementById("heroPlay");
+
+        const progress =
+            document.getElementById("progress");
+
+        const progressBar =
+            document.getElementById("progressBar");
+
+        const currentTime =
+            document.getElementById("currentTime");
+
+        const duration =
+            document.getElementById("duration");
+
+        const volume =
+            document.getElementById("volume");
+
+        const lyricsWindow =
+            document.getElementById("lyricsWindow");
+
+        const lyricsStatus =
+            document.getElementById("lyricsStatus");
+
+        const scrollLyrics =
+            document.getElementById("scrollLyrics");
+
+        const albumCover =
+            document.getElementById("albumCover");
+
+
+        /* =========================================================
+           AUDIO SETUP
+        ========================================================== */
+
+        audio.src =
+            audioSrc;
+
+        audio.volume =
+            Number(volume.value);
+
+
+        /* =========================================================
+           ALBUM IMAGE
+        ========================================================== */
+
+        if (albumImage.trim() !== "") {
+
+            albumCover.style.backgroundImage =
+                `url("${albumImage}")`;
+
+            albumCover.style.backgroundSize =
+                "cover";
+
+            albumCover.style.backgroundPosition =
+                "center";
+
+        }
+
+
+        /* =========================================================
+           CREATE LYRICS
+        ========================================================== */
+
+        lyrics.forEach(
+            (item, index) => {
+
+                const line =
+                    document.createElement("div");
+
+                line.className =
+                    "line";
+
+                line.dataset.index =
+                    index;
+
+                line.dataset.time =
+                    item.time;
+
+                line.textContent =
+                    item.text;
+
+                line.addEventListener(
+                    "click",
+                    () => {
+
+                        audio.currentTime =
+                            item.time;
+
+                        if (
+                            audio.paused
+                        ) {
+                            audio.play()
+                                .catch(() => {});
+                        }
+
+                    }
+                );
+
+                lyricsWindow.appendChild(
+                    line
+                );
+
+            }
+        );
+
+
+        const lyricElements =
+            [...document.querySelectorAll(".line")];
+
+
+        /* =========================================================
+           FORMAT TIME
+        ========================================================== */
+
+        function formatTime(seconds) {
+
+            if (!Number.isFinite(seconds)) {
+                return "0:00";
+            }
+
+            const minutes =
+                Math.floor(seconds / 60);
+
+            const secs =
+                Math.floor(seconds % 60)
+                    .toString()
+                    .padStart(2, "0");
+
+            return `${minutes}:${secs}`;
+
+        }
+
+
+        /* =========================================================
+           PLAY / PAUSE
+        ========================================================== */
+
+        function togglePlay() {
+
+            if (
+                audio.paused
+            ) {
+
+                audio.play()
+                    .then(() => {
+
+                        playIcon.textContent =
+                            "Ⅱ";
+
+                        heroPlay.textContent =
+                            "Ⅱ PAUSE SONG";
+
+                    })
+                    .catch(() => {
+
+                        alert(
+                            "File lagu belum ditemukan. Periksa audioSrc di bagian JavaScript."
+                        );
+
+                    });
+
+            } else {
+
+                audio.pause();
+
+                playIcon.textContent =
+                    "▶";
+
+                heroPlay.textContent =
+                    "▶ PLAY SONG";
+
+            }
+
+        }
+
+
+        playButton.addEventListener(
+            "click",
+            togglePlay
+        );
+
+        heroPlay.addEventListener(
+            "click",
+            togglePlay
+        );
+
+
+        /* =========================================================
+           AUDIO EVENTS
+        ========================================================== */
+
+        audio.addEventListener(
+            "loadedmetadata",
+            () => {
+
+                duration.textContent =
+                    formatTime(
+                        audio.duration
+                    );
+
+            }
+        );
+
+
+        audio.addEventListener(
+            "timeupdate",
+            () => {
+
+                if (
+                    !Number.isFinite(audio.duration) ||
+                    audio.duration <= 0
+                ) {
+                    return;
+                }
+
+                const percentage =
+                    (
+                        audio.currentTime /
+                        audio.duration
+                    ) * 100;
+
+                progressBar.style.width =
+                    `${percentage}%`;
+
+                currentTime.textContent =
+                    formatTime(
+                        audio.currentTime
+                    );
+
+                updateLyrics(
+                    audio.currentTime
+                );
+
+            }
+        );
+
+
+        audio.addEventListener(
+            "play",
+            () => {
+
+                playIcon.textContent =
+                    "Ⅱ";
+
+                heroPlay.textContent =
+                    "Ⅱ PAUSE SONG";
+
+                lyricsStatus.textContent =
+                    "PLAYING";
+
+            }
+        );
+
+
+        audio.addEventListener(
+            "pause",
+            () => {
+
+                playIcon.textContent =
+                    "▶";
+
+                heroPlay.textContent =
+                    "▶ PLAY SONG";
+
+                lyricsStatus.textContent =
+                    "PAUSED";
+
+            }
+        );
+
+
+        audio.addEventListener(
+            "ended",
+            () => {
+
+                playIcon.textContent =
+                    "▶";
+
+                heroPlay.textContent =
+                    "▶ PLAY AGAIN";
+
+                lyricsStatus.textContent =
+                    "FINISHED";
+
+            }
+        );
+
+
+        /* =========================================================
+           PROGRESS BAR CLICK
+        ========================================================== */
+
+        progress.addEventListener(
+            "click",
+            (event) => {
+
+                if (
+                    !Number.isFinite(
+                        audio.duration
+                    )
+                ) {
+                    return;
+                }
+
+                const rect =
+                    progress.getBoundingClientRect();
+
+                const position =
+                    (
+                        event.clientX -
+                        rect.left
+                    ) /
+                    rect.width;
+
+                audio.currentTime =
+                    position *
+                    audio.duration;
+
+            }
+        );
+
+
+        /* =========================================================
+           VOLUME
+        ========================================================== */
+
+        volume.addEventListener(
+            "input",
+            () => {
+
+                audio.volume =
+                    Number(volume.value);
+
+            }
+        );
+
+
+        /* =========================================================
+           PREVIOUS / NEXT
+        ========================================================== */
+
+        document
+            .getElementById("backButton")
+            .addEventListener(
+                "click",
+                () => {
+
+                    audio.currentTime =
+                        Math.max(
+                            0,
+                            audio.currentTime - 5
+                        );
+
+                }
+            );
+
+
+        document
+            .getElementById("nextButton")
+            .addEventListener(
+                "click",
+                () => {
+
+                    audio.currentTime =
+                        Math.min(
+                            audio.duration || 0,
+                            audio.currentTime + 5
+                        );
+
+                }
+            );
+
+
+        /* =========================================================
+           LYRIC SYNC
+        ========================================================== */
+
+        let activeLyric =
+            -1;
+
+
+        function updateLyrics(
+            current
+        ) {
+
+            let currentIndex =
+                -1;
+
+            for (
+                let i = 0;
+                i < lyrics.length;
+                i++
+            ) {
+
+                if (
+                    current >=
+                    lyrics[i].time
+                ) {
+
+                    currentIndex =
+                        i;
+
+                } else {
+
+                    break;
+
+                }
+
+            }
+
+            if (
+                currentIndex ===
+                activeLyric
+            ) {
+                return;
+            }
+
+            activeLyric =
+                currentIndex;
+
+
+            lyricElements.forEach(
+                (element, index) => {
+
+                    element.classList
+                        .remove(
+                            "active"
+                        );
+
+                    element.classList
+                        .remove(
+                            "past"
+                        );
+
+                    if (
+                        index <
+                        currentIndex
+                    ) {
+
+                        element.classList
+                            .add(
+                                "past"
+                            );
+
+                    }
+
+                }
+            );
+
+
+            if (
+                currentIndex >= 0
+            ) {
+
+                const activeElement =
+                    lyricElements[
+                        currentIndex
+                    ];
+
+                activeElement.classList
+                    .add(
+                        "active"
+                    );
+
+                lyricsStatus.textContent =
+                    "SYNCED";
+
+                activeElement.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+
+            }
+
+        }
+
+
+        /* =========================================================
+           SCROLL TO LYRICS
+        ========================================================== */
+
+        scrollLyrics.addEventListener(
+            "click",
+            () => {
+
+                document
+                    .getElementById(
+                        "lyricsSection"
+                    )
+                    .scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    });
+
+            }
+        );
+
+
+        /* =========================================================
+           STAR GENERATOR
+        ========================================================== */
+
+        const stars =
+            document.getElementById(
+                "stars"
+            );
+
+        const STAR_COUNT =
+            window.innerWidth < 600
+                ? 35
+                : 75;
+
+
+        for (
+            let i = 0;
+            i < STAR_COUNT;
+            i++
+        ) {
+
+            const star =
+                document.createElement("span");
+
+            star.className =
+                "star";
+
+            star.style.left =
+                `${Math.random() * 100}%`;
+
+            star.style.top =
+                `${Math.random() * 70}%`;
+
+            star.style.setProperty(
+                "--duration",
+                `${2 + Math.random() * 5}s`
+            );
+
+            star.style.animationDelay =
+                `${Math.random() * 5}s`;
+
+            if (
+                Math.random() > .8
+            ) {
+
+                star.style.width =
+                    "5px";
+
+                star.style.height =
+                    "5px";
+
+            }
+
+            stars.appendChild(
+                star
+            );
+
+        }
+
+
+        /* =========================================================
+           PARALLAX CLOUDS
+        ========================================================== */
+
+        const cloudElements =
+            document.querySelectorAll(
+                ".cloud"
+            );
+
+
+        window.addEventListener(
+            "pointermove",
+            (event) => {
+
+                const x =
+                    (
+                        event.clientX /
+                        window.innerWidth
+                    ) - .5;
+
+                const y =
+                    (
+                        event.clientY /
+                        window.innerHeight
+                    ) - .5;
+
+
+                cloudElements.forEach(
+                    (cloud, index) => {
+
+                        const strength =
+                            (index + 1) * 4;
+
+                        cloud.style.marginTop =
+                            `${y * strength}px`;
+
+                    }
+                );
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        /* =========================================================
+           KEYBOARD SHORTCUT
+        ========================================================== */
+
+        document.addEventListener(
+            "keydown",
+            (event) => {
+
+                if (
+                    event.code ===
+                    "Space"
+                ) {
+
+                    const tag =
+                        document
+                            .activeElement
+                            ?.tagName;
+
+                    if (
+                        tag === "INPUT"
+                    ) {
+                        return;
+                    }
+
+                    event.preventDefault();
+
+                    togglePlay();
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
