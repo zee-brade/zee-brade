@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <meta
+    name="description"
+    content="ZEEL.FEX - Landing Page Mobile First"
+  />
+
+  <title>ZEEL.FEX</title>
+
+  <style>
+    /* =========================================================
+       RESET & GLOBAL
+    ========================================================= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --black: #000000;
+      --dark: #111111;
+      --dark-soft: rgba(20, 20, 20, 0.78);
+      --gold: #c89116;
+      --gold-light: #e3b446;
+
+      --white: #ffffff;
+      --white-soft: rgba(255, 255, 255, 0.72);
+      --white-faint: rgba(255, 255, 255, 0.18);
+
+      --blue: #5061ff;
+      --purple: #7654ff;
+      --pink: #e953c8;
+      --red: #ff4c73;
+
+      --radius: 22px;
+      --pill: 999px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--white);
+      background:
+        linear-gradient(
+          180deg,
+          #000000 0%,
+          #080603 30%,
+          #4b3006 68%,
+          #c89116 100%
+        );
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    button,
+    input,
+    video {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    /* =========================================================
+       PAGE
+    ========================================================= */
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .mobile-shell {
+      width: min(100%, 560px);
+      min-height: 100vh;
+      padding-bottom: 30px;
+    }
+
+    /* =========================================================
+       TOP HEADER
+    ========================================================= */
+    .top-header {
+      width: 100%;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 17px;
+
+      background: rgba(255, 255, 255, 0.97);
+      color: #111111;
+
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+
+      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.18);
+    }
+
+    /* =========================================================
+       MAIN CONTENT
+    ========================================================= */
+    .main-content {
+      width: 100%;
+      padding: 22px 15px 30px;
+    }
+
+    .page-title {
+      margin-bottom: 14px;
+      padding: 0 4px;
+
+      font-size: clamp(31px, 9vw, 46px);
+      line-height: 1;
+      font-weight: 950;
+      font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
+      letter-spacing: 1.2px;
+
+      color: #ffffff;
+      text-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.55),
+        0 0 25px rgba(255, 255, 255, 0.08);
+    }
+
+    /* =========================================================
+       MAIN CARD
+    ========================================================= */
+    .main-card {
+      width: 100%;
+      padding: 15px;
+
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(50, 50, 50, 0.80),
+          rgba(15, 15, 15, 0.84)
+        );
+
+      box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* =========================================================
+       CARD TOP ROW
+    ========================================================= */
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+
+      margin-bottom: 13px;
+    }
+
+    .card-description {
+      min-width: 0;
+
+      color: var(--white-soft);
+      font-size: 13px;
+      font-weight: 500;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .new-wrapper {
+      position: relative;
+      flex-shrink: 0;
+      padding-top: 7px;
+      padding-right: 1px;
+    }
+
+    .new-badge {
+      position: absolute;
+      top: -3px;
+      right: -2px;
+
+      z-index: 3;
+
+      padding: 3px 7px;
+      border-radius: 5px;
+
+      color: white;
+      background: linear-gradient(135deg, #ff304f, #ff1441);
+
+      font-size: 8px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+
+      transform: rotate(7deg);
+
+      box-shadow:
+        0 4px 10px rgba(255, 0, 50, 0.34),
+        0 0 0 1px rgba(255, 255, 255, 0.14);
+    }
+
+    .new-btn {
+      min-width: 82px;
+      height: 37px;
+      padding: 0 16px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: var(--pill);
+
+      color: #ffffff;
+      background:
+        linear-gradient(
+          100deg,
+          #5361ff 0%,
+          #7f4cff 43%,
+          #e94bc6 100%
+        );
+
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+
+      box-shadow:
+        0 7px 18px rgba(106, 76, 255, 0.26),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
+      transition:
+        transform 0.16s ease,
+        filter 0.16s ease,
+        box-shadow 0.16s ease;
+    }
+
+    .new-btn:hover {
+      filter: brightness(1.08);
+      box-shadow:
+        0 10px 23px rgba(106, 76, 255, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .new-btn:active {
+      transform: scale(0.94);
+    }
+
+    /* =========================================================
+       VIDEO CONTAINER
+    ========================================================= */
+    .video-container {
+      position: relative;
+      width: 100%;
+
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+
+      border-radius: 17px;
+
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(255, 201, 103, 0.1),
+          transparent 40%
+        ),
+        #080808;
+
+      border: 1px solid rgba(255, 255, 255, 0.09);
+
+      box-shadow:
+        inset 0 0 0 1px rgba(0, 0, 0, 0.38),
+        0 12px 24px rgba(0, 0, 0, 0.35);
+
+      touch-action: manipulation;
+      user-select: none;
+    }
+
+    .video-element {
+      position: absolute;
+      inset: 0;
+
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      background: #080808;
+
+      cursor: pointer;
+    }
+
+    /*
+      Thumbnail fallback / vintage TV visual.
+      Akan berada di belakang elemen video.
+    */
+    .tv-thumbnail {
+      position: absolute;
+      inset: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      overflow: hidden;
+      pointer-events: none;
+
+      background:
+        radial-gradient(
+          ellipse at center,
+          rgba(255, 225, 160, 0.33) 0%,
+          rgba(174, 119, 39, 0.22) 26%,
+          rgba(25, 16, 6, 0.7) 63%,
+          rgba(0, 0, 0, 0.95) 100%
+        );
+
+      z-index: 0;
+    }
+
+    .tv-thumbnail::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+
+      background:
+        repeating-linear-gradient(
+          0deg,
+          rgba(255, 255, 255, 0.04) 0,
+          rgba(255, 255, 255, 0.04) 1px,
+          rgba(0, 0, 0, 0.06) 1px,
+          rgba(0, 0, 0, 0.06) 4px
+        );
+
+      mix-blend-mode: overlay;
+      opacity: 0.8;
+    }
+
+    .tv-frame {
+      position: relative;
+
+      width: 63%;
+      aspect-ratio: 1.25;
+
+      border-radius: 12px 12px 19px 19px;
+
+      border: 5px solid #23190f;
+
+      background:
+        linear-gradient(
+          160deg,
+          #ab8036 0%,
+          #5a3c14 45%,
+          #1e1207 100%
+        );
+
+      box-shadow:
+        0 20px 35px rgba(0, 0, 0, 0.7),
+        inset 0 0 0 2px rgba(255, 218, 148, 0.12);
+
+      transform: perspective(700px) rotateX(2deg);
+    }
+
+    .tv-screen {
+      position: absolute;
+      top: 10%;
+      left: 8%;
+      right: 8%;
+      bottom: 18%;
+
+      overflow: hidden;
+
+      border-radius: 9px;
+
+      background:
+        radial-gradient(
+          ellipse at center,
+          #bf954b 0%,
+          #6d4818 38%,
+          #201205 77%,
+          #080502 100%
+        );
+
+      box-shadow:
+        inset 0 0 25px rgba(0, 0, 0, 0.82),
+        0 0 14px rgba(255, 207, 104, 0.08);
+    }
+
+    .tv-screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+
+      background:
+        repeating-linear-gradient(
+          0deg,
+          transparent 0,
+          transparent 2px,
+          rgba(0, 0, 0, 0.16) 3px,
+          transparent 4px
+        );
+    }
+
+    .tv-person {
+      position: absolute;
+      left: 50%;
+      bottom: 2%;
+      transform: translateX(-50%);
+
+      width: 33%;
+      height: 57%;
+
+      border-radius: 50% 50% 42% 42%;
+
+      background:
+        radial-gradient(
+          circle at 43% 28%,
+          rgba(255,255,255,0.12),
+          transparent 22%
+        ),
+        #1a1008;
+
+      filter: blur(0.3px);
+    }
+
+    .tv-person::before {
+      content: "";
+      position: absolute;
+
+      top: -28%;
+      left: 18%;
+
+      width: 64%;
+      aspect-ratio: 1;
+
+      border-radius: 50%;
+      background: #150c05;
+    }
+
+    .tv-sun {
+      position: absolute;
+      top: 11%;
+      right: 12%;
+
+      width: 22%;
+      aspect-ratio: 1;
+
+      border-radius: 50%;
+
+      background: #f5cb68;
+
+      box-shadow:
+        0 0 20px rgba(255, 203, 90, 0.58),
+        0 0 40px rgba(255, 194, 65, 0.18);
+    }
+
+    .tv-knob {
+      position: absolute;
+      bottom: 5%;
+      width: 11%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle at 35% 30%,
+          #dbc075 0%,
+          #80602a 30%,
+          #2d1c0d 100%
+        );
+
+      box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.12);
+    }
+
+    .tv-knob.one {
+      left: 20%;
+    }
+
+    .tv-knob.two {
+      left: 39%;
+    }
+
+    /* =========================================================
+       VIDEO OVERLAYS
+    ========================================================= */
+    .video-click-layer {
+      position: absolute;
+      inset: 0;
+
+      z-index: 4;
+      cursor: pointer;
+    }
+
+    .play-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+
+      width: 58px;
+      height: 58px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      transform: translate(-50%, -50%);
+
+      border-radius: 50%;
+
+      color: #ffffff;
+      background: rgba(17, 17, 17, 0.78);
+
+      border: 1px solid rgba(255, 255, 255, 0.18);
+
+      box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.48),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14);
+
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+
+      transition:
+        transform 0.18s ease,
+        background 0.18s ease;
+    }
+
+    .video-container:hover .play-btn {
+      background: rgba(22, 22, 22, 0.9);
+    }
+
+    .play-btn:active {
+      transform: translate(-50%, -50%) scale(0.88);
+    }
+
+    .play-icon {
+      width: 0;
+      height: 0;
+
+      margin-left: 4px;
+
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+      border-left: 14px solid #ffffff;
+    }
+
+    .play-btn.is-playing .play-icon {
+      width: 14px;
+      height: 18px;
+
+      margin-left: 0;
+
+      border: 0;
+      border-left: 5px solid #ffffff;
+      border-right: 5px solid #ffffff;
+    }
+
+    .video-controls {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 9px;
+
+      z-index: 6;
+
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mute-btn {
+      width: 31px;
+      height: 31px;
+
+      flex-shrink: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 50%;
+
+      color: white;
+      background: rgba(0, 0, 0, 0.55);
+
+      border: 1px solid rgba(255, 255, 255, 0.08);
+
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+
+      font-size: 14px;
+
+      transition:
+        transform 0.15s ease,
+        background 0.15s ease;
+    }
+
+    .mute-btn:active {
+      transform: scale(0.88);
+    }
+
+    .progress-wrap {
+      flex: 1;
+      height: 13px;
+
+      display: flex;
+      align-items: center;
+
+      cursor: pointer;
+    }
+
+    .progress-track {
+      position: relative;
+
+      width: 100%;
+      height: 4px;
+
+      overflow: hidden;
+
+      border-radius: var(--pill);
+
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+
+      border-radius: inherit;
+
+      background:
+        linear-gradient(
+          90deg,
+          #ffffff 0%,
+          #d7d7d7 100%
+        );
+
+      transition: width 0.08s linear;
+    }
+
+    /* =========================================================
+       AD STATUS
+    ========================================================= */
+    .ad-hint {
+      position: absolute;
+      left: 50%;
+      top: 15px;
+
+      z-index: 8;
+
+      transform: translateX(-50%);
+
+      display: none;
+
+      padding: 6px 10px;
+
+      border-radius: var(--pill);
+
+      color: rgba(255, 255, 255, 0.86);
+      background: rgba(0, 0, 0, 0.58);
+
+      border: 1px solid rgba(255, 255, 255, 0.08);
+
+      font-size: 9px;
+      font-weight: 700;
+
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+
+      pointer-events: none;
+    }
+
+    .ad-hint.show {
+      display: block;
+      animation: hintPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes hintPulse {
+      0%, 100% {
+        opacity: 0.7;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    /* =========================================================
+       BOTTOM CTA
+    ========================================================= */
+    .bottom-area {
+      margin-top: 15px;
+    }
+
+    .next-btn {
+      width: 100%;
+      min-height: 53px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: var(--pill);
+
+      color: #ffffff;
+
+      background:
+        linear-gradient(
+          90deg,
+          #5061ff 0%,
+          #7654ff 42%,
+          #e953c8 100%
+        );
+
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.1px;
+
+      box-shadow:
+        0 10px 25px rgba(81, 84, 255, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
+      transition:
+        transform 0.16s ease,
+        filter 0.16s ease,
+        box-shadow 0.16s ease;
+    }
+
+    .next-btn:hover {
+      filter: brightness(1.08);
+      box-shadow:
+        0 13px 30px rgba(81, 84, 255, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    }
+
+    .next-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* =========================================================
+       SMALL FOOTER
+    ========================================================= */
+    .mini-footer {
+      padding: 13px 5px 0;
+      text-align: center;
+
+      color: rgba(255, 255, 255, 0.42);
+      font-size: 9px;
+      letter-spacing: 0.4px;
+    }
+
+    /* =========================================================
+       DESKTOP ENHANCEMENT
+    ========================================================= */
+    @media (min-width: 700px) {
+      .mobile-shell {
+        padding-top: 12px;
+      }
+
+      .top-header {
+        border-radius: 14px;
+        margin: 0 auto;
+
+        width: calc(100% - 20px);
+      }
+
+      .main-content {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .page-title {
+        margin-top: 8px;
+      }
+    }
+
+    /* =========================================================
+       REDUCED MOTION
+    ========================================================= */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="mobile-shell">
+
+      <!-- =====================================================
+           TOP HEADER
+      ====================================================== -->
+      <header class="top-header">
+        <span>Halaman 1</span>
+      </header>
+
+      <!-- =====================================================
+           MAIN CONTENT
+      ====================================================== -->
+      <main class="main-content">
+
+        <!-- TITLE -->
+        <h1 class="page-title">ZEEL.FEX</h1>
+
+        <!-- ===================================================
+             MAIN CARD
+        ==================================================== -->
+        <section class="main-card">
+
+          <!-- CARD TOP -->
+          <div class="card-top">
+
+            <div class="card-description">
+              keterangan.....
+            </div>
+
+            <div class="new-wrapper">
+
+              <span class="new-badge">NEW!</span>
+
+              <button
+                type="button"
+                class="new-btn smartlink-trigger"
+                data-smartlink-type="new"
+                aria-label="New"
+              >
+                New -&gt;
+              </button>
+
+            </div>
+          </div>
+
+          <!-- =================================================
+               VIDEO
+          ================================================== -->
+          <div
+            class="video-container"
+            id="videoContainer"
+            aria-label="Video Player"
+          >
+
+            <!-- VINTAGE TV THUMBNAIL -->
+            <div class="tv-thumbnail" id="tvThumbnail">
+
+              <div class="tv-frame">
+
+                <div class="tv-screen">
+                  <div class="tv-sun"></div>
+                  <div class="tv-person"></div>
+                </div>
+
+                <span class="tv-knob one"></span>
+                <span class="tv-knob two"></span>
+
+              </div>
+
+            </div>
+
+            <!-- =================================================
+                 GANTI src DENGAN VIDEO ANDA
+            ================================================== -->
+            <video
+              id="videoPlayer"
+              class="video-element"
+              preload="metadata"
+              playsinline
+              poster=""
+            >
+              <source src="VID_20260812_165920.mp4" type="video/mp4">
+            </video>
+
+            <!-- AD HINT -->
+            <div class="ad-hint" id="adHint">
+              Klik video untuk membuka
+            </div>
+
+            <!-- VIDEO CLICK LAYER -->
+            <div
+              class="video-click-layer"
+              id="videoClickLayer"
+              aria-label="Klik video"
+            ></div>
+
+            <!-- PLAY -->
+            <button
+              type="button"
+              class="play-btn"
+              id="playBtn"
+              aria-label="Play / Pause"
+            >
+              <span class="play-icon"></span>
+            </button>
+
+            <!-- VIDEO CONTROLS -->
+            <div class="video-controls">
+
+              <!-- MUTE -->
+              <button
+                type="button"
+                class="mute-btn"
+                id="muteBtn"
+                aria-label="Mute"
+              >
+                🔊
+              </button>
+
+              <!-- PROGRESS -->
+              <div
+                class="progress-wrap"
+                id="progressWrap"
+                role="slider"
+                aria-label="Progress video"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+              >
+                <div class="progress-track">
+                  <div
+                    class="progress-fill"
+                    id="progressFill"
+                  ></div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- =====================================================
+             BOTTOM CTA
+        ====================================================== -->
+        <div class="bottom-area">
+
+          <button
+            type="button"
+            class="next-btn smartlink-trigger"
+            data-smartlink-type="next"
+            id="nextBtn"
+          >
+            Next Lainnya →
+          </button>
+
+        </div>
+
+        <div class="mini-footer">
+          ZEEL.FEX
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+       SMARTLINK CONFIG
+       =========================================================
+
+       GANTI URL DI BAWAH INI DENGAN LINK SMARTLINK ANDA.
+
+       Contoh:
+       const SMARTLINK_URL = "https://domain-smartlink-anda.com/xxxxx";
+    ========================================================= */
+
+    const SMARTLINK_URL =
+      "https://masukkan-link-smartlink-anda-di-sini.com";
+
+
+    /* =========================================================
+       SMARTLINK SETTINGS
+    ========================================================= */
+
+    /*
+      true  = membuka Smartlink di tab/window baru
+      false = redirect halaman saat ini
+    */
+    const SMARTLINK_OPEN_NEW_TAB = true;
+
+
+    /*
+      Jika ingin membatasi popunder agar tidak dipanggil berkali-kali,
+      Anda bisa mengubah nilai cooldown di bawah.
+
+      Contoh:
+      15 = 15 detik
+      20 = 20 detik
+    */
+    const SMARTLINK_COOLDOWN = 15;
+
+
+    /* =========================================================
+       ELEMENT REFERENCES
+    ========================================================= */
+
+    const videoContainer = document.getElementById("videoContainer");
+    const videoPlayer = document.getElementById("videoPlayer");
+    const videoClickLayer = document.getElementById("videoClickLayer");
+
+    const playBtn = document.getElementById("playBtn");
+    const muteBtn = document.getElementById("muteBtn");
+
+    const progressWrap = document.getElementById("progressWrap");
+    const progressFill = document.getElementById("progressFill");
+
+    const tvThumbnail = document.getElementById("tvThumbnail");
+    const adHint = document.getElementById("adHint");
+
+    const smartlinkButtons =
+      document.querySelectorAll(".smartlink-trigger");
+
+
+    /* =========================================================
+       SMARTLINK STATE
+    ========================================================= */
+
+    let smartlinkLocked = false;
+    let smartlinkCooldownTimer = null;
+
+
+    /* =========================================================
+       SMARTLINK FUNCTION
+       =========================================================
+
+       SLOT UTAMA UNTUK POPUNDER / DIRECT REDIRECT.
+
+       Semua tombol dan area video dapat memakai fungsi ini.
+    ========================================================= */
+
+    function openSmartlink(source = "unknown") {
+      /*
+        Jangan menjalankan jika URL belum diganti.
+      */
+      if (
+        !SMARTLINK_URL ||
+        SMARTLINK_URL.includes("masukkan-link-smartlink")
+      ) {
+        console.warn(
+          "[Smartlink] Silakan ganti SMARTLINK_URL terlebih dahulu."
+        );
+
+        return;
+      }
+
+      /*
+        Cooldown supaya satu klik tidak berkali-kali membuka iklan.
+      */
+      if (smartlinkLocked) {
+        console.log(
+          `[Smartlink] Cooldown aktif. Source: ${source}`
+        );
+
+        return;
+      }
+
+      /*
+        Kunci Smartlink.
+      */
+      smartlinkLocked = true;
+
+      /*
+        Buka Smartlink.
+      */
+      if (SMARTLINK_OPEN_NEW_TAB) {
+        window.open(
+          SMARTLINK_URL,
+          "_blank",
+          "noopener,noreferrer"
+        );
+      } else {
+        window.location.href = SMARTLINK_URL;
+      }
+
+      /*
+        Mulai cooldown.
+      */
+      startSmartlinkCooldown();
+    }
+
+
+    /* =========================================================
+       SMARTLINK COOLDOWN
+    ========================================================= */
+
+    function startSmartlinkCooldown() {
+      clearTimeout(smartlinkCooldownTimer);
+
+      if (adHint) {
+        adHint.classList.remove("show");
+      }
+
+      smartlinkCooldownTimer = setTimeout(() => {
+        smartlinkLocked = false;
+
+        if (adHint) {
+          adHint.classList.add("show");
+
+          setTimeout(() => {
+            adHint.classList.remove("show");
+          }, 2500);
+        }
+
+        console.log("[Smartlink] Cooldown selesai.");
+      }, SMARTLINK_COOLDOWN * 1000);
+    }
+
+
+    /* =========================================================
+       BUTTON SMARTLINK
+    ========================================================= */
+
+    smartlinkButtons.forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const source =
+          button.dataset.smartlinkType || "button";
+
+        openSmartlink(source);
+      });
+    });
+
+
+    /* =========================================================
+       VIDEO AREA SMARTLINK
+       =========================================================
+
+       Klik area video:
+       - memanggil Smartlink
+       - tidak mengganggu kontrol asli
+       - tetap bisa dikembangkan menjadi click-trap
+    ========================================================= */
+
+    videoClickLayer.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      openSmartlink("video");
+    });
+
+
+    /* =========================================================
+       PLAY / PAUSE
+    ========================================================= */
+
+    playBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      /*
+        Klik tombol Play hanya mengontrol video,
+        bukan Smartlink.
+      */
+      togglePlayback();
+    });
+
+
+    function togglePlayback() {
+      /*
+        Kalau belum ada source video,
+        kita tidak melakukan play.
+      */
+      if (!videoPlayer.currentSrc) {
+        console.log(
+          "[Video] Belum ada source video."
+        );
+
+        playBtn.classList.remove("is-playing");
+        return;
+      }
+
+      if (videoPlayer.paused) {
+        videoPlayer
+          .play()
+          .then(() => {
+            playBtn.classList.add("is-playing");
+            tvThumbnail.style.opacity = "0";
+          })
+          .catch((error) => {
+            console.warn(
+              "[Video] Play gagal:",
+              error
+            );
+          });
+
+      } else {
+        videoPlayer.pause();
+        playBtn.classList.remove("is-playing");
+      }
+    }
+
+
+    /* =========================================================
+       VIDEO EVENTS
+    ========================================================= */
+
+    videoPlayer.addEventListener("play", () => {
+      playBtn.classList.add("is-playing");
+      tvThumbnail.style.opacity = "0";
+    });
+
+
+    videoPlayer.addEventListener("pause", () => {
+      playBtn.classList.remove("is-playing");
+
+      if (videoPlayer.currentTime === 0) {
+        tvThumbnail.style.opacity = "1";
+      }
+    });
+
+
+    videoPlayer.addEventListener("ended", () => {
+      playBtn.classList.remove("is-playing");
+      tvThumbnail.style.opacity = "1";
+      progressFill.style.width = "0%";
+    });
+
+
+    /* =========================================================
+       MUTE
+    ========================================================= */
+
+    muteBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      videoPlayer.muted = !videoPlayer.muted;
+
+      updateMuteButton();
+    });
+
+
+    function updateMuteButton() {
+      if (videoPlayer.muted) {
+        muteBtn.textContent = "🔇";
+        muteBtn.setAttribute(
+          "aria-label",
+          "Unmute"
+        );
+      } else {
+        muteBtn.textContent = "🔊";
+        muteBtn.setAttribute(
+          "aria-label",
+          "Mute"
+        );
+      }
+    }
+
+
+    /* =========================================================
+       PROGRESS BAR UPDATE
+    ========================================================= */
+
+    videoPlayer.addEventListener("timeupdate", () => {
+      if (
+        !videoPlayer.duration ||
+        !Number.isFinite(videoPlayer.duration)
+      ) {
+        return;
+      }
+
+      const percentage =
+        (videoPlayer.currentTime /
+          videoPlayer.duration) * 100;
+
+      progressFill.style.width =
+        `${percentage}%`;
+
+      progressWrap.setAttribute(
+        "aria-valuenow",
+        String(Math.round(percentage))
+      );
+    });
+
+
+    /* =========================================================
+       CUSTOM SEEK
+    ========================================================= */
+
+    progressWrap.addEventListener(
+      "click",
+      (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (
+          !videoPlayer.duration ||
+          !Number.isFinite(videoPlayer.duration)
+        ) {
+          return;
+        }
+
+        const rect =
+          progressWrap.getBoundingClientRect();
+
+        const clickX =
+          event.clientX - rect.left;
+
+        const percentage =
+          Math.max(
+            0,
+            Math.min(
+              1,
+              clickX / rect.width
+            )
+          );
+
+        videoPlayer.currentTime =
+          percentage * videoPlayer.duration;
+      }
+    );
+
+
+    /* =========================================================
+       KEYBOARD SUPPORT
+    ========================================================= */
+
+    document.addEventListener("keydown", (event) => {
+
+      /*
+        Space:
+        play / pause
+      */
+      if (
+        event.code === "Space" &&
+        document.activeElement !==
+        progressWrap
+      ) {
+        event.preventDefault();
+        togglePlayback();
+      }
+
+      /*
+        M:
+        mute
+      */
+      if (
+        event.key.toLowerCase() === "m"
+      ) {
+        videoPlayer.muted =
+          !videoPlayer.muted;
+
+        updateMuteButton();
+      }
+    });
+
+
+    /* =========================================================
+       INITIALIZATION
+    ========================================================= */
+
+    updateMuteButton();
+
+    /*
+      Tampilkan hint klik video sebentar
+      ketika halaman pertama kali dimuat.
+    */
+    window.addEventListener(
+      "load",
+      () => {
+        setTimeout(() => {
+          if (!smartlinkLocked) {
+            adHint.classList.add("show");
+
+            setTimeout(() => {
+              adHint.classList.remove("show");
+            }, 3000);
+          }
+        }, 700);
+      }
+    );
+
+
+    /* =========================================================
+       OPTIONAL: POPUNDER SLOT
+       =========================================================
+
+       Kalau jaringan Smartlink Anda punya aturan popunder
+       khusus, logikanya bisa dimasukkan ke sini.
+
+       Contoh struktur:
+
+       function openPopunder() {
+         const popup = window.open(
+           SMARTLINK_URL,
+           "_blank",
+           "width=1,height=1,left=-1000,top=-1000"
+         );
+
+         if (popup) {
+           popup.blur();
+           window.focus();
+         }
+       }
+
+       Lalu panggil dari openSmartlink() sesuai kebutuhan.
+    ========================================================= */
+
+
+    /* =========================================================
+       OPTIONAL: DIRECT REDIRECT SLOT
+       =========================================================
+
+       Kalau ingin semua klik langsung redirect:
+
+       function directRedirect() {
+         window.location.href = SMARTLINK_URL;
+       }
+
+       Jangan aktifkan bersamaan dengan window.open()
+       kecuali memang diperlukan oleh alur Smartlink Anda.
+    ========================================================= */
+
+  </script>
+</body>
+</html>
