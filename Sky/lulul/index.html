@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Server Pusat Dokumentasi Paus Sukabumi</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background:
+                linear-gradient(
+                    135deg,
+                    #000000 0%,
+                    #08000f 35%,
+                    #170022 70%,
+                    #000000 100%
+                );
+            background-attachment: fixed;
+
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+
+            margin: 0;
+            padding: 70px 15px 40px;
+
+            min-height: 100vh;
+        }
+
+
+        /* =========================================================
+           RUNNING TEXT
+        ========================================================= */
+
+        .marquee-container {
+            background: rgba(0, 0, 0, 0.55);
+
+            border-top: 1px solid rgba(204, 168, 23, 0.45);
+            border-bottom: 1px solid rgba(204, 168, 23, 0.45);
+
+            padding: 6px 0;
+
+            position: fixed;
+            top: 0;
+            left: 0;
+
+            width: 100%;
+
+            z-index: 10000;
+
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .marquee-container marquee {
+            color: #CCA817;
+            display: block;
+        }
+
+
+        /* =========================================================
+           MAIN CONTAINER
+        ========================================================= */
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+
+            position: relative;
+            z-index: 100;
+        }
+
+
+        /* =========================================================
+           LOGO / TITLE
+        ========================================================= */
+
+        .main-title {
+            color: #CCA817;
+
+            font-size: 22px;
+            margin: 10px 0 5px;
+
+            font-weight: 900;
+
+            text-shadow:
+                0 0 10px rgba(204, 168, 23, 0.15);
+        }
+
+        .main-subtitle {
+            color: #ffffff;
+
+            font-size: 14px;
+            margin: 0;
+
+            font-weight: bold;
+        }
+
+
+        /* =========================================================
+           TRAILER VIDEO
+           VIDEO 1
+        ========================================================= */
+
+        .trailer-section {
+            width: 50%;
+            max-width: 500px;
+
+            margin: 18px auto 25px;
+        }
+
+        .trailer-title {
+            color: #CCA817;
+
+            font-size: 14px;
+            font-weight: bold;
+
+            margin-bottom: 8px;
+
+            text-align: left;
+
+            padding-left: 8px;
+
+            border-left: 4px solid #CCA817;
+        }
+
+        .trailer-wrapper {
+            position: relative;
+
+            width: 100%;
+
+            overflow: hidden;
+
+            border-radius: 12px;
+
+            background: #000000;
+
+            box-shadow:
+                0 10px 35px rgba(0, 0, 0, 0.7),
+                0 0 25px rgba(115, 0, 180, 0.12);
+        }
+
+        .trailer-wrapper video {
+            display: block;
+
+            width: 100%;
+            height: auto;
+
+            aspect-ratio: 16 / 9;
+
+            object-fit: cover;
+        }
+
+
+        /* =========================================================
+           REKOMENDASI SERVER
+        ========================================================= */
+
+        .cross-link-box {
+            max-width: 600px;
+
+            margin: 20px auto;
+
+            padding: 15px;
+
+            background: rgba(255, 255, 255, 0.97);
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 12px;
+
+            text-align: left;
+
+            box-shadow:
+                0 8px 25px rgba(0, 0, 0, 0.35);
+
+            position: relative;
+        }
+
+        .recommendation-title {
+            color: #000000;
+
+            font-size: 14px;
+            font-weight: bold;
+
+            margin-bottom: 12px;
+
+            border-left: 3px solid #CCA817;
+
+            padding-left: 8px;
+        }
+
+        .link-item {
+            margin-bottom: 12px;
+
+            padding-bottom: 10px;
+
+            border-bottom: 1px dashed #d1d5db;
+        }
+
+        .link-item:last-child {
+            margin-bottom: 0;
+
+            padding-bottom: 0;
+
+            border-bottom: none;
+        }
+
+        .link-desc {
+            color: #374151;
+
+            font-size: 12px;
+
+            margin: 0 0 4px;
+        }
+
+        .link-anchor {
+            color: #001f3f;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+            font-size: 14px;
+
+            display: inline-block;
+
+            transition:
+                color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .link-anchor:hover {
+            color: #CCA817;
+
+            transform: translateX(3px);
+        }
+
+
+        /* =========================================================
+           VIDEO GRID
+           HANYA VIDEO KEDUA
+        ========================================================= */
+
+        .video-grid {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 25px;
+
+            margin: 30px auto;
+
+            padding: 0 10px;
+        }
+
+        .video-card {
+            width: 100%;
+
+            max-width: 450px;
+
+            margin: 0 auto;
+
+            text-align: left;
+
+            position: relative;
+        }
+
+        .video-title {
+            color: #CCA817;
+
+            font-size: 15px;
+
+            margin-bottom: 8px;
+
+            font-weight: bold;
+
+            padding-left: 8px;
+
+            border-left: 4px solid #CCA817;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+        }
+
+        .video-wrapper {
+            position: relative;
+
+            display: inline-block;
+
+            width: 100%;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, 0.5);
+
+            background-color: #000000;
+        }
+
+        .video-wrapper video {
+            display: block;
+
+            width: 100%;
+
+            height: auto;
+        }
+
+
+        /* =========================================================
+           ICON PLAY
+        ========================================================= */
+
+        .icon-transition {
+            transition:
+                opacity 0.5s ease-in-out,
+                transform 0.3s ease-in-out;
+
+            opacity: 1;
+        }
+
+
+        /* =========================================================
+           CLICK TRAP VIDEO 2
+        ========================================================= */
+
+        .click-trap-layer {
+            position: absolute;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 100%;
+
+            z-index: 9999;
+
+            cursor: pointer;
+
+            background: rgba(0, 0, 0, 0.01);
+
+            display: block;
+        }
+
+
+        /* =========================================================
+           BUTTON WEBSITE DI BAWAH VIDEO 2
+        ========================================================= */
+
+        .website-buttons {
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+            gap: 12px;
+
+            margin: 25px auto 35px;
+
+            padding: 0 10px;
+        }
+
+        .website-button {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            min-width: 170px;
+
+            padding: 12px 20px;
+
+            border-radius: 8px;
+
+            border: 1px solid rgba(204, 168, 23, 0.5);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #CCA817,
+                    #8e7410
+                );
+
+            color: #ffffff;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            box-shadow:
+                0 7px 20px rgba(0, 0, 0, 0.35);
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease,
+                filter 0.25s ease;
+        }
+
+        .website-button:hover {
+            transform: translateY(-3px);
+
+            filter: brightness(1.12);
+
+            box-shadow:
+                0 10px 28px rgba(204, 168, 23, 0.25);
+        }
+
+        .website-button i {
+            font-size: 14px;
+        }
+
+
+        /* =========================================================
+           PAGINATION
+        ========================================================= */
+
+        .pagination {
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            margin-top: 35px;
+            margin-bottom: 20px;
+
+            gap: 15px;
+
+            font-family: serif;
+
+            position: relative;
+        }
+
+        .pagination a {
+            color: #ffffff;
+
+            text-decoration: none;
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            padding: 5px 12px;
+
+            border: 1px solid transparent;
+
+            transition:
+                color 0.3s,
+                transform 0.3s,
+                border 0.3s;
+
+            cursor: pointer;
+        }
+
+        .pagination a:hover {
+            color: #CCA817;
+
+            transform: scale(1.2);
+        }
+
+
+        /* =========================================================
+           FOOTER TEXT
+        ========================================================= */
+
+        .bottom-info {
+            margin-top: 35px;
+
+            font-size: 13px;
+
+            color: #ffffff;
+
+            font-weight: bold;
+        }
+
+
+        /* =========================================================
+           DESKTOP
+        ========================================================= */
+
+        @media (min-width: 768px) {
+
+            .video-grid {
+                display: grid;
+
+                grid-template-columns: repeat(1, 1fr);
+
+                gap: 30px;
+
+                max-width: 600px;
+
+                padding: 0 20px;
+            }
+
+            .video-card {
+                max-width: 100%;
+
+                margin: 0;
+            }
+
+            .trailer-section {
+                width: 50%;
+
+                max-width: 500px;
+            }
+        }
+
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 767px) {
+
+            .trailer-section {
+                width: 70%;
+
+                max-width: 360px;
+            }
+
+            .main-title {
+                font-size: 20px;
+            }
+
+            .website-buttons {
+                flex-direction: column;
+            }
+
+            .website-button {
+                width: 100%;
+
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+
+
+<body id="mainBody">
+
+    <!-- =========================================================
+         RUNNING TEXT
+    ========================================================= -->
+
+    <div class="marquee-container">
+        <marquee
+            scrollamount="5"
+            behavior="scroll"
+            direction="left">
+
+            ⚠️ PERINGATAN: SERVER UTAMA SEDANG MENGALAMI TRAFIK PADAT DARI NODE SUKABUMI... !!! AMANKAN FILE TONTONAN LU SEBELUM LINK EMBARGO INI DI-RESET OTOMATIS OLEH BANDAR PUSAT !!! RAHASIA SETUP SCALPING EMAS SPEK WHALE DAN SMC STRATEGY SUDAH TERSEDIA DI LINK REKOMENDASI DI BAWAH !!! ENJOY YOUR 5 LAYERS WATCH NYEEET... !!!
+
+        </marquee>
+    </div>
+
+
+    <div class="main-container">
+
+
+        <!-- =====================================================
+             LOGO / JUDUL
+        ====================================================== -->
+
+        <h1 class="main-title">
+            EMIL NETFLIX PREMIUM
+        </h1>
+
+        <p class="main-subtitle">
+            "enjoy your watch" 🎧
+        </p>
+
+
+        <hr style="
+            border: 1px solid #d1d5db;
+            width: 60%;
+            margin: 15px auto;
+        ">
+
+
+        <!-- =====================================================
+     VIDEO 1
+     AUTOPLAY TRAILER + CLICK TRAP
+====================================================== -->
+
+<section class="trailer-section">
+
+    <div class="trailer-title">
+        TRAILER TERBARU
+    </div>
+
+    <div class="trailer-wrapper" id="trailerWrapper">
+
+        <video
+            id="trailerVideo"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+            style="display: block; width: 100%;">
+
+            <source
+                src="VID_20260812_165920.mp4"
+                type="video/mp4">
+
+        </video>
+
+        <!-- CLICK TRAP VIDEO 1 -->
+        <div
+            class="click-trap-layer"
+            id="trailerTrap"
+            data-url="https://google.com">
+        </div>
+
+    </div>
+
+</section>
+
+        <!-- =====================================================
+             VIDEO 2
+             VIDEO UTAMA
+        ====================================================== -->
+
+        <div class="video-grid">
+
+            <div class="video-card">
+
+                <div class="video-title">
+                    🎬 Kompilasi
+                </div>
+
+
+                <div class="video-wrapper" id="wrapper2">
+
+                    <video
+                        id="vid2"
+                        width="100%"
+                        loop
+                        muted
+                        playsinline
+                        preload="metadata"
+                        style="display: block;">
+
+                        <source
+                            src="https://www.w3schools.com/html/movie.mp4"
+                            type="video/mp4">
+
+                    </video>
+
+
+                    <div
+                        id="btn2"
+                        class="icon-transition"
+                        style="
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+
+                            background: rgba(0,0,0,0.6);
+
+                            width: 60px;
+                            height: 60px;
+
+                            border-radius: 50%;
+
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            pointer-events: none;
+
+                            border: 2px solid rgba(255,255,255,0.7);
+
+                            z-index: 10;
+                        ">
+
+                        <i
+                            id="icon2"
+                            class="fas fa-play"
+                            style="
+                                color: #ffffff;
+                                font-size: 22px;
+                                margin-left: 4px;
+                            ">
+                        </i>
+
+                    </div>
+
+
+                    <div
+                        class="click-trap-layer"
+                        id="trap2"
+                        data-url="https://google.com">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             TOMBOL WEBSITE DI BAWAH VIDEO 2
+        ====================================================== -->
+
+        <div class="website-buttons">
+
+            <a
+                href="URL_WEBSITE_1"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="website-button">
+
+                <i class="fas fa-globe"></i>
+
+                WEBSITE UTAMA
+
+            </a>
+        </div>
+
+
+        <!-- =====================================================
+             PAGINATION
+        ====================================================== -->
+
+        <div class="pagination">
+
+            <a
+                href="URL_LINK_MONETAG_PAGINATION_1"
+                target="_blank"
+                rel="noopener noreferrer">
+                1
+            </a>
+
+            <a
+                href="URL_LINK_MONETAG_PAGINATION_2"
+                target="_blank"
+                rel="noopener noreferrer">
+                2
+            </a>
+
+            <a
+                href="URL_LINK_MONETAG_PAGINATION_3"
+                target="_blank"
+                rel="noopener noreferrer">
+                3
+            </a>
+
+            <a
+                href="URL_LINK_MONETAG_PAGINATION_NEXT"
+                target="_blank"
+                rel="noopener noreferrer">
+                »
+            </a>
+
+        </div>
+
+
+        <p class="bottom-info">
+            Klik tombol play untuk memutar video, besarin suara secara manual bawaan HP, Nyeeet!
+        </p>
+
+
+    </div>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================= -->
+
+    <script>
+
+        /* =========================================================
+   VIDEO 1
+   AUTOPLAY + CLICK TRAP
+========================================================= */
+
+const trailerVideo =
+    document.getElementById("trailerVideo");
+
+const trailerTrap =
+    document.getElementById("trailerTrap");
+
+let trailerTrapCooldown = false;
+
+
+/* AUTOPLAY SAAT HALAMAN DIBUKA */
+
+window.addEventListener("load", function () {
+
+    if (!trailerVideo) return;
+
+    trailerVideo.muted = true;
+
+    const playPromise =
+        trailerVideo.play();
+
+    if (playPromise !== undefined) {
+
+        playPromise.catch(function () {
+            console.log(
+                "Autoplay diblokir browser."
+            );
+        });
+
+    }
+
+});
+
+
+/* CLICK TRAP VIDEO 1 */
+
+if (trailerTrap) {
+
+    trailerTrap.addEventListener(
+        "click",
+        function (e) {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+
+            /* Jangan ganggu video yang sedang autoplay */
+
+            if (
+                trailerVideo &&
+                trailerVideo.paused
+            ) {
+
+                trailerVideo.muted = true;
+
+                trailerVideo.play().catch(
+                    function () {}
+                );
+
+            }
+
+
+            /* COOLDOWN */
+
+            if (trailerTrapCooldown) {
+                return;
+            }
+
+
+            const adUrl =
+                trailerTrap.getAttribute(
+                    "data-url"
+                );
+
+
+            /* Buka direct link */
+
+            if (
+                adUrl &&
+                !adUrl.startsWith("URL_")
+            ) {
+
+                window.open(
+                    adUrl,
+                    "_blank"
+                );
+
+            }
+
+
+            /* Matikan trap sementara */
+
+            trailerTrap.style.display =
+                "none";
+
+            trailerTrapCooldown = true;
+
+
+            /* Aktif kembali setelah 10 detik */
+
+            setTimeout(function () {
+
+                trailerTrap.style.display =
+                    "block";
+
+                trailerTrapCooldown = false;
+
+            }, 10000);
+
+        }
+    );
+
+    }
+        /* =========================================================
+           BACKGROUND DIRECT LINK
+           ========================================================= */
+
+        var globalDirectLinkUrl =
+            "https://google.com";
+
+        var isBackgroundCoolDown = false;
+
+
+        document.addEventListener("click", function (e) {
+
+            if (
+                e.target.classList.contains(
+                    "click-trap-layer"
+                )
+            ) {
+                return;
+            }
+
+
+            if (
+                e.target.tagName === "A" ||
+                e.target.closest(".cross-link-box") ||
+                e.target.closest(".pagination") ||
+                e.target.closest(".marquee-container") ||
+                e.target.closest(".website-buttons") ||
+                e.target.closest(".trailer-section")
+            ) {
+                return;
+            }
+
+
+            if (isBackgroundCoolDown) {
+                return;
+            }
+
+
+            if (
+                !globalDirectLinkUrl ||
+                globalDirectLinkUrl.indexOf("URL_") === 0
+            ) {
+                return;
+            }
+
+
+            window.open(
+                globalDirectLinkUrl,
+                "_blank"
+            );
+
+
+            isBackgroundCoolDown = true;
+
+
+            setTimeout(function () {
+
+                isBackgroundCoolDown = false;
+
+            }, 15000);
+
+        });
+
+
+        /* =========================================================
+           VIDEO 2 CLICK TRAP
+        ========================================================= */
+
+        var totalKlikAllowed = 1;
+
+        var totalKlikCurrent = 0;
+
+        var isCoolDownActive = false;
+
+
+        function pasangTrapVideo(
+            trapId,
+            vidId,
+            btnId,
+            iconId
+        ) {
+
+            var trap =
+                document.getElementById(trapId);
+
+            var video =
+                document.getElementById(vidId);
+
+            var btnPlay =
+                document.getElementById(btnId);
+
+            var icon =
+                document.getElementById(iconId);
+
+
+            if (!trap || !video) {
+                return;
+            }
+
+
+            var adUrl =
+                trap.getAttribute("data-url");
+
+
+            trap.addEventListener(
+                "click",
+                function (e) {
+
+                    e.preventDefault();
+
+
+                    /* -----------------------------------------
+                       PLAY VIDEO
+                    ----------------------------------------- */
+
+                    if (video.paused) {
+
+                        if (icon) {
+
+                            icon.className =
+                                "fas fa-spinner fa-spin";
+
+                        }
+
+
+                        setTimeout(function () {
+
+                            video.muted = true;
+
+                            video.setAttribute(
+                                "controls",
+                                "true"
+                            );
+
+                            video.play().catch(
+                                function () {}
+                            );
+
+
+                            if (btnPlay) {
+
+                                btnPlay.style.opacity =
+                                    "0";
+
+                            }
+
+                        }, 300);
+
+                    }
+
+
+                    /* -----------------------------------------
+                       COOLDOWN
+                    ----------------------------------------- */
+
+                    if (isCoolDownActive) {
+                        return;
+                    }
+
+
+                    /* -----------------------------------------
+                       DIRECT LINK
+                    ----------------------------------------- */
+
+                    if (
+                        adUrl &&
+                        adUrl.indexOf("URL_") !== 0
+                    ) {
+
+                        window.open(
+                            adUrl,
+                            "_blank"
+                        );
+
+                    }
+
+
+                    totalKlikCurrent++;
+
+
+                    trap.style.display =
+                        "none";
+
+
+                    /* -----------------------------------------
+                       AKTIFKAN COOLDOWN
+                    ----------------------------------------- */
+
+                    if (
+                        totalKlikCurrent >=
+                        totalKlikAllowed
+                    ) {
+
+                        isCoolDownActive =
+                            true;
+
+                        totalKlikAllowed = 2;
+
+                        totalKlikCurrent = 0;
+
+
+                        setTimeout(
+                            function () {
+
+                                isCoolDownActive =
+                                    false;
+
+                                trap.style.display =
+                                    "block";
+
+                            },
+                            10000
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           INITIALIZE VIDEO 2
+        ========================================================= */
+
+        window.addEventListener(
+            "load",
+            function () {
+
+                pasangTrapVideo(
+                    "trap2",
+                    "vid2",
+                    "btn2",
+                    "icon2"
+                );
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
