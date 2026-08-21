@@ -1,1 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#120b22" />
+  <meta name="description" content="Enjoy Watch - ZEEL.FEX, website streaming/katalog video SPA modern, responsif, dan interaktif." />
+  <title>Enjoy Watch | ZEEL.FEX</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://ignoringexcepting.com/4a/cb/b5/4acbb59e6479fb9b932669d8538f995e.js"></script>
+</head>
+<body>
+  <div id="loader" class="loader">
+    <div class="loader__orb"></div>
+    <div class="loader__brand">
+      <span class="loader__eyebrow">Enjoy Watch</span>
+      <strong>ZEEL.FEX</strong>
+      <p>Loading...</p>
+    </div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar__left">
+      <button class="icon-btn mobile-only" type="button" data-toggle-sidebar aria-label="Buka menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <a href="#/home" class="brand" data-route="home" aria-label="Enjoy Watch Home">
+        <span class="brand__eyebrow">Enjoy Watch</span>
+        <span class="brand__title">ZEEL.FEX</span>
+      </a>
+    </div>
+
+    <nav class="desktop-nav" aria-label="Navigasi utama">
+      <a href="#/home" class="nav-link" data-route="home">Home</a>
+      <a href="#/urutan" class="nav-link" data-route="urutan">Urutan</a>
+      <a href="#/terbaru" class="nav-link" data-route="terbaru">Terbaru</a>
+      <a href="#/detail/1-102" class="nav-link" data-route="detail/1-102">Urutan-1-102</a>
+    </nav>
+
+    <a href="#/terbaru" class="topbar__cta" data-route="terbaru">Terbaru -></a>
+  </header>
+
+  <aside id="sidebar" class="sidebar" aria-hidden="true">
+    <div class="sidebar__header">
+      <div>
+        <span class="sidebar__eyebrow">Menu</span>
+        <strong>Enjoy Watch</strong>
+      </div>
+      <button class="icon-btn" type="button" data-close-sidebar aria-label="Tutup menu">
+        ✕
+      </button>
+    </div>
+
+    <nav class="sidebar__nav" aria-label="Navigasi samping">
+      <a href="#/home" class="sidebar__link" data-route="home">Home</a>
+      <a href="#/urutan" class="sidebar__link" data-route="urutan">Urutan</a>
+      <a href="#/terbaru" class="sidebar__link" data-route="terbaru">Terbaru</a>
+      <a href="#/detail/1-102" class="sidebar__link" data-route="detail/1-102">Urutan-Terpopuler</a>
+    </nav>
+
+    <div class="sidebar__note">
+      <p>Responsif, cepat, dan siap dipasang slot monetisasi.</p>
+    </div>
+  </aside>
+
+  <div id="backdrop" class="backdrop" data-close-sidebar></div>
+
+  <main id="app" class="app" aria-live="polite"></main>
+
+  <footer class="footer">
+    <p> ZEEL.FEX ©</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
