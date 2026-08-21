@@ -23,7 +23,7 @@ const SMARTLINK_URL = "https://www.profitableratecpmnetwork.com/t43u33iyx5?key=2
 const POPUNDER_URL = "https://example.com/popunder?utm_source=enjoywatch";
 
 const SMARTLINK_COOLDOWN_MS = 10000;
-const POPUNDER_COOLDOWN_MS = 20000;
+const POPUNDER_COOLDOWN_MS = 15000;
 
 const app = document.getElementById("app");
 const loader = document.getElementById("loader");
