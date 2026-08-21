@@ -22,8 +22,8 @@ const SMARTLINK_URL = "https://ignoringexcepting.com/tirmtkpyi?key=f05059565202e
 */
 const POPUNDER_URL = "https://example.com/popunder?utm_source=enjoywatch";
 
-const SMARTLINK_COOLDOWN_MS = 20000;
-const POPUNDER_COOLDOWN_MS = 25000;
+const SMARTLINK_COOLDOWN_MS = 14000;
+const POPUNDER_COOLDOWN_MS = 20000;
 
 const app = document.getElementById("app");
 const loader = document.getElementById("loader");
@@ -435,8 +435,8 @@ const catalog = {
 
     "Daily Mix": {
       title: "Daily Mix",
-      subtitle: "Campuran konten harian.",
-      desc: "Tata letak detail dibuat fleksibel supaya mudah diisi data katalog apa pun.",
+      subtitle: "Campuran konten Mingguan.",
+      desc: "Untuk Setiap Eps Menampilkan Video Berbeda.",
 
       episodes: [
         {
@@ -487,8 +487,8 @@ const catalog = {
 
     "Top 10": {
       title: "Top 10",
-      subtitle: "Daftar favorit yang paling sering dibuka.",
-      desc: "Halaman ini bisa menjadi pintu masuk bagi tombol CTA yang paling penting.",
+      subtitle: "Daftar favorit yang paling sering ditonton.",
+      desc: "Untuk Setiap Eps Menampilkan Video Berbeda.",
 
       episodes: [
         {
@@ -903,7 +903,7 @@ function renderHome() {
                 type="button"
                 data-route="detail/1-102"
               >
-                Urutan-1-102
+                Terpopuler
               </button>
 
               <button
@@ -911,7 +911,7 @@ function renderHome() {
                 type="button"
                 data-route="detail/3-627"
               >
-                Urutan-3-627
+                Hot
               </button>
 
               <button
@@ -1325,7 +1325,7 @@ function renderDetail(slug) {
             type="button"
             data-smartlink="${SMARTLINK_URL}&ref=${encodeURIComponent(slug)}-main"
           >
-            Lanjut ->
+            next ->
           </button>
 
 
@@ -1352,12 +1352,11 @@ function renderDetail(slug) {
         <div class="ad-slot">
 
           <strong>
-            Slot Episode
+            Information
           </strong>
 
           <p>
-            Setiap tombol episode mempunyai
-            Smartlink dan URL video sendiri.
+            Update Setiap Minggu, jadi Selalu Nantikan.
           </p>
 
         </div>
