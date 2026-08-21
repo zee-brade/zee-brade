@@ -22,7 +22,7 @@ const SMARTLINK_URL = "https://ignoringexcepting.com/tirmtkpyi?key=f05059565202e
 */
 const POPUNDER_URL = "https://example.com/popunder?utm_source=enjoywatch";
 
-const SMARTLINK_COOLDOWN_MS = 14000;
+const SMARTLINK_COOLDOWN_MS = 10000;
 const POPUNDER_COOLDOWN_MS = 20000;
 
 const app = document.getElementById("app");
@@ -50,42 +50,42 @@ const catalog = {
       title: "Urutan-Terpopuler",
       tag: "Populer",
       number: "sedang ramai di tonton",
-      desc: "Pilihan utama dengan episode yang paling sering dibuka. Cocok untuk pintasan cepat ke konten populer."
+      desc: "Pilihan utama dengan episode yang paling sering ditonton."
     },
     {
       slug: "3-627",
       title: "Sedang Hot",
       tag: "Rekomendasi",
       number: "kumpulan hot terbaru",
-      desc: "Katalog lanjutan untuk pengguna yang suka jelajah lebih dalam. Desain tombol dibuat padat dan cepat."
+      desc: "Kumpulan Dengan Konten Video Hot Terbaru."
     },
     {
       slug: "Prime Pack",
       title: "Update Mingguan",
       tag: "Baru",
       number: "Bagian terbaru",
-      desc: "Kumpulan konten terbaru dengan jalur cepat ke halaman tonton. Siap dipoles ke feed update."
+      desc: "Kumpulan konten terbaru Mingguan."
     },
     {
       slug: "Hot Picks",
       title: "Hot View",
       tag: "Hot",
       number: "saran hot",
-      desc: "Kartu-kartu utama dengan aksen neon dan CTA yang menonjol. Mantap untuk homepage hero section."
+      desc: "Pilihan Konten Video Berdasar Dari Hot Teratas."
     },
     {
       slug: "Night Mode",
       title: "Single Women",
       tag: "fresh",
       number: "barang fresh",
-      desc: "Nuansa gelap elegan dengan border gradasi mint-cyan untuk kesan modern dan premium."
+      desc: "Kumpulan Dengan Konten Khusus Untuk Yang Suka Dengan Single Women."
     },
     {
       slug: "Fresh Drop",
       title: "Full Lokal",
       tag: "Lokal",
       number: "Konten segar",
-      desc: "Langsung arahkan ke daftar update terbaru, ideal untuk pengguna yang suka konten baru."
+      desc: "Pilihan Konten Dengan pemeran Full Lokal."
     }
   ],
 
