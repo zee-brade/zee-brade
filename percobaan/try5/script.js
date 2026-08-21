@@ -832,7 +832,7 @@ function renderHome() {
 
           <h1 class="hero__title">
 
-            STREAM MOVIE
+            STREAM VIDEOS
 
             <span>
               BeeFlex.hd
