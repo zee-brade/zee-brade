@@ -47,43 +47,43 @@ const catalog = {
   recommendations: [
     {
       slug: "1-102",
-      title: "1-102 Collection",
-      tag: "Rekomendasi",
-      number: "1 sampai 102",
+      title: "Urutan-Terpopuler",
+      tag: "Populer",
+      number: "sedang ramai di tonton",
       desc: "Pilihan utama dengan episode yang paling sering dibuka. Cocok untuk pintasan cepat ke konten populer."
     },
     {
       slug: "3-627",
-      title: "3-627 Vault",
-      tag: "Trending",
-      number: "3 sampai 627",
+      title: "Sedang Hot",
+      tag: "Rekomendasi",
+      number: "kumpulan hot terbaru",
       desc: "Katalog lanjutan untuk pengguna yang suka jelajah lebih dalam. Desain tombol dibuat padat dan cepat."
     },
     {
       slug: "Prime Pack",
-      title: "Prime Pack",
+      title: "Update Mingguan",
       tag: "Baru",
-      number: "Update harian",
+      number: "Bagian terbaru",
       desc: "Kumpulan konten terbaru dengan jalur cepat ke halaman tonton. Siap dipoles ke feed update."
     },
     {
       slug: "Hot Picks",
-      title: "Hot Picks",
-      tag: "Populer",
-      number: "Pilihan editor",
+      title: "Hot View",
+      tag: "Hot",
+      number: "saran hot",
       desc: "Kartu-kartu utama dengan aksen neon dan CTA yang menonjol. Mantap untuk homepage hero section."
     },
     {
       slug: "Night Mode",
-      title: "Night Mode",
-      tag: "Sedang hot",
-      number: "Visual gelap",
+      title: "Single Women",
+      tag: "fresh",
+      number: "barang fresh",
       desc: "Nuansa gelap elegan dengan border gradasi mint-cyan untuk kesan modern dan premium."
     },
     {
       slug: "Fresh Drop",
-      title: "Fresh Drop",
-      tag: "Terbaru",
+      title: "Full Lokal",
+      tag: "Lokal",
       number: "Konten segar",
       desc: "Langsung arahkan ke daftar update terbaru, ideal untuk pengguna yang suka konten baru."
     }
@@ -93,38 +93,38 @@ const catalog = {
   categories: [
     {
       slug: "1-102",
-      title: "1-102",
-      desc: "Grid episode utama"
+      title: "Terpopuler",
+      desc: "Tontonan Terpopuler"
     },
     {
       slug: "3-627",
-      title: "3-627",
-      desc: "Rentang katalog besar"
+      title: "Rekomendasi",
+      desc: "Sedang hot"
     },
     {
       slug: "Prime Pack",
-      title: "Prime Pack",
-      desc: "Paket pilihan"
+      title: "Terbaru",
+      desc: "Pilihan dari update terbaru"
     },
     {
       slug: "Hot Picks",
-      title: "Hot Picks",
-      desc: "Tontonan populer"
+      title: "Hot view",
+      desc: "Tontonan Yang Sedang Panas"
     },
     {
       slug: "Night Mode",
-      title: "Night Mode",
-      desc: "Tema sinematik"
+      title: "Pilihan Fresh",
+      desc: "Bagian Terfresh"
     },
     {
       slug: "Fresh Drop",
-      title: "Fresh Drop",
-      desc: "Update terbaru"
+      title: "Full Lokal",
+      desc: "Konten Segar"
     },
     {
       slug: "Daily Mix",
-      title: "Daily Mix",
-      desc: "Campuran harian"
+      title: "Update Mix",
+      desc: "Campuran update Mingguan"
     },
     {
       slug: "Top 10",
@@ -136,28 +136,28 @@ const catalog = {
 
   latest: [
     {
-      title: "Episode 7 - Fresh Drop",
-      desc: "Update paling baru dengan CTA Tonton -> menuju smartlink.",
+      title: "Single Women",
+      desc: "Konten Segar Di kostan.",
       route: "detail/1-102"
     },
     {
-      title: "Episode 6 - Prime Pack",
-      desc: "Masuk ke detail koleksi dan pilih bagian favorit Anda.",
+      title: "Asian Hot",
+      desc: "Premium.",
       route: "detail/3-627"
     },
     {
-      title: "Episode 5 - Night Mode",
-      desc: "Navigasi cepat ke konten dengan tampilan gelap yang tajam.",
+      title: "Erope Big Hot",
+      desc: "Sangat di rekomendasikan.",
       route: "detail/1-102"
     },
     {
-      title: "Episode 4 - Hot Picks",
-      desc: "Kartu update dibuat lebih ringkas dan cocok untuk mobile.",
+      title: "Chudai",
+      desc: "Pilihan Yang Suka Pink.",
       route: "detail/3-627"
     },
     {
-      title: "Episode 3 - Daily Mix",
-      desc: "Tambahkan lebih banyak item sesuai katalog Anda nanti.",
+      title: "Good Women",
+      desc: "Kecil kecil cabe rawit.",
       route: "detail/1-102"
     }
   ],
@@ -166,9 +166,9 @@ const catalog = {
   details: {
 
     "1-102": {
-      title: "Urutan 1-102",
-      subtitle: "Detail view untuk daftar episode 1 sampai 7.",
-      desc: "Halaman ini menampilkan tombol episode dalam grid responsif. Tinggal ganti URL video dan Smartlink tiap episode sesuai kebutuhan katalog.",
+      title: "Urutan Terpopuler",
+      subtitle: "Detail view untuk daftar Populer.",
+      desc: "Untuk Setiap Eps Menampilkan Video Berbeda.",
 
       episodes: [
         {
@@ -218,9 +218,9 @@ const catalog = {
 
 
     "3-627": {
-      title: "Urutan 3-627",
-      subtitle: "Detail view untuk range katalog yang lebih besar.",
-      desc: "Gunakan halaman ini untuk menaruh daftar episode, klip, atau link tujuan lain sesuai struktur katalog Anda.",
+      title: "Urutan Hot",
+      subtitle: "Bagian Yang sedang hot.",
+      desc: "Untuk Setiap Eps Menampilkan Video Berbeda.",
 
       episodes: [
         {
@@ -270,9 +270,9 @@ const catalog = {
 
 
     "Prime Pack": {
-      title: "Prime Pack",
-      subtitle: "Koleksi kurasi dengan CTA cepat.",
-      desc: "Anda bisa menjadikan halaman detail ini sebagai landing page untuk smartlink, episode, atau katalog premium.",
+      title: "Terbaru",
+      subtitle: "Koleksi Premium.",
+      desc: "Untuk Setiap Eps Menampilkan Video Berbeda.",
 
       episodes: [
         {
@@ -322,9 +322,9 @@ const catalog = {
 
 
     "Hot Picks": {
-      title: "Hot Picks",
+      title: "Hot View",
       subtitle: "Konten populer dengan jalur tonton yang kuat.",
-      desc: "Semua tombol episode di sini mengarah ke Smartlink dan masing-masing memiliki video sendiri.",
+      desc: "Untuk Setiap Eps Menampilkan Video Berbeda.",
 
       episodes: [
         {
@@ -374,17 +374,17 @@ const catalog = {
 
 
     "Night Mode": {
-      title: "Night Mode",
-      subtitle: "Sangat cocok untuk konten dengan visual gelap.",
-      desc: "Layout ini memanfaatkan kartu neon dan grid adaptif untuk pengalaman mobile yang luwes.",
+      title: "Asian Hot",
+      subtitle: "Bagian fresh.",
+      desc: "Untuk Setiap Eps Menampilkan Video Berbeda.",
       episodes: makeEpisodeList("Night Mode")
     },
 
 
     "Fresh Drop": {
-      title: "Fresh Drop",
-      subtitle: "Update terbaru yang enak dipindai.",
-      desc: "Taruh episode terbaru, trailer, atau konten baru di bawah halaman detail ini.",
+      title: "Full Lokal",
+      subtitle: "Update terbaru yang enak ditonton.",
+      desc: "Untuk Setiap Eps Menampilkan Video Berbeda.",
 
       episodes: [
         {
