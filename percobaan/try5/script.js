@@ -76,7 +76,7 @@ const catalog = {
     {
       slug: "Night Mode",
       title: "Night Mode",
-      tag: "Cinematic",
+      tag: "Sedang hot",
       number: "Visual gelap",
       desc: "Nuansa gelap elegan dengan border gradasi mint-cyan untuk kesan modern dan premium."
     },
@@ -818,18 +818,18 @@ function renderHome() {
           <div class="hero__badge-row">
 
             <span class="badge">
-              <strong>LIVE</strong>
-              Catalog SPA
+              <strong>Stream</strong>
+              Live Movie
             </span>
 
             <span class="badge">
-              <strong>Responsive</strong>
-              Mobile Ready
+              <strong>Hot</strong>
+              More Video
             </span>
 
             <span class="badge badge--status">
-              <strong>ON</strong>
-              Monetization Slot
+              <strong>Warning!</strong>
+              21+Area
             </span>
 
           </div>
@@ -837,10 +837,10 @@ function renderHome() {
 
           <h1 class="hero__title">
 
-            ENJOY WATCH
+            SREAM MOVIE
 
             <span>
-              ZEEL.FEX
+              BeeFlex.hd
             </span>
 
           </h1>
@@ -848,10 +848,8 @@ function renderHome() {
 
           <p class="hero__desc">
 
-            KETERANGAN.... Tempatkan katalog video,
-            episode, atau koleksi konten dalam satu
-            halaman SPA yang smooth, cepat,
-            dan siap dikembangkan.
+            Web Stream Video, tidak untuk semua orang,
+            hanya Untuk Orang Dengan Umur di atas 21+.
 
           </p>
 
@@ -890,14 +888,14 @@ function renderHome() {
             <div class="banner__copy">
 
               <h3>
-                Kontrol penuh di satu layar
+                Perhatian!
               </h3>
 
               <p>
-                Navigasi tanpa reload,
-                sidebar overlay, kartu video
-                interaktif, dan tombol tujuan
-                yang dapat diarahkan ke smartlink.
+                Web Ini Memiliki iklan, Jadi berharap untuk
+                Bersabar, Dan ketika Anda Mengalami kendala
+                Seperti Salah satu Bagian tidak Berfungsi,
+                Mohon untuk Lihat Area Yg Lainnya.
               </p>
 
             </div>
@@ -935,70 +933,6 @@ function renderHome() {
 
         </div>
 
-
-        <aside class="hero__side">
-
-          <div class="stats">
-
-            <div class="stat">
-
-              <strong>
-                SPA
-              </strong>
-
-              <span>
-                Routing hash,
-                tanpa reload halaman
-              </span>
-
-            </div>
-
-
-            <div class="stat">
-
-              <strong>
-                Neon
-              </strong>
-
-              <span>
-                Border mint-cyan
-                dengan glow halus
-              </span>
-
-            </div>
-
-
-            <div class="stat">
-
-              <strong>
-                Fast
-              </strong>
-
-              <span>
-                Render ringan
-                dan mudah dimodifikasi
-              </span>
-
-            </div>
-
-
-            <div class="stat">
-
-              <strong>
-                Ad Ready
-              </strong>
-
-              <span>
-                Slot popunder dan
-                smartlink siap pakai
-              </span>
-
-            </div>
-
-          </div>
-
-        </aside>
-
       </div>
 
 
@@ -1009,12 +943,12 @@ function renderHome() {
           <div>
 
             <h2 class="section__title">
-              Rekomendasi
+              Saran
             </h2>
 
             <p class="section__subtitle">
-              Daftar kartu video/konten
-              dengan CTA cepat.
+              Ketika Tombol Sedang Tidak Berfungsi
+              Mohon Untuk Ketuk Area Sekitar nya.
             </p>
 
           </div>
@@ -1120,8 +1054,7 @@ function renderUrutan() {
             </h2>
 
             <p class="section__subtitle">
-              Halaman daftar kategori/rentang
-              nomor dengan grid tombol interaktif.
+              Halaman daftar Berdasar Kategory.
             </p>
 
           </div>
@@ -1132,7 +1065,7 @@ function renderUrutan() {
             type="button"
             data-route="home"
           >
-            Kembali Home ->
+            Back to Home ->
           </button>
 
         </div>
@@ -1148,14 +1081,11 @@ function renderUrutan() {
         <div class="ad-slot">
 
           <strong>
-            Smartlink Placeholder
+            Suggestion
           </strong>
 
           <p>
-            Setiap tombol bisa diarahkan
-            ke Smartlink iklan atau halaman
-            detail katalog sesuai strategi
-            monetisasi Anda.
+            Nantikan Untuk Update Selanjutnya.
           </p>
 
         </div>
@@ -1201,7 +1131,7 @@ function renderTerbaru() {
         type="button"
         data-smartlink="${SMARTLINK_URL}&ref=${encodeURIComponent(item.title)}"
       >
-        Tonton ->
+        View ->
       </button>
 
     </article>
