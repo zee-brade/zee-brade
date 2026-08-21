@@ -819,12 +819,7 @@ function renderHome() {
 
             <span class="badge">
               <strong>Stream</strong>
-              Live Movie
-            </span>
-
-            <span class="badge">
-              <strong>Hot</strong>
-              More Video
+              Live Video
             </span>
 
             <span class="badge badge--status">
@@ -837,7 +832,7 @@ function renderHome() {
 
           <h1 class="hero__title">
 
-            SREAM MOVIE
+            STREAM MOVIE
 
             <span>
               BeeFlex.hd
@@ -895,7 +890,7 @@ function renderHome() {
                 Web Ini Memiliki iklan, Jadi berharap untuk
                 Bersabar, Dan ketika Anda Mengalami kendala
                 Seperti Salah satu Bagian tidak Berfungsi,
-                Mohon untuk Lihat Area Yg Lainnya.
+                Mohon untuk Lihat Dan Tes Area Yg Lainnya.
               </p>
 
             </div>
@@ -1157,8 +1152,7 @@ function renderTerbaru() {
             </h2>
 
             <p class="section__subtitle">
-              Daftar update konten terbaru
-              dengan tombol Tonton ->.
+              Daftar update konten terbaru.
             </p>
 
           </div>
@@ -1185,14 +1179,8 @@ function renderTerbaru() {
         <div class="ad-slot">
 
           <strong>
-            Integrasi Iklan
+            Nantikan Update Setiap Minggu
           </strong>
-
-          <p>
-            Struktur ini cocok untuk menaruh
-            native ad, Smartlink, atau tombol
-            interstitial sesuai provider iklan Anda.
-          </p>
 
         </div>
 
