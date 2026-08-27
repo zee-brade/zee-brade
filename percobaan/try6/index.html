@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2412A8">
+  <meta name="description" content="Nuvio.HD - Streaming film modern.">
+  <title>Nuvio.HD</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page-bg" aria-hidden="true">
+    <span class="ambient ambient-a"></span>
+    <span class="ambient ambient-b"></span>
+    <span class="ambient ambient-c"></span>
+    <span class="noise"></span>
+  </div>
+
+  <div class="app-shell">
+    <header class="site-header">
+      <nav class="navbar" id="navbar" aria-label="Navigasi utama">
+        <a class="nav-item is-active" data-view="home" href="#home">HOME</a>
+        <a class="nav-item" data-view="daftar" href="#daftar">Daftar Film</a>
+        <a class="nav-item" data-view="update" href="#update">Update</a>
+        <a class="nav-item" data-view="populer" href="#populer">Populer</a>
+      </nav>
+    </header>
+
+    <main id="app" tabindex="-1"></main>
+
+    <footer class="site-footer">
+      <div class="footer-line"></div>
+      <p>©2026 - Nuvio.HD</p>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
