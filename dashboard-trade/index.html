@@ -1,1 +1,615 @@
+<!DOCTYPE html>
 
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Trazeel, personal trading journal and statistics dashboard." name="description"/>
+<meta content="#08090d" name="theme-color"/>
+<title>Trazeel • Personal Trading Workspace</title>
+<link href="style.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="app">
+<!-- INTRO -->
+<section class="screen intro-screen" id="introScreen">
+<div class="intro-content">
+<div class="logo-mark"><img class="trazeel-logo-img" src="logo-trazeel.png" alt="Trazeel logo"></div>
+<h1 class="intro-logo">TRAZEEL</h1>
+<p class="intro-tagline">Your personal trading space.</p>
+<div class="intro-loader"><div class="intro-loader-bar"></div></div>
+</div>
+</section>
+<!-- WELCOME -->
+<section class="screen welcome-screen hidden" id="welcomeScreen">
+<div class="welcome-content">
+<div class="welcome-badge">TRADING WORKSPACE</div>
+<div class="welcome-logo-small">
+<div class="logo-mark mini"><img class="trazeel-logo-img" src="logo-trazeel.png" alt="Trazeel logo"></div>
+</div>
+<h1>Welcome to <span>Trazeel.</span></h1>
+<p>Tempat pribadi untuk mencatat, memahami, dan mengevaluasi perjalanan trading lo.</p>
+<button class="primary-btn" id="startSetupBtn" type="button">Get Started <span>→</span></button>
+</div>
+</section>
+<!-- SETUP -->
+<section class="screen setup-screen hidden" id="setupScreen">
+<div class="setup-container">
+<div class="setup-top">
+<div class="setup-step">
+<span class="active"></span><span></span>
+</div>
+<p>ACCOUNT SETUP</p>
+</div>
+<div class="setup-step-content active" id="setupStep1">
+<div class="setup-heading">
+<span class="setup-number">01</span>
+<h1>Let's get to know <span>you.</span></h1>
+<p>Nama ini akan digunakan untuk menyambut lo di dashboard.</p>
+</div>
+<div class="input-group">
+<label for="userName">Your name *</label>
+<input autocomplete="name" data-i18n-placeholder="namePlaceholder" id="userName" maxlength="30" placeholder="Contoh: Zril" type="text"/>
+<small class="field-error" id="userNameError"></small>
+</div>
+<button class="primary-btn full" id="step1Btn" type="button">Continue <span>→</span></button>
+</div>
+<div class="setup-step-content" id="setupStep2">
+<div class="setup-heading">
+<span class="setup-number">02</span>
+<h1>Set your <span>account.</span></h1>
+<p>Data ini menjadi dasar informasi awal dashboard.</p>
+</div>
+<div class="input-group">
+<label for="accountName">Account name *</label>
+<input data-i18n-placeholder="accountPlaceholder" id="accountName" maxlength="30" placeholder="Main Account" type="text"/>
+<small class="field-error" id="accountNameError"></small>
+</div>
+<div class="setup-grid">
+<div class="input-group">
+<label for="startingBalance">Starting balance *</label>
+<input data-i18n-placeholder="balancePlaceholder" id="startingBalance" min="0" placeholder="1000" step="0.01" type="number"/>
+<small class="field-error" id="startingBalanceError"></small>
+</div>
+<div class="input-group">
+<label for="currency">Currency *</label>
+<select id="currency">
+<option value="USD">USD</option>
+<option value="IDR">IDR</option>
+<option value="EUR">EUR</option>
+<option value="GBP">GBP</option>
+</select>
+</div>
+</div>
+<div class="setup-actions">
+<button class="secondary-btn" data-i18n="back" id="backStepBtn" type="button">← Back</button>
+<button class="primary-btn" id="finishSetupBtn" type="button">Enter Dashboard <span>→</span></button>
+</div>
+</div>
+</div>
+</section>
+<!-- MAIN APP -->
+<main class="main-app hidden" id="mainApp">
+<header class="topbar">
+<div class="brand-area">
+<div class="brand-mark"><img class="trazeel-logo-img" src="logo-trazeel.png" alt="Trazeel logo"></div>
+<div>
+<div class="brand-name">TRAZEEL</div>
+<div class="brand-subtitle">Trading Space</div>
+</div>
+</div>
+<button aria-label="Notifications" class="icon-btn" data-i18n-aria-label="notifications" id="notificationBtn" type="button">
+<span class="notification-dot"></span><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg>
+</button>
+</header>
+<div class="page-container">
+<!-- HOME -->
+<section class="page-view active" id="homeView">
+<div class="greeting-section">
+<div>
+<p class="eyebrow" data-i18n="personalDashboard">PERSONAL DASHBOARD</p>
+<h1 id="homeGreeting">Good morning.</h1>
+<p class="muted" data-i18n="welcomeBack">Welcome back to your trading space.</p>
+</div>
+</div>
+<div class="account-card">
+<div class="account-card-top">
+<div>
+<span data-i18n="accountBalance">ACCOUNT BALANCE</span>
+<strong id="homeBalance">$0.00</strong>
+</div>
+<div class="account-status">ACTIVE</div>
+</div>
+<div class="account-card-bottom">
+<div>
+<small data-i18n="todaysResult">TODAY'S RESULT</small>
+<strong class="positive" id="homeTodayResult">+0.00</strong>
+</div>
+<div>
+<small data-i18n="tradesLabel">TRADES</small>
+<strong id="homeTradeCount">0</strong>
+</div>
+<div>
+<small data-i18n="winRateLabel">WIN RATE</small>
+<strong id="homeWinRate">0%</strong>
+</div>
+</div>
+</div>
+<div class="section-heading">
+<div>
+<p class="eyebrow" data-i18n="yourWorkspace">YOUR WORKSPACE</p>
+<h2 data-i18n="everythingInOnePlace">Everything in one place.</h2>
+</div>
+</div>
+<div class="feature-list">
+<article class="feature-card" data-navigate="journal">
+<div class="feature-icon purple"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"></path><path d="M4 4.5v17M8 6h8M8 10h8"></path></svg></div>
+<div class="feature-info">
+<h3 data-i18n="tradingJournal">Trading Journal</h3>
+<p>Catat entry, setup, hasil trade, psychology, dan alasan di balik setiap keputusan.</p>
+</div>
+<span class="feature-arrow">→</span>
+</article>
+<article class="feature-card" data-navigate="statistics">
+<div class="feature-icon blue"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M4 19V5M4 19h16"></path><path d="m7 15 4-4 3 2 5-6"></path></svg></div>
+<div class="feature-info">
+<h3 data-i18n="statistics">Statistics</h3>
+<p>Ubah seluruh data jurnal menjadi insight tentang performa trading lo.</p>
+</div>
+<span class="feature-arrow">→</span>
+</article>
+<article class="feature-card" data-navigate="profile">
+<div class="feature-icon orange"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M9 4.5A3.5 3.5 0 0 0 5.5 8c0 .8.27 1.54.72 2.13A3.5 3.5 0 0 0 8 16.5c0 1.93 1.57 3.5 3.5 3.5H12V4.5z"></path><path d="M15 4.5A3.5 3.5 0 0 1 18.5 8c0 .8-.27 1.54-.72 2.13A3.5 3.5 0 0 1 16 16.5c0 1.93-1.57 3.5-3.5 3.5H12V4.5z"></path><path d="M8.5 7.5h1M7.5 12h2M15.5 7.5h-1M16.5 12h-2"></path></svg></div>
+<div class="feature-info">
+<h3 data-i18n="psychologyTitle">Psychology</h3>
+<p>Lihat ringkasan kondisi psikologi lo berdasarkan trade yang sudah dicatat.</p>
+</div>
+<span class="feature-arrow">→</span>
+</article>
+<article class="feature-card" data-navigate="profile">
+<div class="feature-icon green"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"></path><path d="m19 13.5 1.2 1-.2 2.1-2 .8-.9 1.5-2.1-.2-.8-2h-2.4l-.8 2-2.1.2-.9-1.5-2-.8-.2-2.1 1.2-1v-3l-1.2-1 .2-2.1 2-.8.9-1.5 2.1.2.8 2h2.4l.8-2 2.1-.2.9 1.5 2 .8.2 2.1-1.2 1z"></path></svg></div>
+<div class="feature-info">
+<h3 data-i18n="profileSettings">Profile &amp; Settings</h3>
+<p>Kelola informasi akun, preferensi, dan pengaturan dashboard.</p>
+</div>
+<span class="feature-arrow">→</span>
+</article>
+</div>
+<div class="quick-action-card">
+<div>
+<span class="quick-label" data-i18n="readyToLog">READY TO LOG?</span>
+<h3 data-i18n="recordNextTrade">Record your next trade.</h3>
+<p>Jangan cuma mengingat trade. Catat.</p>
+</div>
+<button class="round-arrow-btn" id="quickJournalBtn" type="button">→</button>
+</div>
+</section>
+<!-- JOURNAL -->
+<section class="page-view" id="journalView">
+<div class="page-header journal-page-header">
+<div>
+<p class="eyebrow" data-i18n="journal">JOURNAL</p>
+<h1 data-i18n="yourTrades">Your trades.</h1>
+<p>Catat keputusan trading, bukan cuma hasil akhirnya.</p>
+</div>
+<button class="small-primary-btn" id="addJournalBtn" type="button">+ Add</button>
+</div>
+<div class="journal-toolbar">
+<div class="date-filter-wrap">
+<span class="toolbar-label" data-i18n="filterDate">FILTER DATE</span>
+<div class="date-filter-control">
+<span class="calendar-symbol"><svg aria-hidden="true" viewbox="0 0 24 24"><rect height="16" rx="2" width="18" x="3" y="5"></rect><path d="M16 3v4M8 3v4M3 10h18"></path></svg></span>
+<input aria-label="Filter journal by date" data-i18n-aria-label="filterDate" id="journalDateFilter" type="date"/>
+<button class="clear-filter-btn" data-i18n-title="clearDateFilter" id="clearDateFilterBtn" title="Clear date filter" type="button">×</button>
+</div>
+</div>
+<div class="journal-count">
+<strong id="journalCountLabel">0</strong>
+<span data-i18n="journals" id="journalCountText">journals</span>
+</div>
+</div>
+<div class="journal-list" id="journalList"></div>
+<div class="journal-more-wrap hidden" id="journalMoreWrap">
+<button class="secondary-btn full" id="showAllJournalsBtn" type="button">
+                        Lihat lainnya <span>→</span>
+</button>
+<p class="journal-more-info" id="journalMoreInfo"></p>
+</div>
+</section>
+<!-- STATISTICS -->
+<section class="page-view" id="statisticsView">
+<div class="page-header">
+<div>
+<p class="eyebrow" data-i18n="statistics">STATISTICS</p>
+<h1 data-i18n="readTheData">Read the data.</h1>
+<p>Data jurnal diubah menjadi gambaran performa dan pola trading lo.</p>
+</div>
+</div>
+<div class="stats-grid">
+<div class="stat-card">
+<span data-i18n="winRateLabel">WIN RATE</span>
+<strong id="statWinRate">0%</strong>
+<small id="statWinRateMeta">0 wins / 0 trades</small>
+</div>
+<div class="stat-card">
+<span>AVG. RR</span>
+<strong id="statAvgRR">0.00R</strong>
+<small data-i18n="basedOnSltp">Based on SL / TP</small>
+</div>
+<div class="stat-card">
+<span data-i18n="totalTrades">TOTAL TRADES</span>
+<strong id="statTotalTrades">0</strong>
+<small data-i18n="journalEntries">Journal entries</small>
+</div>
+<div class="stat-card">
+<span data-i18n="netResultLabel">NET RESULT</span>
+<strong id="statNetResult">0</strong>
+<small id="statNetResultMeta">No journal data</small>
+</div>
+</div>
+<div class="chart-card">
+<div class="chart-card-header">
+<div>
+<span data-i18n="performance">PERFORMANCE</span>
+<h2 data-i18n="journalResultOverview">Journal result overview</h2>
+</div>
+<span class="chart-badge">R</span>
+</div>
+<div class="performance-bars" id="performanceBars">
+<div class="stats-empty-message">Chart akan muncul setelah journal memiliki data.</div>
+</div>
+</div>
+<div class="insight-card">
+<div class="insight-icon"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M9 4.5A3.5 3.5 0 0 0 5.5 8c0 .8.27 1.54.72 2.13A3.5 3.5 0 0 0 8 16.5c0 1.93 1.57 3.5 3.5 3.5H12V4.5z"></path><path d="M15 4.5A3.5 3.5 0 0 1 18.5 8c0 .8-.27 1.54-.72 2.13A3.5 3.5 0 0 1 16 16.5c0 1.93-1.57 3.5-3.5 3.5H12V4.5z"></path><path d="M8.5 7.5h1M7.5 12h2M15.5 7.5h-1M16.5 12h-2"></path></svg></div>
+<div>
+<span class="eyebrow" data-i18n="psychologyInsight">PSYCHOLOGY INSIGHT</span>
+<h2 id="psychInsightTitle">Belum ada cukup data.</h2>
+<p id="psychInsightText">Setelah beberapa trade dicatat, bagian ini akan membaca hubungan antara feel dan hasil trading lo.</p>
+</div>
+</div>
+<div class="psychology-stats-card">
+<div class="section-heading compact">
+<div>
+<p class="eyebrow">PSYCHOLOGY BY FEEL</p>
+<h2 data-i18n="seeThePattern">See the pattern.</h2>
+</div>
+</div>
+<div class="psychology-stats-list" id="psychologyStatsList">
+<div class="stats-empty-message">Belum ada data psychology.</div>
+</div>
+</div>
+</section>
+<!-- PROFILE -->
+<section class="page-view" id="profileView">
+<div class="social-profile-card">
+<div class="social-profile-cover"></div>
+<div class="social-profile-body">
+<div class="social-profile-top">
+<button aria-label="Change profile photo" class="profile-avatar social-avatar" data-i18n-aria-label="changeProfilePhoto" id="profileAvatarButton" type="button">
+<img alt="Profile photo" class="profile-avatar-image hidden" id="profileAvatarImage"/>
+<span id="profileInitial">Z</span>
+<span aria-hidden="true" class="avatar-edit-badge"><svg viewbox="0 0 24 24"><path d="M4 7h3l1.4-2h7.2L17 7h3v12H4z"></path><circle cx="12" cy="13" r="3.5"></circle></svg></span>
+</button>
+<div class="social-profile-copy">
+<p class="eyebrow" data-i18n="profileLabel">TRADER PROFILE</p>
+<h1 id="profileName">Trader</h1>
+<p id="profileUsername">@trader</p>
+</div>
+<button class="profile-edit-btn" data-i18n="editProfile" id="editProfileBtn" type="button">Edit</button>
+</div>
+<p class="profile-bio" data-i18n="defaultBio" id="profileBio">Membangun konsistensi, satu trade setiap kali.</p>
+<div class="profile-stats">
+<div><strong id="profileTradeCount">0</strong><span data-i18n="trades">Trades</span></div>
+<div><strong id="profileWinRate">0%</strong><span data-i18n="winRate">Win Rate</span></div>
+<div><strong id="profileNetResult">0</strong><span data-i18n="netResult">Net PNL</span></div>
+</div>
+</div>
+</div>
+<div class="settings-section">
+<div class="section-heading compact account-section-heading">
+<div><p class="eyebrow" data-i18n="account">ACCOUNT</p><h2 data-i18n="accountInformation">Informasi account</h2></div>
+<button class="profile-edit-btn" data-i18n="editAccount" id="editAccountBtn" type="button">Edit</button>
+</div>
+<div class="settings-card">
+<div class="setting-row"><div><span data-i18n="name">Nama</span><strong id="profileNameValue">-</strong></div><span>›</span></div>
+<div class="setting-row"><div><span data-i18n="accountName">Account</span><strong id="profileAccountValue">-</strong></div><span>›</span></div>
+<div class="setting-row"><div><span data-i18n="startingBalance">Starting Balance</span><strong id="profileBalanceValue">-</strong></div><span>›</span></div>
+<div class="setting-row"><div><span data-i18n="currency">Currency</span><strong id="profileCurrencyValue">USD</strong></div><span>›</span></div>
+</div>
+</div>
+<div class="settings-section"><div class="section-heading compact"><div><p class="eyebrow" data-i18n="psychology">PSYCHOLOGY</p><h2 data-i18n="yourCurrentProfile">Profil psikologi lo saat ini.</h2></div></div>
+<div class="psychology-card"><div class="psychology-main"><div class="psychology-face" id="psychologyFace"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M9 4.5A3.5 3.5 0 0 0 5.5 8c0 .8.27 1.54.72 2.13A3.5 3.5 0 0 0 8 16.5c0 1.93 1.57 3.5 3.5 3.5H12V4.5z"></path><path d="M15 4.5A3.5 3.5 0 0 1 18.5 8c0 .8-.27 1.54-.72 2.13A3.5 3.5 0 0 1 16 16.5c0 1.93-1.57 3.5-3.5 3.5H12V4.5z"></path><path d="M8.5 7.5h1M7.5 12h2M15.5 7.5h-1M16.5 12h-2"></path></svg></div><div><span data-i18n="dominantState">DOMINANT STATE</span><strong id="profileDominantFeel">No data yet</strong></div></div><div class="psychology-note" id="profilePsychologyNote">Psychology di halaman ini akan membaca data kondisi psikologi dari journal trading lo.</div></div>
+</div>
+<div class="settings-section"><div class="section-heading compact"><div><p class="eyebrow" data-i18n="settings">SETTINGS</p><h2 data-i18n="preferences">Preferences</h2></div></div>
+<div class="settings-card">
+<div class="setting-button setting-control"><div><strong data-i18n="appearance">Appearance</strong><span data-i18n="appearanceDesc">Pilih tampilan Trazeel.</span></div><select aria-label="Appearance" class="settings-select" id="themeSelect"><option value="system">Default Sistem</option><option value="dark">Gelap</option><option value="light">Terang</option></select></div>
+<div class="setting-button setting-control"><div><strong data-i18n="language">Bahasa</strong><span data-i18n="languageDesc">Pilih bahasa interface.</span></div><select aria-label="Language" class="settings-select" id="languageSelect"><option value="id">Bahasa Indonesia</option><option value="en">English</option></select></div>
+<button class="setting-button" id="tradingPrefsInfoBtn" type="button"><div><strong data-i18n="tradingPreferences">Trading Preferences</strong><span data-i18n="tradingPreferencesDesc">Risk, session, timeframe</span></div><span>›</span></button>
+<button class="setting-button danger" id="resetAppBtn" type="button"><div><strong data-i18n="resetDashboard">Reset Dashboard</strong><span data-i18n="resetDashboardDesc">Hapus seluruh data lokal</span></div><span>›</span></button>
+</div>
+</div>
+<div class="profile-footer">Trazeel • Personal Trading Workspace</div>
+</section>
+<input accept="image/*" hidden="" id="profileAvatarInput" type="file"/>
+<!-- EDIT ACCOUNT MODAL -->
+<div aria-hidden="true" class="modal hidden" id="accountEditModal">
+<div class="modal-backdrop" data-close-modal="accountEditModal"></div>
+<div aria-labelledby="accountEditTitle" aria-modal="true" class="modal-sheet account-edit-sheet" role="dialog">
+<div class="modal-header"><div><span class="eyebrow">ACCOUNT</span><h2 data-i18n="editAccountTitle" id="accountEditTitle">Edit Account</h2></div><button aria-label="Close" class="modal-close" data-close-modal="accountEditModal" type="button">×</button></div>
+<div class="form-stack">
+<div class="form-field"><label data-i18n="name" for="accountEditName">Nama</label><input data-i18n-placeholder="yourNamePlaceholder" id="accountEditName" maxlength="30" placeholder="Your name" type="text"/></div>
+<div class="form-field"><label data-i18n="accountName" for="accountEditAccountName">Account</label><input data-i18n-placeholder="accountPlaceholder" id="accountEditAccountName" maxlength="30" placeholder="Main Account" type="text"/></div>
+<div class="form-field"><label data-i18n="startingBalance" for="accountEditBalance">Starting Balance</label><input id="accountEditBalance" min="0" placeholder="1000" step="0.01" type="number"/></div>
+<div class="form-field"><label data-i18n="currency" for="accountEditCurrency">Currency</label><select id="accountEditCurrency"><option value="USD">USD</option><option value="IDR">IDR</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></div>
+<button class="primary-btn full" data-i18n="saveAccount" id="saveAccountBtn" type="button">Save Account</button>
+</div>
+</div>
+</div>
+<!-- EDIT PROFILE MODAL -->
+<div aria-hidden="true" class="modal hidden" id="profileEditModal">
+<div class="modal-backdrop" data-close-modal="profileEditModal"></div>
+<div aria-labelledby="profileEditTitle" aria-modal="true" class="modal-sheet profile-edit-sheet" role="dialog">
+<div class="modal-header"><div><span class="eyebrow">PROFILE</span><h2 data-i18n="editProfileTitle" id="profileEditTitle">Edit Profile</h2></div><button aria-label="Close" class="modal-close" data-close-modal="profileEditModal" type="button">×</button></div>
+<div class="form-stack"><div class="form-field"><label data-i18n="displayName" for="profileEditName">Display Name</label><input data-i18n-placeholder="yourNamePlaceholder" id="profileEditName" maxlength="30" placeholder="Your name" type="text"/></div><div class="form-field"><label data-i18n="username" for="profileEditUsername">Username</label><input autocomplete="off" data-i18n-placeholder="usernamePlaceholder" id="profileEditUsername" maxlength="20" placeholder="@trader" type="text"/></div><div class="form-field"><label data-i18n="bio" for="profileEditBio">Bio</label><textarea data-i18n-placeholder="bioPlaceholder" id="profileEditBio" maxlength="120" placeholder="Tell something about your trading journey..." rows="4"></textarea></div><button class="primary-btn full" data-i18n="saveProfile" id="saveProfileBtn" type="button">Save Profile</button></div>
+</div>
+</div>
+<!-- BOTTOM NAV -->
+<nav aria-label="Primary navigation" class="bottom-nav">
+<button aria-label="Home" class="nav-item active" data-view="home" type="button">
+<span class="nav-icon"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg></span>
+<span class="nav-label" data-i18n="home">Home</span>
+</button>
+<button aria-label="Journal" class="nav-item" data-view="journal" type="button">
+<span class="nav-icon"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M6 3h12a2 2 0 0 1 2 2v16H6a3 3 0 0 1 0-6h14"></path><path d="M6 15h14M6 3v12M10 7h7M10 11h7"></path></svg></span>
+<span class="nav-label" data-i18n="journalNav">Journal</span>
+</button>
+<button aria-label="Stats" class="nav-item" data-view="statistics" type="button">
+<span class="nav-icon"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M5 20V10M12 20V5M19 20V8"></path><path d="M3 20h18"></path></svg></span>
+<span class="nav-label" data-i18n="statsNav">Stats</span>
+</button>
+<button aria-label="Profile" class="nav-item" data-view="profile" type="button">
+<span class="nav-icon"><svg aria-hidden="true" viewbox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg></span>
+<span class="nav-label" data-i18n="profileNav">Profile</span>
+</button>
+</nav>
+</div></main>
+<!-- ADD JOURNAL MODAL -->
+<div aria-hidden="true" class="modal hidden" id="journalModal">
+<div class="modal-backdrop" data-close-modal="journalModal"></div>
+<div aria-labelledby="addJournalTitle" aria-modal="true" class="modal-sheet add-journal-sheet" role="dialog">
+<div class="modal-header">
+<div>
+<span class="eyebrow">NEW RECORD</span>
+<h2 id="addJournalTitle">Add Journal</h2>
+</div>
+<button aria-label="Close" class="modal-close" data-close-modal="journalModal" type="button">×</button>
+</div>
+<!-- MARKET SELECT -->
+<div class="add-flow-step active" id="marketStep">
+<div class="flow-title">
+<span>STEP 01</span>
+<h3 data-i18n="whatDidYouTrade">What did you trade?</h3>
+<p data-i18n="chooseTradeType">Pilih jenis transaksi terlebih dahulu.</p>
+</div>
+<div class="choice-grid two">
+<button class="choice-card" data-market-type="spot" type="button">
+<span class="choice-icon"><svg aria-hidden="true" viewbox="0 0 24 24"><circle cx="12" cy="12" r="8.5"></circle><path d="M10 9.5c.5-1 1.3-1.5 2.5-1.5 1.3 0 2.5.7 2.5 1.8 0 2.9-5 1.3-5 4.3 0 1.1.9 1.9 2.3 1.9 1.4 0 2.4-.6 2.8-1.6M12 6.5v11"></path></svg></span>
+<strong>Spot</strong>
+<small>Buy only</small>
+</button>
+<button class="choice-card" data-market-type="future" type="button">
+<span class="choice-icon"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M6 4v16M12 2v20M18 5v14"></path><rect height="6" rx=".5" width="3" x="4.5" y="8"></rect><rect height="9" rx=".5" width="3" x="10.5" y="6"></rect><rect height="5" rx=".5" width="3" x="16.5" y="9"></rect></svg></span>
+<strong>Future</strong>
+<small>Forex / Crypto</small>
+</button>
+</div>
+</div>
+<!-- FUTURE CATEGORY -->
+<div class="add-flow-step" id="futureCategoryStep">
+<div class="flow-title">
+<span>STEP 02</span>
+<h3 data-i18n="chooseMarket">Choose the market.</h3>
+<p data-i18n="futureMarkets">Future dibagi menjadi Forex atau Crypto.</p>
+</div>
+<div class="choice-grid two">
+<button class="choice-card" data-future-category="forex" type="button">
+<span class="choice-icon">FX</span>
+<strong>Forex</strong>
+<small>Currency pairs</small>
+</button>
+<button class="choice-card" data-future-category="crypto" type="button">
+<span class="choice-icon"><svg aria-hidden="true" viewbox="0 0 24 24"><circle cx="12" cy="12" r="8.5"></circle><path d="M10 9.5c.5-1 1.3-1.5 2.5-1.5 1.3 0 2.5.7 2.5 1.8 0 2.9-5 1.3-5 4.3 0 1.1.9 1.9 2.3 1.9 1.4 0 2.4-.6 2.8-1.6M12 6.5v11"></path></svg></span>
+<strong>Crypto</strong>
+<small>Crypto futures</small>
+</button>
+</div>
+<button class="text-btn" data-i18n="back" id="futureBackBtn" type="button">← Back</button>
+</div>
+<!-- FORM -->
+<div class="add-flow-step" id="journalFormStep">
+<div class="selected-trade-badges" id="selectedTradeBadges"></div>
+<form id="journalForm" novalidate="">
+<div class="form-stack">
+<div class="form-field">
+<div class="field-label-row">
+<label for="journalDate">01. Date <span>*</span></label>
+</div>
+<input id="journalDate" required="" type="date"/>
+<small class="field-error" data-error-for="journalDate"></small>
+</div>
+<div class="form-field">
+<div class="field-label-row">
+<label for="journalPair">02. Pair <span>*</span></label>
+<small>Manual</small>
+</div>
+<input autocomplete="off" data-i18n-placeholder="pairPlaceholder" id="journalPair" maxlength="20" placeholder="Contoh: XAUUSD" required="" type="text"/>
+<small class="field-error" data-error-for="journalPair"></small>
+</div>
+<div class="form-field" id="positionField">
+<div class="field-label-row">
+<label>03. Position <span>*</span></label>
+<small>Select</small>
+</div>
+<div class="inline-choice-grid two">
+<button class="inline-choice buy" data-position="buy" type="button">BUY</button>
+<button class="inline-choice sell" data-position="sell" type="button">SELL</button>
+</div>
+<small class="field-error" data-error-for="journalPosition"></small>
+</div>
+<div class="spot-only-notice hidden" id="spotPositionNotice">
+<span>SPOT</span>
+                            Position tidak diperlukan untuk transaksi Spot.
+                        </div>
+<div class="form-field">
+<div class="field-label-row">
+<label>04. Final PNL <span>*</span></label>
+<small>Choose result</small>
+</div>
+<div class="pnl-choice-grid">
+<button class="pnl-choice pnl-profit" data-pnl-sign="positive" type="button">
+<span>＋</span>
+<div><strong data-i18n="profit">Profit</strong><small data-i18n="tradePositive">Trade berakhir positif</small></div>
+</button>
+<button class="pnl-choice pnl-loss" data-pnl-sign="negative" type="button">
+<span>－</span>
+<div><strong data-i18n="loss">Loss</strong><small data-i18n="tradeNegative">Trade berakhir negatif</small></div>
+</button>
+</div>
+<div class="pnl-amount-wrap hidden" id="pnlAmountWrap">
+<span class="pnl-sign-preview positive-text" id="pnlSignPreview">+</span>
+<input id="journalPnl" min="0" placeholder="0.00" required="" step="0.01" type="number"/>
+</div>
+<small class="field-error" data-error-for="journalPnl"></small>
+</div>
+<div class="form-field">
+<div class="field-label-row">
+<label for="journalEntry">05. Entry Price <span>*</span></label>
+<small>Manual</small>
+</div>
+<input data-i18n-placeholder="entryPlaceholder" id="journalEntry" placeholder="3342.50" required="" step="any" type="number"/>
+<small class="field-error" data-error-for="journalEntry"></small>
+</div>
+<div class="form-field">
+<div class="field-label-row">
+<label>06. SL / TP <span>*</span></label>
+<small>Manual</small>
+</div>
+<div class="sl-tp-grid">
+<div>
+<span>STOP LOSS</span>
+<input id="journalSl" placeholder="3332.50" required="" step="any" type="number"/>
+</div>
+<div>
+<span>TAKE PROFIT</span>
+<input id="journalTp" placeholder="3360.00" required="" step="any" type="number"/>
+</div>
+</div>
+<div class="two-errors">
+<small class="field-error" data-error-for="journalSl"></small>
+<small class="field-error" data-error-for="journalTp"></small>
+</div>
+</div>
+<div class="form-field">
+<div class="field-label-row">
+<label for="journalSetup">07. Setup <span>*</span></label>
+<small>Manual</small>
+</div>
+<input data-i18n-placeholder="setupPlaceholder" id="journalSetup" maxlength="60" placeholder="Liquidity Sweep" required="" type="text"/>
+<small class="field-error" data-error-for="journalSetup"></small>
+</div>
+<div class="form-field">
+<div class="field-label-row">
+<label for="journalMethod">08. Method <span>*</span></label>
+<small>Manual</small>
+</div>
+<input data-i18n-placeholder="methodPlaceholder" id="journalMethod" maxlength="60" placeholder="SMC / Price Action / etc." required="" type="text"/>
+<small class="field-error" data-error-for="journalMethod"></small>
+</div>
+<div class="form-field">
+<div class="field-label-row">
+<label>09. Feel <span>*</span></label>
+<small>Psychology data</small>
+</div>
+<div class="feel-grid">
+<button class="feel-choice" data-feel="calm" type="button"><span>😎</span><strong>Calm</strong></button>
+<button class="feel-choice" data-feel="neutral" type="button"><span>😐</span><strong>Neutral</strong></button>
+<button class="feel-choice" data-feel="fear" type="button"><span>😨</span><strong>Fear</strong></button>
+<button class="feel-choice" data-feel="revenge" type="button"><span>😤</span><strong>Revenge</strong></button>
+<button class="feel-choice" data-feel="overconfident" type="button"><span>🔥</span><strong>Overconfident</strong></button>
+<button class="feel-choice" data-feel="anxious" type="button"><span>😰</span><strong>Anxious</strong></button>
+</div>
+<small class="field-error" data-error-for="journalFeel"></small>
+</div>
+<div class="form-field">
+<div class="field-label-row">
+<label>10. Screenshot</label>
+<small>Optional</small>
+</div>
+<label class="upload-box" for="journalScreenshot" id="uploadBox">
+<input accept="image/*" id="journalScreenshot" type="file"/>
+<span class="upload-icon">＋</span>
+<strong>Add image</strong>
+<small>Optional. Image akan dikompres untuk penyimpanan lokal.</small>
+</label>
+<div class="image-preview-wrap hidden" id="imagePreviewWrap">
+<img alt="Journal screenshot preview" id="imagePreview"/>
+<button class="remove-image-btn" id="removeImageBtn" type="button">Remove</button>
+</div>
+</div>
+<div class="form-submit-area">
+<div class="required-note">
+<span>*</span> Semua field wajib diisi kecuali screenshot.
+                            </div>
+<button class="primary-btn full" id="saveJournalBtn" type="submit">
+                                Add Journal <span>→</span>
+</button>
+</div>
+</div>
+</form>
+</div>
+</div>
+</div>
+<!-- VIEW DETAIL -->
+<div aria-hidden="true" class="modal hidden" id="detailModal">
+<div class="modal-backdrop" data-close-modal="detailModal"></div>
+<div aria-labelledby="detailTitle" aria-modal="true" class="modal-sheet detail-sheet" role="dialog">
+<div class="modal-header">
+<div>
+<span class="eyebrow">LOCKED RECORD</span>
+<h2 id="detailTitle">Journal Detail</h2>
+</div>
+<button aria-label="Close" class="modal-close" data-close-modal="detailModal" type="button">×</button>
+</div>
+<div class="locked-notice">
+<span>🔒</span>
+<div>
+<strong>View only</strong>
+<p>Journal yang sudah disimpan tidak dapat diedit. Data hanya bisa dilihat atau dihapus.</p>
+</div>
+</div>
+<div class="journal-detail-content" id="journalDetailContent"></div>
+<div class="detail-actions">
+<button class="danger-btn full" id="deleteJournalBtn" type="button">🗑 Delete Journal</button>
+</div>
+</div>
+</div>
+<!-- SIMPLE INFO MODAL -->
+<div aria-hidden="true" class="modal hidden" id="infoModal">
+<div class="modal-backdrop" data-close-modal="infoModal"></div>
+<div aria-modal="true" class="modal-sheet info-sheet" role="dialog">
+<div class="modal-header">
+<div>
+<span class="eyebrow">TRAZEEL</span>
+<h2 id="infoModalTitle">Information</h2>
+</div>
+<button aria-label="Close" class="modal-close" data-close-modal="infoModal" type="button">×</button>
+</div>
+<p class="info-modal-text" id="infoModalText"></p>
+<button class="primary-btn full" data-close-modal="infoModal" data-i18n="close" type="button">Close</button>
+</div>
+</div>
+<div aria-live="polite" class="toast" id="toast" role="status"></div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
