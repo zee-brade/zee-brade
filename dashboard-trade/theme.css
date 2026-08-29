@@ -1,0 +1,73 @@
+/* Theme overrides for minimal-premium design (teal accent)
+   - Sets typographic scale
+   - Adjusts color tokens to teal-based premium palette
+   - Adds subtle animations for buttons, cards, and nav
+*/
+:root {
+    /* Typography scale */
+    --fs-base: 16px;
+    --fs-sm: 13px;
+    --fs-lg: 20px;
+    --fs-h1: clamp(28px, 6vw, 44px);
+    --fs-h2: clamp(20px, 4.5vw, 28px);
+    --fs-h3: 18px;
+
+    /* Palette (teal minimal-premium) */
+    --accent: #2dd4bf;        /* primary teal */
+    --accent-2: #14b8a6;      /* darker teal */
+    --accent-soft: rgba(45,212,191,.10);
+
+    --bg: var(--bg); /* keep original dark background */
+
+    /* subtle metallic highlight for premium feel */
+    --highlight: linear-gradient(135deg, rgba(45,212,191,.22), rgba(20,184,166,.08));
+
+    /* small motion tuning */
+    --motion-duration: 240ms;
+    --motion-ease: cubic-bezier(.2,.9,.25,1);
+}
+
+/* Apply typographic scale */
+html { font-size: var(--fs-base); }
+body { font-size: var(--fs-base); line-height: 1.45; }
+h1 { font-size: var(--fs-h1); line-height: 1.03; }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
+
+/* Tweak existing components using the new tokens */
+.primary-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: 0 10px 30px rgba(20,184,166,.12);
+    transform: translateZ(0);
+    transition: transform var(--motion-duration) var(--motion-ease), box-shadow var(--motion-duration) var(--motion-ease);
+}
+.primary-btn:hover { transform: translateY(-4px); box-shadow: 0 22px 48px rgba(20,184,166,.16); }
+.primary-btn:active { transform: translateY(-1px); }
+
+/* Card accent */
+.feature-card { border-radius: 16px; }
+.feature-card:hover { box-shadow: 0 14px 40px rgba(15,103,95,.06); border-color: rgba(45,212,191,.06); }
+
+/* Nav active accent ring */
+.nav-item.active {
+    background: #fff; /* keep contrast */
+    color: #0b0c11;
+    box-shadow: 0 12px 30px rgba(0,0,0,.22), 0 0 0 8px rgba(45,212,191,.06);
+}
+
+/* Logo adjustments for SVG */
+.trazeel-logo-img { width: auto; height: 100%; display: block; }
+.brand-mark img, .logo-mark img { width: 100%; height: 100%; }
+
+/* Intro motion polish */
+.intro-logo { letter-spacing: .12em; }
+.intro-content .logo-mark { transform-origin: center; }
+
+/* Performance bar micro animation */
+.performance-bar { transition: height 560ms var(--motion-ease), transform 320ms var(--motion-ease); }
+.performance-bar:hover { transform: scaleY(1.06); }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+}

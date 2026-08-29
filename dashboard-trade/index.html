@@ -10,13 +10,15 @@
 <!-- Added Inter font for better typography -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 <link href="style.css" rel="stylesheet"/>
+<!-- Theme overrides (minimal premium, teal accent) -->
+<link href="theme.css" rel="stylesheet"/>
 </head>
 <body>
 <div id="app">
 <!-- INTRO -->
 <section class="screen intro-screen" id="introScreen">
 <div class="intro-content">
-<div class="logo-mark"><img class="trazeel-logo-img" src="logo-trazeel.png" alt="Trazeel logo"></div>
+<div class="logo-mark"><img class="trazeel-logo-img" src="logo-trazeel.svg" alt="Trazeel logo"></div>
 <h1 class="intro-logo">TRAZEEL</h1>
 <p class="intro-tagline">Your personal trading space.</p>
 <div class="intro-loader"><div class="intro-loader-bar"></div></div>
@@ -27,7 +29,7 @@
 <div class="welcome-content">
 <div class="welcome-badge">TRADING WORKSPACE</div>
 <div class="welcome-logo-small">
-<div class="logo-mark mini"><img class="trazeel-logo-img" src="logo-trazeel.png" alt="Trazeel logo"></div>
+<div class="logo-mark mini"><img class="trazeel-logo-img" src="logo-trazeel.svg" alt="Trazeel logo"></div>
 </div>
 <h1>Welcome to <span>Trazeel.</span></h1>
 <p>Tempat pribadi untuk mencatat, memahami, dan mengevaluasi perjalanan trading lo.</p>
@@ -94,7 +96,7 @@
 <main class="main-app hidden" id="mainApp">
 <header class="topbar">
 <div class="brand-area">
-<div class="brand-mark"><img class="trazeel-logo-img" src="logo-trazeel.png" alt="Trazeel logo"></div>
+<div class="brand-mark"><img class="trazeel-logo-img" src="logo-trazeel.svg" alt="Trazeel logo"></div>
 <div>
 <div class="brand-name">TRAZEEL</div>
 <div class="brand-subtitle">Trading Space</div>
@@ -605,6 +607,6 @@
 </div>
 <div aria-live="polite" class="toast" id="toast" role="status"></div>
 </div>
-<script src="script.js"></script>
+<script defer src="script.js"></script>
 </body>
 </html>
