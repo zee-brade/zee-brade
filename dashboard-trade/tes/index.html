@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <title>Trazeel • Sliding Auth</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<main
+    class="auth-container"
+    id="authContainer"
+>
+
+    <div
+        class="border-stars"
+        id="borderStars"
+        aria-hidden="true"
+    >
+
+        <span class="border-star"></span>
+        <span class="border-star"></span>
+        <span class="border-star"></span>
+        <span class="border-star"></span>
+        <span class="border-star"></span>
+        <span class="border-star"></span>
+        <span class="border-star"></span>
+        <span class="border-star"></span>
+
+    </div>
+
+    <div
+        class="forms"
+    >
+
+        <section
+            class="form-panel"
+            id="loginPanel"
+        >
+
+            <div
+                class="form-content-scale"
+                id="loginScale"
+            >
+
+                <div
+                    class="form-content"
+                >
+
+                    <span
+                        class="form-kicker"
+                    >
+                        Welcome Back
+                    </span>
+
+                    <h1>
+                        Login
+                    </h1>
+
+                    <p
+                        class="form-description"
+                    >
+                        Masuk ke akun kamu dan
+                        lanjutkan perjalananmu.
+                    </p>
+
+                    <form
+                        id="loginForm"
+                    >
+
+                        <div class="field">
+
+                            <label
+                                for="loginEmail"
+                            >
+                                Email
+                            </label>
+
+                            <input
+                                id="loginEmail"
+                                name="email"
+                                type="email"
+                                autocomplete="email"
+                                placeholder="you@example.com"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="field">
+
+                            <label
+                                for="loginPassword"
+                            >
+                                Password
+                            </label>
+
+                            <input
+                                id="loginPassword"
+                                name="password"
+                                type="password"
+                                autocomplete="current-password"
+                                placeholder="••••••••"
+                                required
+                            >
+
+                        </div>
+
+                        <button
+                            class="submit-btn"
+                            type="submit"
+                        >
+                            Login
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section
+            class="form-panel"
+            id="signupPanel"
+        >
+
+            <div
+                class="form-content-scale"
+                id="signupScale"
+            >
+
+                <div
+                    class="form-content"
+                >
+
+                    <span
+                        class="form-kicker"
+                    >
+                        New Account
+                    </span>
+
+                    <h1>
+                        Sign Up
+                    </h1>
+
+                    <p
+                        class="form-description"
+                    >
+                        Buat akun baru dan mulai
+                        perjalanan trading kamu.
+                    </p>
+
+                    <form
+                        id="signupForm"
+                    >
+
+                        <div class="field">
+
+                            <label
+                                for="signupName"
+                            >
+                                Name
+                            </label>
+
+                            <input
+                                id="signupName"
+                                name="name"
+                                type="text"
+                                autocomplete="name"
+                                placeholder="Nama kamu"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="field">
+
+                            <label
+                                for="signupEmail"
+                            >
+                                Email
+                            </label>
+
+                            <input
+                                id="signupEmail"
+                                name="email"
+                                type="email"
+                                autocomplete="email"
+                                placeholder="you@example.com"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="field">
+
+                            <label
+                                for="signupPassword"
+                            >
+                                Password
+                            </label>
+
+                            <input
+                                id="signupPassword"
+                                name="password"
+                                type="password"
+                                autocomplete="new-password"
+                                placeholder="••••••••"
+                                required
+                            >
+
+                        </div>
+
+                        <button
+                            class="submit-btn"
+                            type="submit"
+                        >
+                            Sign Up
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <aside
+        class="overlay"
+        id="overlay"
+    >
+
+        <div
+            class="overlay-content-scale"
+            id="overlayScale"
+        >
+
+            <div
+                class="overlay-content"
+            >
+
+                <div
+                    class="overlay-badge"
+                >
+                    Trazeel Auth
+                </div>
+
+                <h2
+                    id="overlayTitle"
+                >
+                    Welcome Back
+                </h2>
+
+                <p
+                    class="overlay-description"
+                    id="overlayDescription"
+                >
+                    Sudah punya akun?
+                    Masuk dan lanjutkan
+                    perjalananmu.
+                </p>
+
+                <p
+                    class="overlay-hint"
+                >
+                    Geser panel atau tekan
+                    tombol panah untuk berpindah.
+                </p>
+
+                <button
+                    class="arrow-btn"
+                    id="arrowBtn"
+                    type="button"
+                    aria-label="Open sign up"
+                >
+                    ←
+                </button>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+</main>
+    <script src="script.js"></script>
+
+</body>
+
+</html>
