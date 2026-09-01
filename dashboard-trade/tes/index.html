@@ -1,783 +1,979 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
->
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
 
-<title>Trazeel • Responsive Sliding Auth</title>
+    <title>Trazeel • Responsive Sliding Auth</title>
 
-<style>
+    <style>
 
-/* =========================================================
-   ROOT
+        /* =========================================================
+           ROOT
+        ========================================================= */
+
+        :root {
+            --bg: #09090d;
+            --surface: #15151c;
+            --surface-2: #1c1c25;
+
+            --text: #f5f2ea;
+            --text-soft: #aaa7b1;
+            --text-muted: #6d6c77;
+
+            --accent: #c9a962;
+            --accent-light: #e7cb83;
+            --accent-dark: #8d6b36;
+
+            --border: rgba(255,255,255,.08);
+
+            --radius: clamp(18px, 3vw, 32px);
+
+            /* Blur variables */
+            --drag-blur: 0px;
+            --drag-opacity: 1;
+        }
+
+
+        /* =========================================================
+           RESET
+        ========================================================= */
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        html {
+            width: 100%;
+            min-height: 100%;
+        }
+
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+
+            display: grid;
+            place-items: center;
+
+            padding:
+                clamp(8px, 3vw, 36px);
+
+            overflow: hidden;
+
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            color: var(--text);
+
+            background:
+                radial-gradient(
+                    circle at 15% 10%,
+                    rgba(201,169,98,.14),
+                    transparent 28%
+                ),
+
+                radial-gradient(
+                    circle at 85% 90%,
+                    rgba(201,169,98,.08),
+                    transparent 30%
+                ),
+
+                var(--bg);
+        }
+
+
+        button,
+        input {
+            font: inherit;
+        }
+
+
+        button {
+            border: 0;
+        }
+
+
+        /* =========================================================
+           MAIN CONTAINER
+        ========================================================= */
+
+        .auth-container {
+
+            position: relative;
+
+            width:
+                min(
+                    94vw,
+                    980px
+                );
+
+            height:
+                min(
+                    84dvh,
+                    680px
+                );
+
+            overflow: hidden;
+
+            background:
+                var(--surface);
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+
+            border-radius:
+                var(--radius);
+
+            box-shadow:
+                0 35px 100px
+                rgba(0,0,0,.5),
+
+                0 0 0 1px
+                rgba(255,255,255,.015);
+
+            isolation: isolate;
+        }
+
+
+        /* =========================================================
+           FORM AREAS
+        ========================================================= */
+
+        .forms {
+
+            position: absolute;
+
+            inset: 0;
+
+            z-index: 1;
+
+            display: flex;
+
+            flex-direction: row;
+
+            width: 100%;
+            height: 100%;
+        }
+
+
+        /* =========================================================
+           FORM PANEL
+        ========================================================= */
+
+        .form-panel {
+
+            position: relative;
+
+            flex:
+                0 0 50%;
+
+            width:
+                50%;
+
+            height:
+                100%;
+
+            display: flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            padding:
+                clamp(
+                    14px,
+                    4vw,
+                    54px
+                );
+
+            overflow: hidden;
+
+            /*
+             * Blur hanya dipakai ketika sedang drag.
+             */
+            filter:
+                blur(
+                    var(--drag-blur)
+                );
+
+            opacity:
+                var(--drag-opacity);
+
+            transition:
+                filter 140ms ease,
+                opacity 140ms ease;
+
+            will-change:
+                filter,
+                opacity;
+        }
+
+
+        .form-panel::before {
+
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            pointer-events: none;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    rgba(255,255,255,.025),
+                    transparent 65%
+                );
+        }
+
+
+        /* =========================================================
+           CONTENT SCALE WRAPPER
+        ========================================================= */
+
+        .form-content-scale,
+        .overlay-content-scale {
+
+            width:
+                100%;
+
+            height:
+                auto;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            transform-origin:
+                center center;
+
+            will-change:
+                transform;
+        }
+
+
+        /* =========================================================
+           FORM CONTENT
+        ========================================================= */
+
+        .form-content {
+
+            position:
+                relative;
+
+            width:
+                100%;
+
+            max-width:
+                350px;
+
+            flex-shrink:
+                0;
+        }
+
+
+        /* =========================================================
+           KICKER
+        ========================================================= */
+
+        .form-kicker {
+
+            display:
+                block;
+
+            margin-bottom:
+                9px;
+
+            color:
+                var(--accent);
+
+            font-size:
+                10px;
+
+            font-weight:
+                900;
+
+            letter-spacing:
+                .17em;
+
+            text-transform:
+                uppercase;
+        }
+
+
+        /* =========================================================
+           TITLE
+        ========================================================= */
+
+        .form-content h1 {
+
+            margin-bottom:
+                10px;
+
+            font-size:
+                clamp(
+                    28px,
+                    4vw,
+                    42px
+                );
+
+            line-height:
+                1.05;
+
+            letter-spacing:
+                -.045em;
+        }
+
+
+        /* =========================================================
+           DESCRIPTION
+        ========================================================= */
+
+        .form-description {
+
+            margin-bottom:
+                25px;
+
+            color:
+                var(--text-soft);
+
+            font-size:
+                13px;
+
+            line-height:
+                1.7;
+        }
+
+
+        /* =========================================================
+           FIELD
+        ========================================================= */
+
+        .field {
+
+            margin-bottom:
+                15px;
+        }
+
+
+        .field label {
+
+            display:
+                block;
+
+            margin-bottom:
+                7px;
+
+            color:
+                #aaa8b2;
+
+            font-size:
+                12px;
+
+            font-weight:
+                700;
+        }
+
+
+        .field input {
+
+            display:
+                block;
+
+            width:
+                100%;
+
+            height:
+                50px;
+
+            padding:
+                0 15px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.08);
+
+            border-radius:
+                13px;
+
+            outline:
+                none;
+
+            background:
+                #1d1d26;
+
+            color:
+                #ffffff;
+
+            font-size:
+                14px;
+
+            transition:
+                border-color .18s ease,
+                background .18s ease,
+                box-shadow .18s ease;
+        }
+
+
+        .field input::placeholder {
+            color:
+                #5f5e69;
+        }
+
+
+        .field input:focus {
+
+            border-color:
+                rgba(201,169,98,.72);
+
+            background:
+                #20202a;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(201,169,98,.08);
+        }
+
+
+        /* =========================================================
+           SUBMIT
+        ========================================================= */
+
+        .submit-btn {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            width:
+                100%;
+
+            min-height:
+                52px;
+
+            margin-top:
+                6px;
+
+            border-radius:
+                14px;
+
+            cursor:
+                pointer;
+
+            color:
+                #17120c;
+
+            font-size:
+                13px;
+
+            font-weight:
+                900;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--accent-light),
+                    var(--accent-dark)
+                );
+
+            box-shadow:
+                0 12px 30px
+                rgba(169,129,63,.2);
+
+            transition:
+                transform .18s ease,
+                box-shadow .18s ease,
+                filter .18s ease;
+        }
+
+
+        .submit-btn:hover {
+
+            transform:
+                translateY(-2px);
+
+            filter:
+                brightness(1.05);
+
+            box-shadow:
+                0 17px 34px
+                rgba(169,129,63,.28);
+        }
+
+
+        .submit-btn:active {
+            transform:
+                translateY(0);
+        }
+
+
+        /* =========================================================
+           OVERLAY
+        ========================================================= */
+
+        .overlay {
+
+            position:
+                absolute;
+
+            top:
+                0;
+
+            right:
+                0;
+
+            width:
+                50%;
+
+            height:
+                100%;
+
+            z-index:
+                10;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            padding:
+                clamp(
+                    14px,
+                    4vw,
+                    54px
+                );
+
+            text-align:
+                center;
+
+            color:
+                #ffffff;
+
+            background:
+
+                radial-gradient(
+                    circle at 15% 15%,
+                    rgba(255,255,255,.17),
+                    transparent 30%
+                ),
+
+                radial-gradient(
+                    circle at 90% 90%,
+                    rgba(255,255,255,.08),
+                    transparent 30%
+                ),
+
+                linear-gradient(
+                    145deg,
+                    #c9a962,
+                    #8d6b36
+                );
+
+            box-shadow:
+                -18px 0 50px
+                rgba(0,0,0,.14);
+
+            transform:
+                translate3d(
+                    0,
+                    0,
+                    0
+                );
+
+            transition:
+                transform
+                650ms
+                cubic-bezier(
+                    .77,
+                    0,
+                    .18,
+                    1
+                );
+
+            touch-action:
+                none;
+
+            user-select:
+                none;
+
+            cursor:
+                grab;
+
+            will-change:
+                transform;
+        }
+
+
+        .overlay.dragging {
+
+            cursor:
+                grabbing;
+
+            transition:
+                none;
+
+            box-shadow:
+                -18px 0 55px
+                rgba(201,169,98,.22);
+        }
+
+
+        /* =========================================================
+           OVERLAY CONTENT
+        ========================================================= */
+
+        .overlay-content {
+
+            width:
+                100%;
+
+            max-width:
+                320px;
+
+            flex-shrink:
+                0;
+        }
+
+
+        /* =========================================================
+           BADGE
+        ========================================================= */
+
+        .overlay-badge {
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            min-height:
+                28px;
+
+            padding:
+                0 12px;
+
+            margin-bottom:
+                18px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.25);
+
+            border-radius:
+                999px;
+
+            background:
+                rgba(255,255,255,.09);
+
+            backdrop-filter:
+                blur(12px);
+
+            font-size:
+                9px;
+
+            font-weight:
+                900;
+
+            letter-spacing:
+                .15em;
+
+            text-transform:
+                uppercase;
+        }
+
+
+        /* =========================================================
+           OVERLAY TITLE
+        ========================================================= */
+
+        .overlay h2 {
+
+            margin-bottom:
+                14px;
+
+            font-size:
+                clamp(
+                    28px,
+                    4vw,
+                    40px
+                );
+
+            line-height:
+                1.04;
+
+            letter-spacing:
+                -.045em;
+        }
+
+
+        /* =========================================================
+           OVERLAY DESCRIPTION
+        ========================================================= */
+
+        .overlay-description {
+
+            max-width:
+                320px;
+
+            margin:
+                0 auto 24px;
+
+            color:
+                rgba(255,255,255,.85);
+
+            font-size:
+                13px;
+
+            line-height:
+                1.7;
+        }
+
+
+        /* =========================================================
+           HINT
+        ========================================================= */
+
+        .overlay-hint {
+
+            margin-bottom:
+                12px;
+
+            color:
+                rgba(255,255,255,.62);
+
+            font-size:
+                10px;
+
+            line-height:
+                1.5;
+        }
+
+
+        /* =========================================================
+   ARROW PULSE / HEARTBEAT
 ========================================================= */
 
-:root {
-    --bg: #09090d;
-    --surface: #15151c;
-    --surface-2: #1c1c25;
-
-    --text: #f5f2ea;
-    --text-soft: #aaa7b1;
-    --text-muted: #6d6c77;
-
-    --accent: #c9a962;
-    --accent-light: #e7cb83;
-    --accent-dark: #8d6b36;
-
-    --border: rgba(255,255,255,.08);
-
-    --radius:
-        clamp(18px, 3vw, 32px);
-}
-
-
-/* =========================================================
-   RESET
-========================================================= */
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-
-html,
-body {
-    width: 100%;
-    min-height: 100%;
-}
-
-
-body {
-    min-height: 100vh;
-    min-height: 100dvh;
-
-    display: grid;
-    place-items: center;
-
-    padding:
-        clamp(8px, 3vw, 36px);
-
-    overflow: hidden;
-
-    font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-
-    color:
-        var(--text);
-
-    background:
-        radial-gradient(
-            circle at 15% 10%,
-            rgba(201,169,98,.14),
-            transparent 28%
-        ),
-
-        radial-gradient(
-            circle at 85% 90%,
-            rgba(201,169,98,.08),
-            transparent 30%
-        ),
-
-        var(--bg);
-}
-
-
-button,
-input {
-    font: inherit;
-}
-
-
-button {
-    border: 0;
-}
-
-
-/* =========================================================
-   MAIN CONTAINER
-
-   INI YANG MENGIKUTI DEVICE.
-   
-   Isi tidak menentukan ukuran container.
-========================================================= */
-
-.auth-container {
-
+.arrow-btn {
     position: relative;
 
-    width:
-        min(
-            94vw,
-            980px
-        );
-
-    height:
-        min(
-            84dvh,
-            680px
-        );
-
-    overflow: hidden;
-
-    background:
-        var(--surface);
-
-    border:
-        1px solid
-        rgba(255,255,255,.08);
-
-    border-radius:
-        var(--radius);
-
-    box-shadow:
-        0 35px 100px
-        rgba(0,0,0,.5),
-
-        0 0 0 1px
-        rgba(255,255,255,.015);
-
-    isolation: isolate;
-}
-
-
-/* =========================================================
-   TWO FORM AREAS
-========================================================= */
-
-.forms {
-
-    position: absolute;
-
-    inset: 0;
-
-    z-index: 1;
-
-    display: flex;
-
-    flex-direction: row;
-
-    width: 100%;
-    height: 100%;
-}
-
-
-/* =========================================================
-   FORM PANEL
-========================================================= */
-
-.form-panel {
-
-    position: relative;
-
-    flex:
-        0 0 50%;
-
-    width: 50%;
-    height: 100%;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    padding:
-        clamp(
-            14px,
-            4vw,
-            54px
-        );
-
-    overflow: hidden;
-}
-
-
-/* =========================================================
-   CONTENT SCALE WRAPPER
-
-   JS akan mengubah scale:
-   0.75
-   0.85
-   1
-   dst.
-
-   sehingga yang berubah adalah ISINYA,
-   bukan kotak luarnya.
-========================================================= */
-
-.form-content-scale,
-.overlay-content-scale {
-
-    width: 100%;
-    height: auto;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    transform-origin:
-        center center;
-
-    will-change:
-        transform;
-}
-
-
-/* =========================================================
-   FORM CONTENT
-========================================================= */
-
-.form-content {
-
-    width: 100%;
-
-    max-width:
-        350px;
-
-    flex-shrink: 0;
-}
-
-
-/* =========================================================
-   FORM KICKER
-========================================================= */
-
-.form-kicker {
-
-    display: block;
-
-    margin-bottom: 9px;
-
-    color:
-        var(--accent);
-
-    font-size: 10px;
-
-    font-weight: 900;
-
-    letter-spacing:
-        .17em;
-
-    text-transform:
-        uppercase;
-}
-
-
-/* =========================================================
-   TITLE
-========================================================= */
-
-.form-content h1 {
-
-    margin-bottom: 10px;
-
-    font-size:
-        clamp(
-            28px,
-            4vw,
-            42px
-        );
-
-    line-height: 1.05;
-
-    letter-spacing:
-        -.045em;
-}
-
-
-/* =========================================================
-   DESCRIPTION
-========================================================= */
-
-.form-description {
-
-    margin-bottom: 25px;
-
-    color:
-        var(--text-soft);
-
-    font-size: 13px;
-
-    line-height: 1.7;
-}
-
-
-/* =========================================================
-   FIELDS
-========================================================= */
-
-.field {
-
-    margin-bottom: 15px;
-}
-
-
-.field label {
-
-    display: block;
-
-    margin-bottom: 7px;
-
-    color:
-        #aaa8b2;
-
-    font-size: 12px;
-
-    font-weight: 700;
-}
-
-
-.field input {
-
-    display: block;
-
-    width: 100%;
-
-    height: 50px;
-
-    padding:
-        0 15px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.08);
-
-    border-radius:
-        13px;
-
-    outline: none;
-
-    background:
-        #1d1d26;
-
-    color:
-        #ffffff;
-
-    font-size:
-        14px;
-
-    transition:
-        border-color .18s ease,
-        background .18s ease,
-        box-shadow .18s ease;
-}
-
-
-.field input::placeholder {
-    color: #5f5e69;
-}
-
-
-.field input:focus {
-
-    border-color:
-        rgba(201,169,98,.72);
-
-    background:
-        #20202a;
-
-    box-shadow:
-        0 0 0 4px
-        rgba(201,169,98,.08);
-}
-
-
-/* =========================================================
-   SUBMIT
-========================================================= */
-
-.submit-btn {
-
-    width: 100%;
-
-    min-height:
-        52px;
-
-    margin-top: 6px;
-
-    border-radius:
-        14px;
-
-    cursor:
-        pointer;
-
-    color:
-        #17120c;
-
-    font-size:
-        13px;
-
-    font-weight:
-        900;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--accent-light),
-            var(--accent-dark)
-        );
-
-    box-shadow:
-        0 12px 30px
-        rgba(169,129,63,.2);
-
-    transition:
-        transform .18s ease,
-        box-shadow .18s ease;
-}
-
-
-.submit-btn:hover {
-
-    transform:
-        translateY(-2px);
-
-    box-shadow:
-        0 17px 34px
-        rgba(169,129,63,.28);
-}
-
-
-.submit-btn:active {
-    transform: translateY(0);
-}
-
-
-/* =========================================================
-   OVERLAY
-========================================================= */
-
-.overlay {
-
-    position: absolute;
-
-    top: 0;
-    right: 0;
-
-    width: 50%;
-    height: 100%;
-
-    z-index: 10;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    padding:
-        clamp(
-            14px,
-            4vw,
-            54px
-        );
-
-    text-align: center;
-
-    color: #fff;
-
-    background:
-
-        radial-gradient(
-            circle at 15% 15%,
-            rgba(255,255,255,.17),
-            transparent 30%
-        ),
-
-        radial-gradient(
-            circle at 90% 90%,
-            rgba(255,255,255,.08),
-            transparent 30%
-        ),
-
-        linear-gradient(
-            145deg,
-            #c9a962,
-            #8d6b36
-        );
-
-    box-shadow:
-        -18px 0 50px
-        rgba(0,0,0,.14);
-
-    transform:
-        translate3d(0,0,0);
-
-    transition:
-        transform
-        650ms
-        cubic-bezier(.77,0,.18,1);
-
-    touch-action:
-        none;
-
-    user-select:
-        none;
-
-    cursor:
-        grab;
-
-    will-change:
-        transform;
-}
-
-
-.overlay.dragging {
-    cursor:
-        grabbing;
-
-    transition:
-        none;
-}
-
-
-/* =========================================================
-   OVERLAY CONTENT
-========================================================= */
-
-.overlay-content {
-
-    width: 100%;
-
-    max-width:
-        320px;
-
-    flex-shrink: 0;
-}
-
-
-/* =========================================================
-   BADGE
-========================================================= */
-
-.overlay-badge {
+    width: 64px;
+    height: 64px;
 
     display: inline-flex;
 
     align-items: center;
     justify-content: center;
 
-    min-height:
-        28px;
+    border: 1px solid rgba(255,255,255,.35);
 
-    padding:
-        0 12px;
+    border-radius: 50%;
 
-    margin-bottom:
-        18px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.25);
-
-    border-radius:
-        999px;
+    color: #ffffff;
 
     background:
-        rgba(255,255,255,.09);
+        rgba(255,255,255,.10);
 
     backdrop-filter:
         blur(12px);
 
-    font-size:
-        9px;
+    cursor: pointer;
 
-    font-weight:
-        900;
-
-    letter-spacing:
-        .15em;
-
-    text-transform:
-        uppercase;
-}
-
-
-/* =========================================================
-   OVERLAY TITLE
-========================================================= */
-
-.overlay h2 {
-
-    margin-bottom:
-        14px;
-
-    font-size:
-        clamp(
-            28px,
-            4vw,
-            40px
-        );
-
-    line-height:
-        1.04;
-
-    letter-spacing:
-        -.045em;
-}
-
-
-/* =========================================================
-   OVERLAY DESCRIPTION
-========================================================= */
-
-.overlay-description {
-
-    max-width:
-        320px;
-
-    margin:
-        0 auto 24px;
-
-    color:
-        rgba(255,255,255,.85);
-
-    font-size:
-        13px;
-
-    line-height:
-        1.7;
-}
-
-
-/* =========================================================
-   HINT
-========================================================= */
-
-.overlay-hint {
-
-    margin-bottom:
-        12px;
-
-    color:
-        rgba(255,255,255,.62);
-
-    font-size:
-        10px;
-
-    line-height:
-        1.5;
-}
-
-
-/* =========================================================
-   ARROW
-========================================================= */
-
-.arrow-btn {
-
-    width:
-        64px;
-
-    height:
-        64px;
-
-    display:
-        inline-flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    border:
-        1px solid
-        rgba(255,255,255,.35);
-
-    border-radius:
-        50%;
-
-    color:
-        #fff;
-
-    background:
-        rgba(255,255,255,.1);
-
-    backdrop-filter:
-        blur(12px);
-
-    cursor:
-        pointer;
-
-    font-size:
-        28px;
+    font-size: 28px;
+    line-height: 1;
 
     transition:
         transform .2s ease,
-        background .2s ease;
+        background .2s ease,
+        border-color .2s ease;
+
+    /*
+     * Pulse utama.
+     */
+    animation:
+        arrowHeartbeat 2.2s ease-in-out infinite;
 }
 
 
-.arrow-btn:hover {
+/*
+ * Lingkaran cahaya yang melebar
+ * dari belakang tombol.
+ */
+.arrow-btn::before {
+    content: "";
 
+    position: absolute;
+
+    inset: -7px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(255,255,255,.20);
+
+    opacity: 0;
+
+    transform: scale(.82);
+
+    animation:
+        arrowRipple 2.2s ease-out infinite;
+
+    pointer-events: none;
+}
+
+
+/*
+ * Glow halus di bagian dalam.
+ */
+.arrow-btn::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.14),
+            transparent 65%
+        );
+
+    opacity: .45;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HEARTBEAT
+========================================================= */
+
+@keyframes arrowHeartbeat {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    8% {
+        transform: scale(1.06);
+    }
+
+    16% {
+        transform: scale(1);
+    }
+
+    24% {
+        transform: scale(1.045);
+    }
+
+    32% {
+        transform: scale(1);
+    }
+
+    60% {
+        transform: scale(1);
+    }
+}
+
+
+/* =========================================================
+   RIPPLE
+========================================================= */
+
+@keyframes arrowRipple {
+
+    0% {
+        opacity: 0;
+        transform: scale(.82);
+    }
+
+    10% {
+        opacity: .45;
+    }
+
+    55% {
+        opacity: 0;
+        transform: scale(1.35);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.35);
+    }
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.arrow-btn:hover {
     transform:
         scale(1.08);
 
     background:
         rgba(255,255,255,.18);
+
+    border-color:
+        rgba(255,255,255,.52);
+
+    animation-play-state:
+        paused;
 }
 
+
+/* =========================================================
+   PRESS
+========================================================= */
 
 .arrow-btn:active {
-
     transform:
-        scale(.96);
-}
+        scale(.94);
 
-
-/* =========================================================
-   DESKTOP / TABLET
-========================================================= */
-
-@media (min-width: 701px) {
-
-    .auth-container.signup-open
-    .overlay {
-
-        transform:
-            translate3d(
-                -100%,
-                0,
-                0
-            );
-    }
-}
-
-
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media (min-width: 701px)
-and (max-width: 1000px) {
-
-    .auth-container {
-
-        width:
-            min(
-                94vw,
-                900px
-            );
-
-        height:
-            min(
-                82dvh,
-                620px
-            );
-    }
-
+    animation-play-state:
+        paused;
 }
 
 
@@ -787,221 +983,15 @@ and (max-width: 1000px) {
 
 @media (max-width: 700px) {
 
-    body {
-
-        display:
-            flex;
-
-        align-items:
-            center;
-
-        justify-content:
-            center;
-
-        padding:
-            8px;
-
-        overflow:
-            hidden;
+    .arrow-btn {
+        animation-duration:
+            2s;
     }
 
-
-    /*
-     * CONTAINER MENGIKUTI DEVICE.
-     *
-     * BUKAN ukuran isi.
-     */
-    .auth-container {
-
-        width:
-            min(
-                94vw,
-                480px
-            );
-
-        height:
-            min(
-                88dvh,
-                760px
-            );
-
-        margin:
-            0 auto;
-
-        border-radius:
-            clamp(
-                18px,
-                5vw,
-                25px
-            );
+    .arrow-btn::before {
+        animation-duration:
+            2s;
     }
-
-
-    /* ---------------------------------------------
-       STACK FORM VERTICAL
-    --------------------------------------------- */
-
-    .forms {
-
-        flex-direction:
-            column;
-    }
-
-
-    .form-panel {
-
-        width:
-            100%;
-
-        height:
-            50%;
-
-        flex:
-            0 0 50%;
-
-        padding:
-            clamp(
-                12px,
-                5vw,
-                32px
-            );
-    }
-
-
-    /*
-     * Isi form hanya memenuhi
-     * ruang yang tersedia.
-     */
-    .form-content {
-
-        max-width:
-            380px;
-    }
-
-
-    /* ---------------------------------------------
-       OVERLAY VERTICAL
-    --------------------------------------------- */
-
-    .overlay {
-
-        top:
-            auto;
-
-        right:
-            0;
-
-        bottom:
-            0;
-
-        width:
-            100%;
-
-        height:
-            50%;
-
-        padding:
-            clamp(
-                12px,
-                5vw,
-                32px
-            );
-
-        transform:
-            translate3d(
-                0,
-                0,
-                0
-            );
-
-        box-shadow:
-            0 -20px 55px
-            rgba(0,0,0,.16);
-    }
-
-
-    /*
-     * Login -> Sign Up:
-     * panel bergerak ke ATAS
-     */
-    .auth-container.signup-open
-    .overlay {
-
-        transform:
-            translate3d(
-                0,
-                -100%,
-                0
-            );
-    }
-}
-
-
-/* =========================================================
-   VERY SMALL PHONE
-========================================================= */
-
-@media (max-width: 360px) {
-
-    .auth-container {
-
-        width:
-            96vw;
-
-        height:
-            90dvh;
-    }
-
-
-    .form-panel,
-    .overlay {
-
-        padding:
-            10px;
-    }
-}
-
-
-/* =========================================================
-   LANDSCAPE PHONE
-========================================================= */
-
-@media (max-width: 700px)
-and (orientation: landscape) {
-
-    body {
-        padding:
-            6px;
-    }
-
-
-    .auth-container {
-
-        width:
-            min(
-                94vw,
-                820px
-            );
-
-        height:
-            94dvh;
-    }
-}
-
-
-/* =========================================================
-   FOCUS
-========================================================= */
-
-button:focus-visible,
-input:focus-visible {
-
-    outline:
-        2px solid
-        rgba(229,202,133,.85);
-
-    outline-offset:
-        3px;
 }
 
 
@@ -1011,17 +1001,601 @@ input:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
 
-    .overlay,
     .arrow-btn,
-    .submit-btn,
-    .field input {
-
-        transition:
+    .arrow-btn::before {
+        animation:
             none !important;
     }
 }
 
-</style>
+
+        /* =========================================================
+           DESKTOP / TABLET
+        ========================================================= */
+
+        @media (min-width: 701px) {
+
+            .auth-container.signup-open
+            .overlay {
+
+                transform:
+                    translate3d(
+                        -100%,
+                        0,
+                        0
+                    );
+            }
+        }
+
+
+        /* =========================================================
+           TABLET
+        ========================================================= */
+
+        @media (min-width: 701px)
+        and (max-width: 1000px) {
+
+            .auth-container {
+
+                width:
+                    min(
+                        94vw,
+                        900px
+                    );
+
+                height:
+                    min(
+                        82dvh,
+                        620px
+                    );
+            }
+
+
+            .form-panel {
+
+                padding:
+                    clamp(
+                        20px,
+                        4vw,
+                        42px
+                    );
+            }
+
+
+            .overlay {
+
+                padding:
+                    clamp(
+                        20px,
+                        4vw,
+                        42px
+                    );
+            }
+        }
+
+
+        /* =========================================================
+           MOBILE
+           
+           Vertical layout
+        ========================================================= */
+
+        @media (max-width: 700px) {
+
+            body {
+
+                display:
+                    grid;
+
+                place-items:
+                    center;
+
+                padding:
+                    8px;
+
+                overflow:
+                    hidden;
+            }
+
+
+            /*
+             * Container mengikuti device.
+             */
+            .auth-container {
+
+                width:
+                    min(
+                        94vw,
+                        480px
+                    );
+
+                height:
+                    min(
+                        88dvh,
+                        760px
+                    );
+
+                margin:
+                    0 auto;
+
+                border-radius:
+                    clamp(
+                        18px,
+                        5vw,
+                        25px
+                    );
+            }
+
+
+            /* ---------------------------------------------
+               STACK FORMS
+            --------------------------------------------- */
+
+            .forms {
+
+                flex-direction:
+                    column;
+            }
+
+
+            .form-panel {
+
+                width:
+                    100%;
+
+                height:
+                    50%;
+
+                flex:
+                    0 0 50%;
+
+                padding:
+                    clamp(
+                        10px,
+                        5vw,
+                        32px
+                    );
+            }
+
+
+            /*
+             * Content tetap di-center.
+             */
+            .form-content {
+
+                max-width:
+                    min(
+                        90%,
+                        380px
+                    );
+            }
+
+
+            /* ---------------------------------------------
+               MOBILE OVERLAY
+            --------------------------------------------- */
+
+            .overlay {
+
+                top:
+                    auto;
+
+                right:
+                    0;
+
+                bottom:
+                    0;
+
+                width:
+                    100%;
+
+                height:
+                    50%;
+
+                padding:
+                    clamp(
+                        10px,
+                        5vw,
+                        32px
+                    );
+
+                transform:
+                    translate3d(
+                        0,
+                        0,
+                        0
+                    );
+
+                box-shadow:
+                    0 -20px 55px
+                    rgba(0,0,0,.16);
+            }
+
+
+            /*
+             * Sign Up:
+             * overlay naik.
+             */
+            .auth-container.signup-open
+            .overlay {
+
+                transform:
+                    translate3d(
+                        0,
+                        -100%,
+                        0
+                    );
+            }
+
+
+            /*
+             * Mobile arrow:
+             * ukurannya fleksibel.
+             */
+            .arrow-btn {
+
+                width:
+                    clamp(
+                        48px,
+                        14vw,
+                        62px
+                    );
+
+                height:
+                    clamp(
+                        48px,
+                        14vw,
+                        62px
+                    );
+
+                font-size:
+                    clamp(
+                        22px,
+                        7vw,
+                        30px
+                    );
+            }
+        }
+
+
+        /* =========================================================
+           SMALL PHONE
+        ========================================================= */
+
+        @media (max-width: 420px) {
+
+            .auth-container {
+
+                width:
+                    95vw;
+
+                height:
+                    min(
+                        90dvh,
+                        720px
+                    );
+            }
+
+
+            .form-panel,
+            .overlay {
+
+                padding:
+                    clamp(
+                        8px,
+                        4vw,
+                        20px
+                    );
+            }
+
+
+            .form-content {
+
+                max-width:
+                    92%;
+            }
+
+
+            .form-kicker {
+
+                font-size:
+                    8px;
+            }
+
+
+            .form-content h1 {
+
+                font-size:
+                    clamp(
+                        24px,
+                        8vw,
+                        30px
+                    );
+            }
+
+
+            .form-description {
+
+                font-size:
+                    10px;
+
+                margin-bottom:
+                    17px;
+            }
+
+
+            .field {
+
+                margin-bottom:
+                    10px;
+            }
+
+
+            .field label {
+
+                font-size:
+                    10px;
+            }
+
+
+            .field input {
+
+                height:
+                    clamp(
+                        40px,
+                        11vw,
+                        47px
+                    );
+
+                padding:
+                    0 12px;
+
+                font-size:
+                    11px;
+            }
+
+
+            .submit-btn {
+
+                min-height:
+                    clamp(
+                        40px,
+                        11vw,
+                        48px
+                    );
+
+                border-radius:
+                    11px;
+
+                font-size:
+                    11px;
+            }
+
+
+            .overlay-badge {
+
+                min-height:
+                    24px;
+
+                padding:
+                    0 9px;
+
+                margin-bottom:
+                    11px;
+
+                font-size:
+                    7px;
+            }
+
+
+            .overlay h2 {
+
+                font-size:
+                    clamp(
+                        24px,
+                        8vw,
+                        30px
+                    );
+            }
+
+
+            .overlay-description {
+
+                max-width:
+                    90%;
+
+                margin-bottom:
+                    15px;
+
+                font-size:
+                    10px;
+            }
+
+
+            .overlay-hint {
+
+                margin-bottom:
+                    9px;
+
+                font-size:
+                    8px;
+            }
+        }
+
+
+        /* =========================================================
+           VERY SMALL PHONE
+        ========================================================= */
+
+        @media (max-width: 360px) {
+
+            .auth-container {
+
+                width:
+                    96vw;
+
+                height:
+                    91dvh;
+            }
+
+
+            .form-panel,
+            .overlay {
+
+                padding:
+                    7px 12px;
+            }
+
+
+            .form-content {
+
+                max-width:
+                    94%;
+            }
+
+
+            .form-content h1 {
+
+                font-size:
+                    23px;
+            }
+
+
+            .field input {
+
+                height:
+                    38px;
+
+                font-size:
+                    10px;
+            }
+
+
+            .submit-btn {
+
+                min-height:
+                    39px;
+
+                font-size:
+                    10px;
+            }
+
+
+            .overlay h2 {
+
+                font-size:
+                    23px;
+            }
+
+
+            .overlay-description {
+
+                font-size:
+                    9px;
+
+                line-height:
+                    1.5;
+            }
+
+
+            .arrow-btn {
+
+                width:
+                    45px;
+
+                height:
+                    45px;
+
+                font-size:
+                    22px;
+            }
+        }
+
+
+        /* =========================================================
+           LANDSCAPE PHONE
+        ========================================================= */
+
+        @media (max-width: 700px)
+        and (orientation: landscape) {
+
+            body {
+
+                padding:
+                    5px;
+            }
+
+
+            .auth-container {
+
+                width:
+                    min(
+                        94vw,
+                        820px
+                    );
+
+                height:
+                    94dvh;
+            }
+
+
+            .form-panel,
+            .overlay {
+
+                padding:
+                    8px 20px;
+            }
+
+
+            .form-content {
+
+                max-width:
+                    400px;
+            }
+
+
+            .overlay-content {
+
+                max-width:
+                    380px;
+            }
+        }
+
+
+        /* =========================================================
+           FOCUS
+        ========================================================= */
+
+        button:focus-visible,
+        input:focus-visible {
+
+            outline:
+                2px solid
+                rgba(229,202,133,.85);
+
+            outline-offset:
+                3px;
+        }
+
+
+        /* =========================================================
+           REDUCED MOTION
+        ========================================================= */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .overlay,
+            .arrow-btn,
+            .submit-btn,
+            .field input,
+            .form-panel {
+
+                transition:
+                    none !important;
+            }
+        }
+
+    </style>
 </head>
 
 
@@ -1048,9 +1622,9 @@ input:focus-visible {
     >
 
 
-        <!-- ================================================
+        <!-- =================================================
              LOGIN
-        ================================================= -->
+        ================================================== -->
 
         <section
             class="form-panel"
@@ -1066,7 +1640,9 @@ input:focus-visible {
                     class="form-content"
                 >
 
-                    <span class="form-kicker">
+                    <span
+                        class="form-kicker"
+                    >
                         Welcome Back
                     </span>
 
@@ -1076,7 +1652,9 @@ input:focus-visible {
                     </h1>
 
 
-                    <p class="form-description">
+                    <p
+                        class="form-description"
+                    >
                         Masuk ke akun kamu dan
                         lanjutkan perjalananmu.
                     </p>
@@ -1140,9 +1718,9 @@ input:focus-visible {
         </section>
 
 
-        <!-- ================================================
+        <!-- =================================================
              SIGN UP
-        ================================================= -->
+        ================================================== -->
 
         <section
             class="form-panel"
@@ -1158,7 +1736,9 @@ input:focus-visible {
                     class="form-content"
                 >
 
-                    <span class="form-kicker">
+                    <span
+                        class="form-kicker"
+                    >
                         New Account
                     </span>
 
@@ -1168,7 +1748,9 @@ input:focus-visible {
                     </h1>
 
 
-                    <p class="form-description">
+                    <p
+                        class="form-description"
+                    >
                         Buat akun baru dan mulai
                         perjalanan trading kamu.
                     </p>
@@ -1254,15 +1836,13 @@ input:focus-visible {
 
 
     <!-- =====================================================
-         OVERLAY
-         
-         DEFAULT:
-         Menutup SIGN UP
+         SLIDING OVERLAY
     ====================================================== -->
 
     <aside
         class="overlay"
         id="overlay"
+        aria-label="Authentication switch panel"
     >
 
         <div
@@ -1298,7 +1878,9 @@ input:focus-visible {
                 </p>
 
 
-                <p class="overlay-hint">
+                <p
+                    class="overlay-hint"
+                >
                     Geser panel atau tekan
                     tombol panah untuk berpindah.
                 </p>
@@ -1405,27 +1987,43 @@ const signupForm =
    STATE
 ========================================================= */
 
-let signupOpen = false;
+let signupOpen =
+    false;
 
-let dragging = false;
 
-let didDrag = false;
+let dragging =
+    false;
 
-let pointerStartX = 0;
 
-let pointerStartY = 0;
+let didDrag =
+    false;
 
-let overlayStartX = 0;
 
-let overlayStartY = 0;
+let pointerStartX =
+    0;
 
-let resizeTimer = null;
+
+let pointerStartY =
+    0;
+
+
+let overlayStartX =
+    0;
+
+
+let overlayStartY =
+    0;
+
+
+let resizeTimer =
+    null;
 
 
 /*
- * Minimum swipe distance.
+ * Swipe threshold.
  */
-const SWIPE_THRESHOLD = 75;
+const SWIPE_THRESHOLD =
+    75;
 
 
 /* =========================================================
@@ -1442,10 +2040,26 @@ function isMobile() {
 
 
 /* =========================================================
-   UPDATE OVERLAY TEXT
+   UPDATE OVERLAY CONTENT
 ========================================================= */
 
 function updateOverlayContent() {
+
+    /*
+     * Desktop:
+     *
+     * Login -> Sign Up = →
+     * Sign Up -> Login = ←
+     *
+     * Mobile:
+     *
+     * Login -> Sign Up = ↑
+     * Sign Up -> Login = ↓
+     */
+
+    const mobile =
+        isMobile();
+
 
     if (signupOpen) {
 
@@ -1458,7 +2072,9 @@ function updateOverlayContent() {
 
 
         arrowBtn.textContent =
-            "←";
+            mobile
+                ? "↓"
+                : "←";
 
 
         arrowBtn.setAttribute(
@@ -1477,7 +2093,9 @@ function updateOverlayContent() {
 
 
         arrowBtn.textContent =
-            "→";
+            mobile
+                ? "↑"
+                : "→";
 
 
         arrowBtn.setAttribute(
@@ -1491,7 +2109,7 @@ function updateOverlayContent() {
 
 
 /* =========================================================
-   SET STATE CLASS
+   APPLY STATE
 ========================================================= */
 
 function applyState(
@@ -1515,10 +2133,10 @@ function applyState(
 
 
         requestAnimationFrame(
-            () => {
+            function() {
 
                 requestAnimationFrame(
-                    () => {
+                    function() {
 
                         overlay.style.transition =
                             oldTransition;
@@ -1545,58 +2163,36 @@ function applyState(
 
 
 /* =========================================================
-   SCALE CONTENT TO AVAILABLE SPACE
+   SCALE CONTENT
 ========================================================= */
-
-/*
- * Ini inti dari responsive yang lu minta.
- *
- * Container:
- *      mengikuti ukuran device
- *
- * Content:
- *      dihitung dari ruang yang tersedia
- *      lalu di-scale.
- *
- * Jadi:
- *
- * HP kecil
- *   -> isi mengecil
- *
- * HP besar
- *   -> isi membesar
- *
- * Desktop
- *   -> isi normal
- */
 
 function scaleContentToPanel(
     panel,
     scaleElement
 ) {
 
-    if (!panel || !scaleElement) {
+    if (
+        !panel ||
+        !scaleElement
+    ) {
+
         return;
     }
 
 
     /*
-     * Reset scale sementara.
+     * Reset scale.
      */
     scaleElement.style.transform =
         "scale(1)";
 
 
     /*
-     * Pastikan browser sudah
-     * memperbarui layout.
+     * Force reflow.
      */
     void scaleElement.offsetWidth;
 
 
-    /*
-     * Ukuran area panel.
-     */
     const availableWidth =
         panel.clientWidth;
 
@@ -1605,9 +2201,6 @@ function scaleContentToPanel(
         panel.clientHeight;
 
 
-    /*
-     * Ukuran asli content.
-     */
     const contentWidth =
         scaleElement.scrollWidth;
 
@@ -1628,21 +2221,17 @@ function scaleContentToPanel(
 
 
     /*
-     * Sisakan sedikit ruang aman
-     * supaya tidak menempel tepi.
+     * Safe zone:
+     * 88% dari ruang panel.
      */
     const safeWidth =
-        availableWidth * 0.88;
+        availableWidth * .88;
 
 
     const safeHeight =
-        availableHeight * 0.88;
+        availableHeight * .88;
 
 
-    /*
-     * Hitung scale horizontal
-     * dan vertical.
-     */
     const widthScale =
         safeWidth /
         contentWidth;
@@ -1654,11 +2243,7 @@ function scaleContentToPanel(
 
 
     /*
-     * Ambil yang paling membatasi.
-     *
-     * Maksimum 1:
-     * isi tidak akan dibesarkan
-     * melebihi ukuran naturalnya.
+     * Ambil faktor terkecil.
      */
     const scale =
         Math.min(
@@ -1669,35 +2254,30 @@ function scaleContentToPanel(
 
 
     /*
-     * Jangan biarkan terlalu kecil.
-     *
-     * Kalau layar terlalu kecil,
-     * tetap ada batas minimum agar
-     * interaksi masih nyaman.
+     * Batas bawah supaya
+     * isi tidak terlalu mengecil.
      */
     const finalScale =
         Math.max(
-            0.62,
+            .62,
             scale
         );
 
 
     scaleElement.style.transform =
         `scale(${finalScale})`;
+
 }
 
 
 /* =========================================================
-   SCALE ALL CONTENT
+   RESIZE CONTENT
 ========================================================= */
 
 function resizeInnerContent() {
 
-    /*
-     * Tunggu layout selesai.
-     */
     requestAnimationFrame(
-        () => {
+        function() {
 
             scaleContentToPanel(
                 loginPanel,
@@ -1711,9 +2291,6 @@ function resizeInnerContent() {
             );
 
 
-            /*
-             * Overlay juga ikut scale.
-             */
             scaleContentToPanel(
                 overlay,
                 overlayScale
@@ -1735,7 +2312,9 @@ function toggleAuth() {
         !signupOpen;
 
 
-    applyState(true);
+    applyState(
+        true
+    );
 
 
     resizeInnerContent();
@@ -1755,8 +2334,8 @@ arrowBtn.addEventListener(
 
 
         /*
-         * Kalau sebelumnya merupakan drag,
-         * jangan toggle dua kali.
+         * Jangan double toggle
+         * setelah drag.
          */
         if (didDrag) {
 
@@ -1782,7 +2361,7 @@ overlay.addEventListener(
     function(event) {
 
         /*
-         * Panah ditangani sendiri.
+         * Panah punya handler sendiri.
          */
         if (
             event.target.closest(
@@ -1811,7 +2390,7 @@ overlay.addEventListener(
 
 
         /*
-         * Posisi awal panel.
+         * Simpan posisi awal overlay.
          */
 
         if (isMobile()) {
@@ -1827,12 +2406,31 @@ overlay.addEventListener(
                 signupOpen
                     ? -overlay.offsetWidth
                     : 0;
-
         }
 
 
         overlay.classList.add(
             "dragging"
+        );
+
+
+        /*
+         * MULAI BLUR.
+         */
+        authContainer.classList.add(
+            "is-dragging"
+        );
+
+
+        authContainer.style.setProperty(
+            "--drag-blur",
+            "0px"
+        );
+
+
+        authContainer.style.setProperty(
+            "--drag-opacity",
+            "1"
         );
 
 
@@ -1845,7 +2443,7 @@ overlay.addEventListener(
         } catch (error) {
 
             /*
-             * Aman diabaikan.
+             * Pointer capture optional.
              */
         }
 
@@ -1876,6 +2474,9 @@ overlay.addEventListener(
             pointerStartY;
 
 
+        /*
+         * Tandai sebagai drag.
+         */
         if (
             Math.abs(deltaX) > 7 ||
             Math.abs(deltaY) > 7
@@ -1883,12 +2484,86 @@ overlay.addEventListener(
 
             didDrag =
                 true;
+
         }
 
 
-        /* ================================================
-           MOBILE
-        ================================================= */
+        /* =====================================================
+           BLUR PROGRESS
+        ===================================================== */
+
+        let progress;
+
+
+        if (isMobile()) {
+
+            progress =
+                Math.abs(deltaY) /
+                Math.max(
+                    1,
+                    overlay.offsetHeight
+                );
+
+        } else {
+
+            progress =
+                Math.abs(deltaX) /
+                Math.max(
+                    1,
+                    overlay.offsetWidth
+                );
+
+        }
+
+
+        /*
+         * Batasi 0 -> 1.
+         */
+        progress =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    progress
+                )
+            );
+
+
+        /*
+         * Maksimal blur = 8px.
+         */
+        const maxBlur =
+            8;
+
+
+        const blurAmount =
+            progress *
+            maxBlur;
+
+
+        /*
+         * Fade sangat tipis.
+         */
+        const opacity =
+            1 -
+            progress * .06;
+
+
+        authContainer.style.setProperty(
+            "--drag-blur",
+            `${blurAmount}px`
+        );
+
+
+        authContainer.style.setProperty(
+            "--drag-opacity",
+            opacity.toString()
+        );
+
+
+        /* =====================================================
+           MOBILE MOVEMENT
+        ===================================================== */
 
         if (isMobile()) {
 
@@ -1931,9 +2606,9 @@ overlay.addEventListener(
         }
 
 
-        /* ================================================
-           DESKTOP / TABLET
-        ================================================= */
+        /* =====================================================
+           DESKTOP / TABLET MOVEMENT
+        ===================================================== */
 
         let nextX =
             overlayStartX +
@@ -1993,6 +2668,33 @@ function finishDrag(event) {
     );
 
 
+    /*
+     * Lepaskan blur.
+     *
+     * Karena CSS transition,
+     * blur akan hilang smooth.
+     */
+    authContainer.style.setProperty(
+        "--drag-blur",
+        "0px"
+    );
+
+
+    authContainer.style.setProperty(
+        "--drag-opacity",
+        "1"
+    );
+
+
+    /*
+     * Hapus drag class setelah
+     * state blur kembali.
+     */
+    authContainer.classList.remove(
+        "is-dragging"
+    );
+
+
     const deltaX =
         event.clientX -
         pointerStartX;
@@ -2003,14 +2705,14 @@ function finishDrag(event) {
         pointerStartY;
 
 
-    /* ================================================
+    /* =====================================================
        MOBILE
-    ================================================= */
+    ===================================================== */
 
     if (isMobile()) {
 
         /*
-         * Swipe UP
+         * Swipe UP:
          * Login -> Sign Up
          */
         if (
@@ -2025,7 +2727,7 @@ function finishDrag(event) {
 
 
         /*
-         * Swipe DOWN
+         * Swipe DOWN:
          * Sign Up -> Login
          */
         else if (
@@ -2041,14 +2743,14 @@ function finishDrag(event) {
     }
 
 
-    /* ================================================
+    /* =====================================================
        DESKTOP / TABLET
-    ================================================= */
+    ===================================================== */
 
     else {
 
         /*
-         * Swipe LEFT
+         * Swipe LEFT:
          * Login -> Sign Up
          */
         if (
@@ -2063,7 +2765,7 @@ function finishDrag(event) {
 
 
         /*
-         * Swipe RIGHT
+         * Swipe RIGHT:
          * Sign Up -> Login
          */
         else if (
@@ -2086,7 +2788,12 @@ function finishDrag(event) {
         "";
 
 
-    applyState(true);
+    /*
+     * Snap ke posisi final.
+     */
+    applyState(
+        true
+    );
 
 
     resizeInnerContent();
@@ -2101,12 +2808,16 @@ function finishDrag(event) {
     } catch (error) {
 
         /*
-         * Aman diabaikan.
+         * Safe to ignore.
          */
     }
 
 }
 
+
+/* =========================================================
+   POINTER UP
+========================================================= */
 
 overlay.addEventListener(
     "pointerup",
@@ -2131,11 +2842,36 @@ overlay.addEventListener(
         );
 
 
+        /*
+         * Clear blur.
+         */
+        authContainer.style.setProperty(
+            "--drag-blur",
+            "0px"
+        );
+
+
+        authContainer.style.setProperty(
+            "--drag-opacity",
+            "1"
+        );
+
+
+        authContainer.classList.remove(
+            "is-dragging"
+        );
+
+
+        /*
+         * Kembalikan overlay.
+         */
         overlay.style.transform =
             "";
 
 
-        applyState(false);
+        applyState(
+            false
+        );
 
 
         resizeInnerContent();
@@ -2150,7 +2886,7 @@ overlay.addEventListener(
         } catch (error) {
 
             /*
-             * Aman diabaikan.
+             * Safe to ignore.
              */
         }
 
@@ -2173,26 +2909,20 @@ function handleResize() {
         setTimeout(
             function() {
 
-                /*
-                 * Kembalikan transform
-                 * manual dari gesture.
-                 */
                 overlay.style.transform =
                     "";
 
 
-                /*
-                 * Recalculate ukuran
-                 * isi terhadap device baru.
-                 */
                 resizeInnerContent();
 
 
                 /*
-                 * Pastikan state overlay
-                 * benar.
+                 * Refresh arrow:
+                 * horizontal / vertical.
                  */
-                applyState(false);
+                applyState(
+                    false
+                );
 
             },
             80
@@ -2214,20 +2944,40 @@ window.addEventListener(
 
 
 /* =========================================================
-   FONT LOAD
+   RESIZE OBSERVER
 ========================================================= */
 
 if (
-    document.fonts &&
-    document.fonts.ready
+    "ResizeObserver"
+    in window
 ) {
 
-    document.fonts.ready.then(
-        () => {
+    const resizeObserver =
+        new ResizeObserver(
+            function() {
 
-            resizeInnerContent();
+                if (!dragging) {
 
-        }
+                    resizeInnerContent();
+
+                }
+
+            }
+        );
+
+
+    resizeObserver.observe(
+        loginPanel
+    );
+
+
+    resizeObserver.observe(
+        signupPanel
+    );
+
+
+    resizeObserver.observe(
+        overlay
     );
 
 }
@@ -2243,6 +2993,7 @@ loginForm.addEventListener(
 
         event.preventDefault();
 
+
         alert(
             "Login form submitted."
         );
@@ -2256,6 +3007,7 @@ signupForm.addEventListener(
     function(event) {
 
         event.preventDefault();
+
 
         alert(
             "Sign Up form submitted."
@@ -2271,6 +3023,10 @@ signupForm.addEventListener(
 
 function initialize() {
 
+    /*
+     * Default:
+     * Login.
+     */
     signupOpen =
         false;
 
@@ -2278,7 +3034,9 @@ function initialize() {
     updateOverlayContent();
 
 
-    applyState(false);
+    applyState(
+        false
+    );
 
 
     resizeInnerContent();
@@ -2287,7 +3045,7 @@ function initialize() {
 
 
 /*
- * Jalankan setelah halaman selesai.
+ * DOM ready.
  */
 if (
     document.readyState ===
@@ -2307,6 +3065,23 @@ if (
     initialize();
 
 }
+
+
+/*
+ * Final calculation setelah
+ * resource/layout selesai.
+ */
+window.addEventListener(
+    "load",
+    function() {
+
+        resizeInnerContent();
+
+    },
+    {
+        once: true
+    }
+);
 
 </script>
 
