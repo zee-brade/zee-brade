@@ -12,7 +12,7 @@
   - Video diputar di player halaman, tidak membuka tab baru
 */
 
-const SMARTLINK_URL = "https://ignoringexcepting.com/tirmtkpyi?key=f05059565202e05f940b6a84b893c584/smartlink?utm_source=enjoywatch";
+const SMARTLINK_URL = "";
 
 /*
   Jika Popunder provider Anda menggunakan script <script src="..."></script>
