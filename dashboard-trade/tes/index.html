@@ -2045,37 +2045,33 @@ function isMobile() {
 
 function updateOverlayContent() {
 
-    /*
-     * Desktop:
-     *
-     * Login -> Sign Up = →
-     * Sign Up -> Login = ←
-     *
-     * Mobile:
-     *
-     * Login -> Sign Up = ↑
-     * Sign Up -> Login = ↓
-     */
-
-    const mobile =
-        isMobile();
-
+    const mobile = isMobile();
 
     if (signupOpen) {
 
         overlayTitle.textContent =
             "Create Account";
 
-
         overlayDescription.textContent =
             "Belum punya akun? Daftar sekarang dan mulai perjalananmu.";
 
-
+        /*
+         * SIGN UP sedang terbuka.
+         *
+         * Desktop:
+         * overlay berada di kiri.
+         * Untuk kembali ke Login,
+         * panel bergerak ke kanan.
+         *
+         * Mobile:
+         * overlay berada di atas.
+         * Untuk kembali ke Login,
+         * panel bergerak ke bawah.
+         */
         arrowBtn.textContent =
             mobile
                 ? "↓"
-                : "←";
-
+                : "→";
 
         arrowBtn.setAttribute(
             "aria-label",
@@ -2087,24 +2083,32 @@ function updateOverlayContent() {
         overlayTitle.textContent =
             "Welcome Back";
 
-
         overlayDescription.textContent =
             "Sudah punya akun? Masuk dan lanjutkan perjalananmu.";
 
-
+        /*
+         * LOGIN sedang terbuka.
+         *
+         * Desktop:
+         * overlay berada di kanan.
+         * Untuk membuka Sign Up,
+         * panel bergerak ke kiri.
+         *
+         * Mobile:
+         * overlay berada di bawah.
+         * Untuk membuka Sign Up,
+         * panel bergerak ke atas.
+         */
         arrowBtn.textContent =
             mobile
                 ? "↑"
-                : "→";
-
+                : "←";
 
         arrowBtn.setAttribute(
             "aria-label",
             "Open sign up"
         );
-
     }
-
 }
 
 
