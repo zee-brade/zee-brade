@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -8,7 +10,8 @@
         content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     >
 
-    <title>Trazeel • Responsive Sliding Auth</title>
+    <title>Trazeel • Sliding Auth</title>
+
 
     <style>
 
@@ -17,25 +20,40 @@
         ========================================================= */
 
         :root {
-            --bg: #09090d;
-            --surface: #15151c;
-            --surface-2: #1c1c25;
 
-            --text: #f5f2ea;
-            --text-soft: #aaa7b1;
-            --text-muted: #6d6c77;
+            --bg:
+                #09090d;
 
-            --accent: #c9a962;
-            --accent-light: #e7cb83;
-            --accent-dark: #8d6b36;
+            --surface:
+                #15151c;
 
-            --border: rgba(255,255,255,.08);
+            --surface-2:
+                #1d1d26;
 
-            --radius: clamp(18px, 3vw, 32px);
+            --text:
+                #f5f2ea;
 
-            /* Blur variables */
-            --drag-blur: 0px;
-            --drag-opacity: 1;
+            --text-soft:
+                #aaa7b1;
+
+            --text-muted:
+                #6d6c77;
+
+            --accent:
+                #c9a962;
+
+            --accent-light:
+                #e7cb83;
+
+            --accent-dark:
+                #8d6b36;
+
+            --border:
+                rgba(255,255,255,.08);
+
+            --radius:
+                clamp(18px, 3vw, 32px);
+
         }
 
 
@@ -46,30 +64,54 @@
         *,
         *::before,
         *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+
+            box-sizing:
+                border-box;
+
+            margin:
+                0;
+
+            padding:
+                0;
+
         }
 
 
-        html {
-            width: 100%;
-            min-height: 100%;
+        html,
+        body {
+
+            width:
+                100%;
+
+            min-height:
+                100%;
+
         }
 
 
         body {
-            width: 100%;
-            min-height: 100vh;
-            min-height: 100dvh;
 
-            display: grid;
-            place-items: center;
+            min-height:
+                100vh;
+
+            min-height:
+                100dvh;
+
+            display:
+                grid;
+
+            place-items:
+                center;
 
             padding:
-                clamp(8px, 3vw, 36px);
+                clamp(
+                    8px,
+                    3vw,
+                    36px
+                );
 
-            overflow: hidden;
+            overflow:
+                hidden;
 
             font-family:
                 Inter,
@@ -79,12 +121,14 @@
                 "Segoe UI",
                 sans-serif;
 
-            color: var(--text);
+            color:
+                var(--text);
 
             background:
+
                 radial-gradient(
                     circle at 15% 10%,
-                    rgba(201,169,98,.14),
+                    rgba(201,169,98,.13),
                     transparent 28%
                 ),
 
@@ -95,27 +139,35 @@
                 ),
 
                 var(--bg);
+
         }
 
 
         button,
         input {
-            font: inherit;
+
+            font:
+                inherit;
+
         }
 
 
         button {
-            border: 0;
+
+            border:
+                0;
+
         }
 
 
         /* =========================================================
-           MAIN CONTAINER
+           MAIN AUTH CONTAINER
         ========================================================= */
 
         .auth-container {
 
-            position: relative;
+            position:
+                relative;
 
             width:
                 min(
@@ -129,47 +181,388 @@
                     680px
                 );
 
-            overflow: hidden;
+            overflow:
+                hidden;
 
             background:
                 var(--surface);
 
             border:
-                1px solid
-                rgba(255,255,255,.08);
+        1px solid
+        rgba(201, 169, 98, .38);
 
-            border-radius:
-                var(--radius);
+    border-radius:
+        var(--radius);
 
             box-shadow:
-                0 35px 100px
-                rgba(0,0,0,.5),
+
+                0 40px 100px
+                rgba(0,0,0,.48),
 
                 0 0 0 1px
                 rgba(255,255,255,.015);
 
-            isolation: isolate;
+            isolation:
+                isolate;
+
         }
 
 
         /* =========================================================
-           FORM AREAS
+           BASE BORDER
+        ========================================================= */
+
+        .auth-container::before {
+
+            content:
+                "";
+
+            position:
+                absolute;
+
+            inset:
+                0;
+
+            z-index:
+                90;
+
+            border:
+        1px solid
+        rgba(201,169,98,.22);
+
+    border-radius:
+        inherit;
+
+    pointer-events:
+        none;
+
+        }
+
+
+        /* =========================================================
+           BORDER STARS CONTAINER
+        ========================================================= */
+
+        .border-stars {
+
+            position:
+                absolute;
+
+            inset:
+                0;
+
+            z-index:
+                100;
+
+            overflow:
+                hidden;
+
+            border-radius:
+                inherit;
+
+            pointer-events:
+                none;
+
+        }
+
+
+        /* =========================================================
+           BORDER STAR
+        ========================================================= */
+
+        .border-star {
+
+            position:
+                absolute;
+
+            top:
+                0;
+
+            left:
+                0;
+
+            width:
+                3px;
+
+            height:
+                3px;
+
+            border-radius:
+                50%;
+
+            background:
+                #ffffff;
+
+            opacity:
+                .12;
+
+            transform:
+                translate(
+                    -50%,
+                    -50%
+                );
+
+            box-shadow:
+
+                0 0 3px
+                rgba(255,255,255,.98),
+
+                0 0 7px
+                rgba(255,255,255,.86),
+
+                0 0 13px
+                rgba(255,255,255,.56),
+
+                0 0 22px
+                rgba(255,255,255,.22);
+
+            will-change:
+                left,
+                top,
+                opacity,
+                transform;
+
+        }
+
+
+        /* =========================================================
+           HORIZONTAL STAR RAY
+        ========================================================= */
+
+        .border-star::before {
+
+            content:
+                "";
+
+            position:
+                absolute;
+
+            left:
+                50%;
+
+            top:
+                50%;
+
+            width:
+                13px;
+
+            height:
+                1px;
+
+            transform:
+                translate(
+                    -50%,
+                    -50%
+                );
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255,255,255,.95),
+                    transparent
+                );
+
+            filter:
+                blur(.2px);
+
+            pointer-events:
+                none;
+
+        }
+
+
+        /* =========================================================
+           VERTICAL STAR RAY
+        ========================================================= */
+
+        .border-star::after {
+
+            content:
+                "";
+
+            position:
+                absolute;
+
+            left:
+                50%;
+
+            top:
+                50%;
+
+            width:
+                1px;
+
+            height:
+                13px;
+
+            transform:
+                translate(
+                    -50%,
+                    -50%
+                );
+
+            background:
+                linear-gradient(
+                    180deg,
+                    transparent,
+                    rgba(255,255,255,.95),
+                    transparent
+                );
+
+            filter:
+                blur(.2px);
+
+            pointer-events:
+                none;
+
+        }
+
+
+        /* =========================================================
+           STAR TWINKLE
+        ========================================================= */
+
+        .border-star.active {
+
+            animation:
+                starTwinkle
+                var(--twinkle-duration,3s)
+                ease-in-out
+                infinite;
+
+        }
+
+
+        @keyframes starTwinkle {
+
+            0% {
+
+                opacity:
+                    .08;
+
+                transform:
+                    translate(
+                        -50%,
+                        -50%
+                    )
+                    scale(.72);
+
+            }
+
+
+            14% {
+
+                opacity:
+                    .95;
+
+                transform:
+                    translate(
+                        -50%,
+                        -50%
+                    )
+                    scale(1.12);
+
+            }
+
+
+            28% {
+
+                opacity:
+                    .28;
+
+                transform:
+                    translate(
+                        -50%,
+                        -50%
+                    )
+                    scale(.80);
+
+            }
+
+
+            45% {
+
+                opacity:
+                    .82;
+
+                transform:
+                    translate(
+                        -50%,
+                        -50%
+                    )
+                    scale(1);
+
+            }
+
+
+            62% {
+
+                opacity:
+                    .20;
+
+            }
+
+
+            78% {
+
+                opacity:
+                    .72;
+
+                transform:
+                    translate(
+                        -50%,
+                        -50%
+                    )
+                    scale(.95);
+
+            }
+
+
+            100% {
+
+                opacity:
+                    .08;
+
+                transform:
+                    translate(
+                        -50%,
+                        -50%
+                    )
+                    scale(.72);
+
+            }
+
+        }
+
+
+        /* =========================================================
+           FORM WRAPPER
         ========================================================= */
 
         .forms {
 
-            position: absolute;
+            position:
+                absolute;
 
-            inset: 0;
+            inset:
+                0;
 
-            z-index: 1;
+            z-index:
+                1;
 
-            display: flex;
+            display:
+                flex;
 
-            flex-direction: row;
+            flex-direction:
+                row;
 
-            width: 100%;
-            height: 100%;
+            width:
+                100%;
+
+            height:
+                100%;
+
         }
 
 
@@ -179,7 +572,8 @@
 
         .form-panel {
 
-            position: relative;
+            position:
+                relative;
 
             flex:
                 0 0 50%;
@@ -190,7 +584,8 @@
             height:
                 100%;
 
-            display: flex;
+            display:
+                flex;
 
             align-items:
                 center;
@@ -205,54 +600,68 @@
                     54px
                 );
 
-            overflow: hidden;
+            overflow:
+                hidden;
 
             /*
-             * Blur hanya dipakai ketika sedang drag.
+             * FIXED BLUR
+             *
+             * Blur tidak mengikuti
+             * seberapa jauh panel digeser.
              */
             filter:
-                blur(
-                    var(--drag-blur)
-                );
+                blur(0);
 
             opacity:
-                var(--drag-opacity);
+                1;
 
             transition:
-                filter 140ms ease,
-                opacity 140ms ease;
+                filter 180ms ease,
+                opacity 180ms ease;
 
             will-change:
                 filter,
                 opacity;
+
         }
 
 
-        .form-panel::before {
+        /*
+         * Ketika drag dimulai:
+         * blur langsung 4px.
+         */
 
-            content: "";
+        .auth-container.is-dragging
+        .form-panel {
 
-            position: absolute;
+            filter:
+                blur(4px);
 
-            inset: 0;
+            opacity:
+                .94;
 
-            pointer-events: none;
+        }
 
-            background:
-                radial-gradient(
-                    circle at center,
-                    rgba(255,255,255,.025),
-                    transparent 65%
-                );
+
+        /*
+         * Sedikit soft tambahan
+         * untuk isi form.
+         */
+
+        .auth-container.is-dragging
+        .form-content {
+
+            filter:
+                blur(1px);
+
         }
 
 
         /* =========================================================
-           CONTENT SCALE WRAPPER
+           FORM INNER
         ========================================================= */
 
-        .form-content-scale,
-        .overlay-content-scale {
+        .form-content-scale {
 
             width:
                 100%;
@@ -274,12 +683,9 @@
 
             will-change:
                 transform;
+
         }
 
-
-        /* =========================================================
-           FORM CONTENT
-        ========================================================= */
 
         .form-content {
 
@@ -294,11 +700,12 @@
 
             flex-shrink:
                 0;
+
         }
 
 
         /* =========================================================
-           KICKER
+           FORM TEXT
         ========================================================= */
 
         .form-kicker {
@@ -323,12 +730,9 @@
 
             text-transform:
                 uppercase;
+
         }
 
-
-        /* =========================================================
-           TITLE
-        ========================================================= */
 
         .form-content h1 {
 
@@ -347,12 +751,9 @@
 
             letter-spacing:
                 -.045em;
+
         }
 
-
-        /* =========================================================
-           DESCRIPTION
-        ========================================================= */
 
         .form-description {
 
@@ -367,17 +768,19 @@
 
             line-height:
                 1.7;
+
         }
 
 
         /* =========================================================
-           FIELD
+           FORM FIELD
         ========================================================= */
 
         .field {
 
             margin-bottom:
                 15px;
+
         }
 
 
@@ -397,6 +800,7 @@
 
             font-weight:
                 700;
+
         }
 
 
@@ -425,7 +829,7 @@
                 none;
 
             background:
-                #1d1d26;
+                var(--surface-2);
 
             color:
                 #ffffff;
@@ -437,12 +841,15 @@
                 border-color .18s ease,
                 background .18s ease,
                 box-shadow .18s ease;
+
         }
 
 
         .field input::placeholder {
+
             color:
                 #5f5e69;
+
         }
 
 
@@ -457,6 +864,7 @@
             box-shadow:
                 0 0 0 4px
                 rgba(201,169,98,.08);
+
         }
 
 
@@ -508,12 +916,13 @@
 
             box-shadow:
                 0 12px 30px
-                rgba(169,129,63,.2);
+                rgba(169,129,63,.20);
 
             transition:
                 transform .18s ease,
                 box-shadow .18s ease,
                 filter .18s ease;
+
         }
 
 
@@ -528,12 +937,15 @@
             box-shadow:
                 0 17px 34px
                 rgba(169,129,63,.28);
+
         }
 
 
         .submit-btn:active {
+
             transform:
                 translateY(0);
+
         }
 
 
@@ -635,6 +1047,7 @@
 
             will-change:
                 transform;
+
         }
 
 
@@ -649,12 +1062,39 @@
             box-shadow:
                 -18px 0 55px
                 rgba(201,169,98,.22);
+
         }
 
 
         /* =========================================================
            OVERLAY CONTENT
         ========================================================= */
+
+        .overlay-content-scale {
+
+            width:
+                100%;
+
+            height:
+                auto;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            transform-origin:
+                center center;
+
+            will-change:
+                transform;
+
+        }
+
 
         .overlay-content {
 
@@ -666,11 +1106,12 @@
 
             flex-shrink:
                 0;
+
         }
 
 
         /* =========================================================
-           BADGE
+           OVERLAY BADGE
         ========================================================= */
 
         .overlay-badge {
@@ -717,6 +1158,7 @@
 
             text-transform:
                 uppercase;
+
         }
 
 
@@ -741,6 +1183,7 @@
 
             letter-spacing:
                 -.045em;
+
         }
 
 
@@ -764,6 +1207,7 @@
 
             line-height:
                 1.7;
+
         }
 
 
@@ -784,233 +1228,259 @@
 
             line-height:
                 1.5;
+
         }
 
 
         /* =========================================================
-   ARROW PULSE / HEARTBEAT
-========================================================= */
+           ARROW BUTTON
+        ========================================================= */
 
-.arrow-btn {
-    position: relative;
+        .arrow-btn {
 
-    width: 64px;
-    height: 64px;
+            position:
+                relative;
 
-    display: inline-flex;
+            width:
+                64px;
 
-    align-items: center;
-    justify-content: center;
+            height:
+                64px;
 
-    border: 1px solid rgba(255,255,255,.35);
+            display:
+                inline-flex;
 
-    border-radius: 50%;
+            align-items:
+                center;
 
-    color: #ffffff;
+            justify-content:
+                center;
 
-    background:
-        rgba(255,255,255,.10);
+            border:
+                1px solid
+                rgba(255,255,255,.35);
 
-    backdrop-filter:
-        blur(12px);
+            border-radius:
+                50%;
 
-    cursor: pointer;
+            color:
+                #ffffff;
 
-    font-size: 28px;
-    line-height: 1;
+            background:
+                rgba(255,255,255,.10);
 
-    transition:
-        transform .2s ease,
-        background .2s ease,
-        border-color .2s ease;
+            backdrop-filter:
+                blur(12px);
 
-    /*
-     * Pulse utama.
-     */
-    animation:
-        arrowHeartbeat 2.2s ease-in-out infinite;
-}
+            cursor:
+                pointer;
 
+            font-size:
+                28px;
 
-/*
- * Lingkaran cahaya yang melebar
- * dari belakang tombol.
- */
-.arrow-btn::before {
-    content: "";
+            line-height:
+                1;
 
-    position: absolute;
+            animation:
+                arrowHeartbeat
+                2.2s
+                ease-in-out
+                infinite;
 
-    inset: -7px;
+            transition:
+                transform .2s ease,
+                background .2s ease,
+                border-color .2s ease;
 
-    border-radius: 50%;
+        }
 
-    border:
-        1px solid
-        rgba(255,255,255,.20);
 
-    opacity: 0;
+        .arrow-btn::before {
 
-    transform: scale(.82);
+            content:
+                "";
 
-    animation:
-        arrowRipple 2.2s ease-out infinite;
+            position:
+                absolute;
 
-    pointer-events: none;
-}
+            inset:
+                -7px;
 
+            border:
+                1px solid
+                rgba(255,255,255,.20);
 
-/*
- * Glow halus di bagian dalam.
- */
-.arrow-btn::after {
-    content: "";
+            border-radius:
+                50%;
 
-    position: absolute;
+            opacity:
+                0;
 
-    inset: 0;
+            transform:
+                scale(.82);
 
-    border-radius: 50%;
+            animation:
+                arrowRipple
+                2.2s
+                ease-out
+                infinite;
 
-    background:
-        radial-gradient(
-            circle,
-            rgba(255,255,255,.14),
-            transparent 65%
-        );
+            pointer-events:
+                none;
 
-    opacity: .45;
+        }
 
-    pointer-events: none;
-}
 
+        .arrow-btn::after {
 
-/* =========================================================
-   HEARTBEAT
-========================================================= */
+            content:
+                "";
 
-@keyframes arrowHeartbeat {
+            position:
+                absolute;
 
-    0%,
-    100% {
-        transform: scale(1);
-    }
+            inset:
+                0;
 
-    8% {
-        transform: scale(1.06);
-    }
+            border-radius:
+                50%;
 
-    16% {
-        transform: scale(1);
-    }
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(255,255,255,.14),
+                    transparent 65%
+                );
 
-    24% {
-        transform: scale(1.045);
-    }
+            opacity:
+                .45;
 
-    32% {
-        transform: scale(1);
-    }
+            pointer-events:
+                none;
 
-    60% {
-        transform: scale(1);
-    }
-}
+        }
 
 
-/* =========================================================
-   RIPPLE
-========================================================= */
+        @keyframes arrowHeartbeat {
 
-@keyframes arrowRipple {
+            0%,
+            100% {
 
-    0% {
-        opacity: 0;
-        transform: scale(.82);
-    }
+                transform:
+                    scale(1);
 
-    10% {
-        opacity: .45;
-    }
+            }
 
-    55% {
-        opacity: 0;
-        transform: scale(1.35);
-    }
+            8% {
 
-    100% {
-        opacity: 0;
-        transform: scale(1.35);
-    }
-}
+                transform:
+                    scale(1.06);
 
+            }
 
-/* =========================================================
-   HOVER
-========================================================= */
+            16% {
 
-.arrow-btn:hover {
-    transform:
-        scale(1.08);
+                transform:
+                    scale(1);
 
-    background:
-        rgba(255,255,255,.18);
+            }
 
-    border-color:
-        rgba(255,255,255,.52);
+            24% {
 
-    animation-play-state:
-        paused;
-}
+                transform:
+                    scale(1.045);
 
+            }
 
-/* =========================================================
-   PRESS
-========================================================= */
+            32% {
 
-.arrow-btn:active {
-    transform:
-        scale(.94);
+                transform:
+                    scale(1);
 
-    animation-play-state:
-        paused;
-}
+            }
 
+            60% {
 
-/* =========================================================
-   MOBILE
-========================================================= */
+                transform:
+                    scale(1);
 
-@media (max-width: 700px) {
+            }
 
-    .arrow-btn {
-        animation-duration:
-            2s;
-    }
+        }
 
-    .arrow-btn::before {
-        animation-duration:
-            2s;
-    }
-}
 
+        @keyframes arrowRipple {
 
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
+            0% {
 
-@media (prefers-reduced-motion: reduce) {
+                opacity:
+                    0;
 
-    .arrow-btn,
-    .arrow-btn::before {
-        animation:
-            none !important;
-    }
-}
+                transform:
+                    scale(.82);
+
+            }
+
+            10% {
+
+                opacity:
+                    .45;
+
+            }
+
+            55% {
+
+                opacity:
+                    0;
+
+                transform:
+                    scale(1.35);
+
+            }
+
+            100% {
+
+                opacity:
+                    0;
+
+                transform:
+                    scale(1.35);
+
+            }
+
+        }
+
+
+        .arrow-btn:hover {
+
+            transform:
+                scale(1.08);
+
+            background:
+                rgba(255,255,255,.18);
+
+            border-color:
+                rgba(255,255,255,.52);
+
+            animation-play-state:
+                paused;
+
+        }
+
+
+        .arrow-btn:active {
+
+            transform:
+                scale(.94);
+
+            animation-play-state:
+                paused;
+
+        }
 
 
         /* =========================================================
-           DESKTOP / TABLET
+           DESKTOP
         ========================================================= */
 
         @media (min-width: 701px) {
@@ -1024,7 +1494,9 @@
                         0,
                         0
                     );
+
             }
+
         }
 
 
@@ -1048,20 +1520,11 @@
                         82dvh,
                         620px
                     );
+
             }
 
 
-            .form-panel {
-
-                padding:
-                    clamp(
-                        20px,
-                        4vw,
-                        42px
-                    );
-            }
-
-
+            .form-panel,
             .overlay {
 
                 padding:
@@ -1070,37 +1533,40 @@
                         4vw,
                         42px
                     );
+
             }
+
+
+            .border-star {
+
+                width:
+                    2.5px;
+
+                height:
+                    2.5px;
+
+            }
+
         }
 
 
         /* =========================================================
            MOBILE
-           
-           Vertical layout
         ========================================================= */
 
         @media (max-width: 700px) {
 
             body {
 
-                display:
-                    grid;
-
-                place-items:
-                    center;
-
                 padding:
                     8px;
 
                 overflow:
                     hidden;
+
             }
 
 
-            /*
-             * Container mengikuti device.
-             */
             .auth-container {
 
                 width:
@@ -1115,26 +1581,25 @@
                         760px
                     );
 
-                margin:
-                    0 auto;
-
                 border-radius:
                     clamp(
                         18px,
                         5vw,
                         25px
                     );
+
             }
 
 
             /* ---------------------------------------------
-               STACK FORMS
+               VERTICAL FORMS
             --------------------------------------------- */
 
             .forms {
 
                 flex-direction:
                     column;
+
             }
 
 
@@ -1151,16 +1616,14 @@
 
                 padding:
                     clamp(
-                        10px,
+                        8px,
                         5vw,
                         32px
                     );
+
             }
 
 
-            /*
-             * Content tetap di-center.
-             */
             .form-content {
 
                 max-width:
@@ -1168,11 +1631,12 @@
                         90%,
                         380px
                     );
+
             }
 
 
             /* ---------------------------------------------
-               MOBILE OVERLAY
+               VERTICAL OVERLAY
             --------------------------------------------- */
 
             .overlay {
@@ -1194,7 +1658,7 @@
 
                 padding:
                     clamp(
-                        10px,
+                        8px,
                         5vw,
                         32px
                     );
@@ -1209,13 +1673,16 @@
                 box-shadow:
                     0 -20px 55px
                     rgba(0,0,0,.16);
+
             }
 
 
             /*
-             * Sign Up:
-             * overlay naik.
+             * Login -> Sign Up
+             *
+             * Panel bergerak ke atas.
              */
+
             .auth-container.signup-open
             .overlay {
 
@@ -1225,13 +1692,15 @@
                         -100%,
                         0
                     );
+
             }
 
 
             /*
-             * Mobile arrow:
-             * ukurannya fleksibel.
+             * Mobile arrow mengikuti arah
+             * gerakan overlay.
              */
+
             .arrow-btn {
 
                 width:
@@ -1254,7 +1723,50 @@
                         7vw,
                         30px
                     );
+
             }
+
+
+            .border-star {
+
+                width:
+                    2.5px;
+
+                height:
+                    2.5px;
+
+                box-shadow:
+
+                    0 0 3px
+                    rgba(255,255,255,.98),
+
+                    0 0 6px
+                    rgba(255,255,255,.82),
+
+                    0 0 11px
+                    rgba(255,255,255,.52),
+
+                    0 0 17px
+                    rgba(255,255,255,.20);
+
+            }
+
+
+            .border-star::before {
+
+                width:
+                    11px;
+
+            }
+
+
+            .border-star::after {
+
+                height:
+                    11px;
+
+            }
+
         }
 
 
@@ -1274,6 +1786,7 @@
                         90dvh,
                         720px
                     );
+
             }
 
 
@@ -1282,10 +1795,11 @@
 
                 padding:
                     clamp(
-                        8px,
+                        7px,
                         4vw,
                         20px
                     );
+
             }
 
 
@@ -1293,6 +1807,7 @@
 
                 max-width:
                     92%;
+
             }
 
 
@@ -1300,6 +1815,7 @@
 
                 font-size:
                     8px;
+
             }
 
 
@@ -1307,27 +1823,30 @@
 
                 font-size:
                     clamp(
-                        24px,
+                        23px,
                         8vw,
                         30px
                     );
+
             }
 
 
             .form-description {
 
+                margin-bottom:
+                    16px;
+
                 font-size:
                     10px;
 
-                margin-bottom:
-                    17px;
             }
 
 
             .field {
 
                 margin-bottom:
-                    10px;
+                    9px;
+
             }
 
 
@@ -1335,6 +1854,7 @@
 
                 font-size:
                     10px;
+
             }
 
 
@@ -1342,16 +1862,17 @@
 
                 height:
                     clamp(
-                        40px,
+                        39px,
                         11vw,
                         47px
                     );
 
                 padding:
-                    0 12px;
+                    0 11px;
 
                 font-size:
                     11px;
+
             }
 
 
@@ -1359,7 +1880,7 @@
 
                 min-height:
                     clamp(
-                        40px,
+                        39px,
                         11vw,
                         48px
                     );
@@ -1369,22 +1890,24 @@
 
                 font-size:
                     11px;
+
             }
 
 
             .overlay-badge {
 
                 min-height:
-                    24px;
+                    23px;
 
                 padding:
                     0 9px;
 
                 margin-bottom:
-                    11px;
+                    10px;
 
                 font-size:
                     7px;
+
             }
 
 
@@ -1392,10 +1915,11 @@
 
                 font-size:
                     clamp(
-                        24px,
+                        23px,
                         8vw,
                         30px
                     );
+
             }
 
 
@@ -1405,21 +1929,57 @@
                     90%;
 
                 margin-bottom:
-                    15px;
+                    14px;
 
                 font-size:
                     10px;
+
             }
 
 
             .overlay-hint {
 
                 margin-bottom:
-                    9px;
+                    8px;
 
                 font-size:
                     8px;
+
             }
+
+
+            .arrow-btn {
+
+                width:
+                    clamp(
+                        45px,
+                        14vw,
+                        56px
+                    );
+
+                height:
+                    clamp(
+                        45px,
+                        14vw,
+                        56px
+                    );
+
+                font-size:
+                    23px;
+
+            }
+
+
+            .border-star {
+
+                width:
+                    2px;
+
+                height:
+                    2px;
+
+            }
+
         }
 
 
@@ -1436,6 +1996,7 @@
 
                 height:
                     91dvh;
+
             }
 
 
@@ -1443,48 +2004,46 @@
             .overlay {
 
                 padding:
-                    7px 12px;
-            }
+                    6px 11px;
 
-
-            .form-content {
-
-                max-width:
-                    94%;
             }
 
 
             .form-content h1 {
 
                 font-size:
-                    23px;
+                    22px;
+
             }
 
 
             .field input {
 
                 height:
-                    38px;
+                    36px;
 
                 font-size:
                     10px;
+
             }
 
 
             .submit-btn {
 
                 min-height:
-                    39px;
+                    37px;
 
                 font-size:
                     10px;
+
             }
 
 
             .overlay h2 {
 
                 font-size:
-                    23px;
+                    22px;
+
             }
 
 
@@ -1494,26 +2053,40 @@
                     9px;
 
                 line-height:
-                    1.5;
+                    1.45;
+
             }
 
 
             .arrow-btn {
 
                 width:
-                    45px;
+                    43px;
 
                 height:
-                    45px;
+                    43px;
 
                 font-size:
-                    22px;
+                    21px;
+
             }
+
+
+            .border-star {
+
+                width:
+                    1.8px;
+
+                height:
+                    1.8px;
+
+            }
+
         }
 
 
         /* =========================================================
-           LANDSCAPE PHONE
+           MOBILE LANDSCAPE
         ========================================================= */
 
         @media (max-width: 700px)
@@ -1523,6 +2096,7 @@
 
                 padding:
                     5px;
+
             }
 
 
@@ -1536,6 +2110,7 @@
 
                 height:
                     94dvh;
+
             }
 
 
@@ -1543,7 +2118,8 @@
             .overlay {
 
                 padding:
-                    8px 20px;
+                    7px 20px;
+
             }
 
 
@@ -1551,6 +2127,7 @@
 
                 max-width:
                     400px;
+
             }
 
 
@@ -1558,7 +2135,9 @@
 
                 max-width:
                     380px;
+
             }
+
         }
 
 
@@ -1575,6 +2154,7 @@
 
             outline-offset:
                 3px;
+
         }
 
 
@@ -1584,27 +2164,31 @@
 
         @media (prefers-reduced-motion: reduce) {
 
-            .overlay,
+            .border-star,
             .arrow-btn,
+            .arrow-btn::before,
+            .overlay,
             .submit-btn,
             .field input,
             .form-panel {
 
+                animation:
+                    none !important;
+
                 transition:
                     none !important;
+
             }
+
         }
 
     </style>
+
 </head>
 
 
 <body>
 
-
-<!-- =========================================================
-     MAIN CONTAINER
-========================================================= -->
 
 <main
     class="auth-container"
@@ -1613,12 +2197,33 @@
 
 
     <!-- =====================================================
-         TWO FORMS
+         8 BORDER STARS
+    ====================================================== -->
+
+    <div
+        class="border-stars"
+        id="borderStars"
+        aria-hidden="true"
+    >
+
+        <span class="border-star"></span>
+        <span class="border-star"></span>
+        <span class="border-star"></span>
+        <span class="border-star"></span>
+        <span class="border-star"></span>
+        <span class="border-star"></span>
+        <span class="border-star"></span>
+        <span class="border-star"></span>
+
+    </div>
+
+
+    <!-- =====================================================
+         FORM WRAPPER
     ====================================================== -->
 
     <div
         class="forms"
-        id="forms"
     >
 
 
@@ -1674,6 +2279,7 @@
 
                             <input
                                 id="loginEmail"
+                                name="email"
                                 type="email"
                                 autocomplete="email"
                                 placeholder="you@example.com"
@@ -1693,6 +2299,7 @@
 
                             <input
                                 id="loginPassword"
+                                name="password"
                                 type="password"
                                 autocomplete="current-password"
                                 placeholder="••••••••"
@@ -1770,6 +2377,7 @@
 
                             <input
                                 id="signupName"
+                                name="name"
                                 type="text"
                                 autocomplete="name"
                                 placeholder="Nama kamu"
@@ -1789,6 +2397,7 @@
 
                             <input
                                 id="signupEmail"
+                                name="email"
                                 type="email"
                                 autocomplete="email"
                                 placeholder="you@example.com"
@@ -1808,6 +2417,7 @@
 
                             <input
                                 id="signupPassword"
+                                name="password"
                                 type="password"
                                 autocomplete="new-password"
                                 placeholder="••••••••"
@@ -1842,7 +2452,6 @@
     <aside
         class="overlay"
         id="overlay"
-        aria-label="Authentication switch panel"
     >
 
         <div
@@ -1892,7 +2501,7 @@
                     type="button"
                     aria-label="Open sign up"
                 >
-                    →
+                    ←
                 </button>
 
             </div>
@@ -1903,6 +2512,7 @@
 
 
 </main>
+
 
 
 <script>
@@ -1983,6 +2593,12 @@ const signupForm =
     );
 
 
+const borderStars =
+    document.querySelectorAll(
+        ".border-star"
+    );
+
+
 /* =========================================================
    STATE
 ========================================================= */
@@ -2019,6 +2635,10 @@ let resizeTimer =
     null;
 
 
+let borderAnimationFrame =
+    null;
+
+
 /*
  * Swipe threshold.
  */
@@ -2026,8 +2646,17 @@ const SWIPE_THRESHOLD =
     75;
 
 
+/*
+ * Kecepatan cahaya border.
+ *
+ * Lebih kecil = lebih pelan.
+ */
+const BORDER_SPEED =
+    0.006;
+
+
 /* =========================================================
-   MOBILE CHECK
+   DEVICE
 ========================================================= */
 
 function isMobile() {
@@ -2040,75 +2669,81 @@ function isMobile() {
 
 
 /* =========================================================
-   UPDATE OVERLAY CONTENT
+   OVERLAY CONTENT
 ========================================================= */
 
 function updateOverlayContent() {
 
-    const mobile = isMobile();
+    const mobile =
+        isMobile();
 
-    if (signupOpen) {
 
-        overlayTitle.textContent =
-            "Create Account";
+    /*
+     * LOGIN AKTIF
+     *
+     * Desktop:
+     * ← buka Sign Up
+     *
+     * Mobile:
+     * ↑ buka Sign Up
+     */
 
-        overlayDescription.textContent =
-            "Belum punya akun? Daftar sekarang dan mulai perjalananmu.";
-
-        /*
-         * SIGN UP sedang terbuka.
-         *
-         * Desktop:
-         * overlay berada di kiri.
-         * Untuk kembali ke Login,
-         * panel bergerak ke kanan.
-         *
-         * Mobile:
-         * overlay berada di atas.
-         * Untuk kembali ke Login,
-         * panel bergerak ke bawah.
-         */
-        arrowBtn.textContent =
-            mobile
-                ? "↓"
-                : "→";
-
-        arrowBtn.setAttribute(
-            "aria-label",
-            "Back to login"
-        );
-
-    } else {
+    if (!signupOpen) {
 
         overlayTitle.textContent =
             "Welcome Back";
 
+
         overlayDescription.textContent =
             "Sudah punya akun? Masuk dan lanjutkan perjalananmu.";
 
-        /*
-         * LOGIN sedang terbuka.
-         *
-         * Desktop:
-         * overlay berada di kanan.
-         * Untuk membuka Sign Up,
-         * panel bergerak ke kiri.
-         *
-         * Mobile:
-         * overlay berada di bawah.
-         * Untuk membuka Sign Up,
-         * panel bergerak ke atas.
-         */
+
         arrowBtn.textContent =
             mobile
                 ? "↑"
                 : "←";
 
+
         arrowBtn.setAttribute(
             "aria-label",
             "Open sign up"
         );
+
+
+        return;
+
     }
+
+
+    /*
+     * SIGN UP AKTIF
+     *
+     * Desktop:
+     * → kembali Login
+     *
+     * Mobile:
+     * ↓ kembali Login
+     */
+
+    overlayTitle.textContent =
+        "Create Account";
+
+
+    overlayDescription.textContent =
+        "Belum punya akun? Daftar sekarang dan mulai perjalananmu.";
+
+
+    arrowBtn.textContent =
+        mobile
+            ? "↓"
+            : "→";
+
+
+    arrowBtn.setAttribute(
+        "aria-label",
+        "Back to login"
+    );
+
 }
 
 
@@ -2167,7 +2802,7 @@ function applyState(
 
 
 /* =========================================================
-   SCALE CONTENT
+   CONTENT SCALE
 ========================================================= */
 
 function scaleContentToPanel(
@@ -2181,12 +2816,14 @@ function scaleContentToPanel(
     ) {
 
         return;
+
     }
 
 
     /*
-     * Reset scale.
+     * Reset terlebih dahulu.
      */
+
     scaleElement.style.transform =
         "scale(1)";
 
@@ -2194,6 +2831,7 @@ function scaleContentToPanel(
     /*
      * Force reflow.
      */
+
     void scaleElement.offsetWidth;
 
 
@@ -2221,13 +2859,14 @@ function scaleContentToPanel(
     ) {
 
         return;
+
     }
 
 
     /*
-     * Safe zone:
-     * 88% dari ruang panel.
+     * Safe area.
      */
+
     const safeWidth =
         availableWidth * .88;
 
@@ -2247,8 +2886,10 @@ function scaleContentToPanel(
 
 
     /*
-     * Ambil faktor terkecil.
+     * Ambil scale terkecil
+     * agar semua isi tetap muat.
      */
+
     const scale =
         Math.min(
             1,
@@ -2258,9 +2899,10 @@ function scaleContentToPanel(
 
 
     /*
-     * Batas bawah supaya
-     * isi tidak terlalu mengecil.
+     * Batas minimum agar
+     * teks tidak terlalu kecil.
      */
+
     const finalScale =
         Math.max(
             .62,
@@ -2275,7 +2917,7 @@ function scaleContentToPanel(
 
 
 /* =========================================================
-   RESIZE CONTENT
+   RESIZE INNER CONTENT
 ========================================================= */
 
 function resizeInnerContent() {
@@ -2338,9 +2980,10 @@ arrowBtn.addEventListener(
 
 
         /*
-         * Jangan double toggle
-         * setelah drag.
+         * Kalau event ini terjadi
+         * setelah drag, jangan toggle dua kali.
          */
+
         if (didDrag) {
 
             didDrag =
@@ -2365,8 +3008,10 @@ overlay.addEventListener(
     function(event) {
 
         /*
-         * Panah punya handler sendiri.
+         * Kalau tombol panah,
+         * biarkan click handler yang menangani.
          */
+
         if (
             event.target.closest(
                 ".arrow-btn"
@@ -2410,6 +3055,7 @@ overlay.addEventListener(
                 signupOpen
                     ? -overlay.offsetWidth
                     : 0;
+
         }
 
 
@@ -2419,22 +3065,14 @@ overlay.addEventListener(
 
 
         /*
-         * MULAI BLUR.
+         * FIXED BLUR:
+         *
+         * langsung aktif ketika
+         * drag dimulai.
          */
+
         authContainer.classList.add(
             "is-dragging"
-        );
-
-
-        authContainer.style.setProperty(
-            "--drag-blur",
-            "0px"
-        );
-
-
-        authContainer.style.setProperty(
-            "--drag-opacity",
-            "1"
         );
 
 
@@ -2447,8 +3085,9 @@ overlay.addEventListener(
         } catch (error) {
 
             /*
-             * Pointer capture optional.
+             * Aman diabaikan.
              */
+
         }
 
     }
@@ -2464,6 +3103,7 @@ overlay.addEventListener(
     function(event) {
 
         if (!dragging) {
+
             return;
         }
 
@@ -2479,8 +3119,9 @@ overlay.addEventListener(
 
 
         /*
-         * Tandai sebagai drag.
+         * Benar-benar drag.
          */
+
         if (
             Math.abs(deltaX) > 7 ||
             Math.abs(deltaY) > 7
@@ -2493,80 +3134,7 @@ overlay.addEventListener(
 
 
         /* =====================================================
-           BLUR PROGRESS
-        ===================================================== */
-
-        let progress;
-
-
-        if (isMobile()) {
-
-            progress =
-                Math.abs(deltaY) /
-                Math.max(
-                    1,
-                    overlay.offsetHeight
-                );
-
-        } else {
-
-            progress =
-                Math.abs(deltaX) /
-                Math.max(
-                    1,
-                    overlay.offsetWidth
-                );
-
-        }
-
-
-        /*
-         * Batasi 0 -> 1.
-         */
-        progress =
-            Math.max(
-                0,
-                Math.min(
-                    1,
-                    progress
-                )
-            );
-
-
-        /*
-         * Maksimal blur = 8px.
-         */
-        const maxBlur =
-            8;
-
-
-        const blurAmount =
-            progress *
-            maxBlur;
-
-
-        /*
-         * Fade sangat tipis.
-         */
-        const opacity =
-            1 -
-            progress * .06;
-
-
-        authContainer.style.setProperty(
-            "--drag-blur",
-            `${blurAmount}px`
-        );
-
-
-        authContainer.style.setProperty(
-            "--drag-opacity",
-            opacity.toString()
-        );
-
-
-        /* =====================================================
-           MOBILE MOVEMENT
+           MOBILE
         ===================================================== */
 
         if (isMobile()) {
@@ -2607,11 +3175,12 @@ overlay.addEventListener(
 
 
             return;
+
         }
 
 
         /* =====================================================
-           DESKTOP / TABLET MOVEMENT
+           DESKTOP / TABLET
         ===================================================== */
 
         let nextX =
@@ -2659,6 +3228,7 @@ overlay.addEventListener(
 function finishDrag(event) {
 
     if (!dragging) {
+
         return;
     }
 
@@ -2673,27 +3243,9 @@ function finishDrag(event) {
 
 
     /*
-     * Lepaskan blur.
-     *
-     * Karena CSS transition,
-     * blur akan hilang smooth.
+     * Fixed blur dimatikan.
      */
-    authContainer.style.setProperty(
-        "--drag-blur",
-        "0px"
-    );
 
-
-    authContainer.style.setProperty(
-        "--drag-opacity",
-        "1"
-    );
-
-
-    /*
-     * Hapus drag class setelah
-     * state blur kembali.
-     */
     authContainer.classList.remove(
         "is-dragging"
     );
@@ -2719,6 +3271,7 @@ function finishDrag(event) {
          * Swipe UP:
          * Login -> Sign Up
          */
+
         if (
             !signupOpen &&
             deltaY <
@@ -2727,6 +3280,7 @@ function finishDrag(event) {
 
             signupOpen =
                 true;
+
         }
 
 
@@ -2734,6 +3288,7 @@ function finishDrag(event) {
          * Swipe DOWN:
          * Sign Up -> Login
          */
+
         else if (
             signupOpen &&
             deltaY >
@@ -2742,6 +3297,7 @@ function finishDrag(event) {
 
             signupOpen =
                 false;
+
         }
 
     }
@@ -2757,6 +3313,7 @@ function finishDrag(event) {
          * Swipe LEFT:
          * Login -> Sign Up
          */
+
         if (
             !signupOpen &&
             deltaX <
@@ -2765,6 +3322,7 @@ function finishDrag(event) {
 
             signupOpen =
                 true;
+
         }
 
 
@@ -2772,6 +3330,7 @@ function finishDrag(event) {
          * Swipe RIGHT:
          * Sign Up -> Login
          */
+
         else if (
             signupOpen &&
             deltaX >
@@ -2780,6 +3339,7 @@ function finishDrag(event) {
 
             signupOpen =
                 false;
+
         }
 
     }
@@ -2788,6 +3348,7 @@ function finishDrag(event) {
     /*
      * Hapus transform manual.
      */
+
     overlay.style.transform =
         "";
 
@@ -2795,6 +3356,7 @@ function finishDrag(event) {
     /*
      * Snap ke posisi final.
      */
+
     applyState(
         true
     );
@@ -2812,8 +3374,9 @@ function finishDrag(event) {
     } catch (error) {
 
         /*
-         * Safe to ignore.
+         * Aman diabaikan.
          */
+
     }
 
 }
@@ -2846,29 +3409,11 @@ overlay.addEventListener(
         );
 
 
-        /*
-         * Clear blur.
-         */
-        authContainer.style.setProperty(
-            "--drag-blur",
-            "0px"
-        );
-
-
-        authContainer.style.setProperty(
-            "--drag-opacity",
-            "1"
-        );
-
-
         authContainer.classList.remove(
             "is-dragging"
         );
 
 
-        /*
-         * Kembalikan overlay.
-         */
         overlay.style.transform =
             "";
 
@@ -2890,8 +3435,9 @@ overlay.addEventListener(
         } catch (error) {
 
             /*
-             * Safe to ignore.
+             * Aman diabaikan.
              */
+
         }
 
     }
@@ -2899,7 +3445,645 @@ overlay.addEventListener(
 
 
 /* =========================================================
-   RESIZE / ROTATE
+   BORDER GEOMETRY
+========================================================= */
+
+/*
+ * Menghitung titik tepat
+ * di perimeter rounded rectangle.
+ */
+
+function getBorderPoint(
+    distance,
+    width,
+    height,
+    radius
+) {
+
+    const r =
+        Math.min(
+            radius,
+            width / 2,
+            height / 2
+        );
+
+
+    const topLength =
+        Math.max(
+            0,
+            width -
+            2 * r
+        );
+
+
+    const sideLength =
+        Math.max(
+            0,
+            height -
+            2 * r
+        );
+
+
+    const cornerLength =
+        Math.PI *
+        r /
+        2;
+
+
+    const perimeter =
+        (topLength * 2) +
+        (sideLength * 2) +
+        (cornerLength * 4);
+
+
+    let d =
+        distance %
+        perimeter;
+
+
+    if (
+        d < 0
+    ) {
+
+        d +=
+            perimeter;
+
+    }
+
+
+    /* =====================================================
+       TOP
+    ===================================================== */
+
+    if (
+        d <= topLength
+    ) {
+
+        return {
+
+            x:
+                r + d,
+
+            y:
+                0
+
+        };
+
+    }
+
+
+    d -=
+        topLength;
+
+
+    /* =====================================================
+       TOP RIGHT
+    ===================================================== */
+
+    if (
+        d <= cornerLength
+    ) {
+
+        const angle =
+            -Math.PI / 2 +
+            d / r;
+
+
+        return {
+
+            x:
+                width -
+                r +
+                Math.cos(angle) *
+                r,
+
+            y:
+                r +
+                Math.sin(angle) *
+                r
+
+        };
+
+    }
+
+
+    d -=
+        cornerLength;
+
+
+    /* =====================================================
+       RIGHT
+    ===================================================== */
+
+    if (
+        d <= sideLength
+    ) {
+
+        return {
+
+            x:
+                width,
+
+            y:
+                r + d
+
+        };
+
+    }
+
+
+    d -=
+        sideLength;
+
+
+    /* =====================================================
+       BOTTOM RIGHT
+    ===================================================== */
+
+    if (
+        d <= cornerLength
+    ) {
+
+        const angle =
+            d / r;
+
+
+        return {
+
+            x:
+                width -
+                r +
+                Math.cos(angle) *
+                r,
+
+            y:
+                height -
+                r +
+                Math.sin(angle) *
+                r
+
+        };
+
+    }
+
+
+    d -=
+        cornerLength;
+
+
+    /* =====================================================
+       BOTTOM
+    ===================================================== */
+
+    if (
+        d <= topLength
+    ) {
+
+        return {
+
+            x:
+                width -
+                r -
+                d,
+
+            y:
+                height
+
+        };
+
+    }
+
+
+    d -=
+        topLength;
+
+
+    /* =====================================================
+       BOTTOM LEFT
+    ===================================================== */
+
+    if (
+        d <= cornerLength
+    ) {
+
+        const angle =
+            Math.PI / 2 +
+            d / r;
+
+
+        return {
+
+            x:
+                r +
+                Math.cos(angle) *
+                r,
+
+            y:
+                height -
+                r +
+                Math.sin(angle) *
+                r
+
+        };
+
+    }
+
+
+    d -=
+        cornerLength;
+
+
+    /* =====================================================
+       LEFT
+    ===================================================== */
+
+    if (
+        d <= sideLength
+    ) {
+
+        return {
+
+            x:
+                0,
+
+            y:
+                height -
+                r -
+                d
+
+        };
+
+    }
+
+
+    d -=
+        sideLength;
+
+
+    /* =====================================================
+       TOP LEFT
+    ===================================================== */
+
+    const angle =
+        Math.PI +
+        d / r;
+
+
+    return {
+
+        x:
+            r +
+            Math.cos(angle) *
+            r,
+
+        y:
+            r +
+            Math.sin(angle) *
+            r
+
+    };
+
+}
+
+
+/* =========================================================
+   INITIALIZE BORDER STAR POSITIONS
+========================================================= */
+
+function initializeBorderStars() {
+
+    if (
+        !borderStars.length
+    ) {
+
+        return;
+    }
+
+
+    const rect =
+        authContainer.getBoundingClientRect();
+
+
+    const width =
+        rect.width;
+
+
+    const height =
+        rect.height;
+
+
+    const style =
+        getComputedStyle(
+            authContainer
+        );
+
+
+    let radius =
+        parseFloat(
+            style.borderTopLeftRadius
+        );
+
+
+    if (
+        !Number.isFinite(radius)
+    ) {
+
+        radius =
+            24;
+
+    }
+
+
+    const r =
+        Math.min(
+            radius,
+            width / 2,
+            height / 2
+        );
+
+
+    const topLength =
+        Math.max(
+            0,
+            width -
+            2 * r
+        );
+
+
+    const sideLength =
+        Math.max(
+            0,
+            height -
+            2 * r
+        );
+
+
+    const cornerLength =
+        Math.PI *
+        r /
+        2;
+
+
+    const perimeter =
+        (topLength * 2) +
+        (sideLength * 2) +
+        (cornerLength * 4);
+
+
+    /*
+     * 8 cahaya disebar
+     * mengelilingi perimeter.
+     */
+
+    const positions = [
+
+        .015,
+        .135,
+        .255,
+        .385,
+        .515,
+        .645,
+        .775,
+        .905
+
+    ];
+
+
+    borderStars.forEach(
+        function(star,index) {
+
+            const distance =
+                perimeter *
+                positions[index];
+
+
+            star.dataset.distance =
+                distance.toString();
+
+
+            /*
+             * Masing-masing bintang
+             * punya ritme berbeda.
+             */
+
+            const duration =
+                2.7 +
+                (
+                    index % 4
+                ) * .45;
+
+
+            star.style.setProperty(
+                "--twinkle-duration",
+                `${duration}s`
+            );
+
+
+            /*
+             * Offset waktu berbeda.
+             */
+
+            star.style.animationDelay =
+                `${-(index * .37)}s`;
+
+
+            star.classList.add(
+                "active"
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   BORDER ANIMATION
+========================================================= */
+
+function animateBorderStars(
+    timestamp
+) {
+
+    const rect =
+        authContainer.getBoundingClientRect();
+
+
+    const width =
+        rect.width;
+
+
+    const height =
+        rect.height;
+
+
+    const style =
+        getComputedStyle(
+            authContainer
+        );
+
+
+    let radius =
+        parseFloat(
+            style.borderTopLeftRadius
+        );
+
+
+    if (
+        !Number.isFinite(radius)
+    ) {
+
+        radius =
+            24;
+
+    }
+
+
+    const r =
+        Math.min(
+            radius,
+            width / 2,
+            height / 2
+        );
+
+
+    const topLength =
+        Math.max(
+            0,
+            width -
+            2 * r
+        );
+
+
+    const sideLength =
+        Math.max(
+            0,
+            height -
+            2 * r
+        );
+
+
+    const cornerLength =
+        Math.PI *
+        r /
+        2;
+
+
+    const perimeter =
+        (topLength * 2) +
+        (sideLength * 2) +
+        (cornerLength * 4);
+
+
+    /*
+     * Gerakkan bintang pelan.
+     */
+
+    borderStars.forEach(
+        function(star) {
+
+            let distance =
+                parseFloat(
+                    star.dataset.distance
+                );
+
+
+            if (
+                !Number.isFinite(distance)
+            ) {
+
+                distance =
+                    0;
+
+            }
+
+
+            /*
+             * Gerak berdasarkan waktu
+             * supaya stabil.
+             */
+
+            distance +=
+                16.67 *
+                BORDER_SPEED;
+
+
+            if (
+                distance >= perimeter
+            ) {
+
+                distance -=
+                    perimeter;
+
+            }
+
+
+            star.dataset.distance =
+                distance.toString();
+
+
+            const point =
+                getBorderPoint(
+                    distance,
+                    width,
+                    height,
+                    r
+                );
+
+
+            /*
+             * Tepat pada garis border.
+             */
+
+            star.style.left =
+                `${point.x}px`;
+
+
+            star.style.top =
+                `${point.y}px`;
+
+        }
+    );
+
+
+    borderAnimationFrame =
+        requestAnimationFrame(
+            animateBorderStars
+        );
+
+}
+
+
+/* =========================================================
+   START BORDER ANIMATION
+========================================================= */
+
+function startBorderAnimation() {
+
+    if (
+        borderAnimationFrame
+    ) {
+
+        cancelAnimationFrame(
+            borderAnimationFrame
+        );
+
+    }
+
+
+    initializeBorderStars();
+
+
+    borderAnimationFrame =
+        requestAnimationFrame(
+            animateBorderStars
+        );
+
+}
+
+
+/* =========================================================
+   RESIZE HANDLER
 ========================================================= */
 
 function handleResize() {
@@ -2913,17 +4097,39 @@ function handleResize() {
         setTimeout(
             function() {
 
+                /*
+                 * Clear manual transform.
+                 */
+
                 overlay.style.transform =
                     "";
 
+
+                /*
+                 * Update desktop/mobile arrow.
+                 */
+
+                updateOverlayContent();
+
+
+                /*
+                 * Recalculate content.
+                 */
 
                 resizeInnerContent();
 
 
                 /*
-                 * Refresh arrow:
-                 * horizontal / vertical.
+                 * Recalculate border geometry.
                  */
+
+                initializeBorderStars();
+
+
+                /*
+                 * Reapply actual state.
+                 */
+
                 applyState(
                     false
                 );
@@ -2964,10 +4170,17 @@ if (
 
                     resizeInnerContent();
 
+                    initializeBorderStars();
+
                 }
 
             }
         );
+
+
+    resizeObserver.observe(
+        authContainer
+    );
 
 
     resizeObserver.observe(
@@ -3029,8 +4242,9 @@ function initialize() {
 
     /*
      * Default:
-     * Login.
+     * Login aktif.
      */
+
     signupOpen =
         false;
 
@@ -3045,12 +4259,16 @@ function initialize() {
 
     resizeInnerContent();
 
+
+    /*
+     * Border lights.
+     */
+
+    startBorderAnimation();
+
 }
 
 
-/*
- * DOM ready.
- */
 if (
     document.readyState ===
     "loading"
@@ -3060,7 +4278,8 @@ if (
         "DOMContentLoaded",
         initialize,
         {
-            once: true
+            once:
+                true
         }
     );
 
@@ -3072,22 +4291,27 @@ if (
 
 
 /*
- * Final calculation setelah
- * resource/layout selesai.
+ * Final pass setelah semua
+ * resource selesai.
  */
+
 window.addEventListener(
     "load",
     function() {
 
         resizeInnerContent();
 
+        startBorderAnimation();
+
     },
     {
-        once: true
+        once:
+            true
     }
 );
 
 </script>
 
 </body>
+
 </html>
