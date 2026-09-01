@@ -1,0 +1,2314 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+>
+
+<title>Trazeel • Responsive Sliding Auth</title>
+
+<style>
+
+/* =========================================================
+   ROOT
+========================================================= */
+
+:root {
+    --bg: #09090d;
+    --surface: #15151c;
+    --surface-2: #1c1c25;
+
+    --text: #f5f2ea;
+    --text-soft: #aaa7b1;
+    --text-muted: #6d6c77;
+
+    --accent: #c9a962;
+    --accent-light: #e7cb83;
+    --accent-dark: #8d6b36;
+
+    --border: rgba(255,255,255,.08);
+
+    --radius:
+        clamp(18px, 3vw, 32px);
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    display: grid;
+    place-items: center;
+
+    padding:
+        clamp(8px, 3vw, 36px);
+
+    overflow: hidden;
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    color:
+        var(--text);
+
+    background:
+        radial-gradient(
+            circle at 15% 10%,
+            rgba(201,169,98,.14),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 85% 90%,
+            rgba(201,169,98,.08),
+            transparent 30%
+        ),
+
+        var(--bg);
+}
+
+
+button,
+input {
+    font: inherit;
+}
+
+
+button {
+    border: 0;
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+
+   INI YANG MENGIKUTI DEVICE.
+   
+   Isi tidak menentukan ukuran container.
+========================================================= */
+
+.auth-container {
+
+    position: relative;
+
+    width:
+        min(
+            94vw,
+            980px
+        );
+
+    height:
+        min(
+            84dvh,
+            680px
+        );
+
+    overflow: hidden;
+
+    background:
+        var(--surface);
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    border-radius:
+        var(--radius);
+
+    box-shadow:
+        0 35px 100px
+        rgba(0,0,0,.5),
+
+        0 0 0 1px
+        rgba(255,255,255,.015);
+
+    isolation: isolate;
+}
+
+
+/* =========================================================
+   TWO FORM AREAS
+========================================================= */
+
+.forms {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 1;
+
+    display: flex;
+
+    flex-direction: row;
+
+    width: 100%;
+    height: 100%;
+}
+
+
+/* =========================================================
+   FORM PANEL
+========================================================= */
+
+.form-panel {
+
+    position: relative;
+
+    flex:
+        0 0 50%;
+
+    width: 50%;
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        clamp(
+            14px,
+            4vw,
+            54px
+        );
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   CONTENT SCALE WRAPPER
+
+   JS akan mengubah scale:
+   0.75
+   0.85
+   1
+   dst.
+
+   sehingga yang berubah adalah ISINYA,
+   bukan kotak luarnya.
+========================================================= */
+
+.form-content-scale,
+.overlay-content-scale {
+
+    width: 100%;
+    height: auto;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    transform-origin:
+        center center;
+
+    will-change:
+        transform;
+}
+
+
+/* =========================================================
+   FORM CONTENT
+========================================================= */
+
+.form-content {
+
+    width: 100%;
+
+    max-width:
+        350px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   FORM KICKER
+========================================================= */
+
+.form-kicker {
+
+    display: block;
+
+    margin-bottom: 9px;
+
+    color:
+        var(--accent);
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing:
+        .17em;
+
+    text-transform:
+        uppercase;
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.form-content h1 {
+
+    margin-bottom: 10px;
+
+    font-size:
+        clamp(
+            28px,
+            4vw,
+            42px
+        );
+
+    line-height: 1.05;
+
+    letter-spacing:
+        -.045em;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.form-description {
+
+    margin-bottom: 25px;
+
+    color:
+        var(--text-soft);
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   FIELDS
+========================================================= */
+
+.field {
+
+    margin-bottom: 15px;
+}
+
+
+.field label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    color:
+        #aaa8b2;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+.field input {
+
+    display: block;
+
+    width: 100%;
+
+    height: 50px;
+
+    padding:
+        0 15px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    border-radius:
+        13px;
+
+    outline: none;
+
+    background:
+        #1d1d26;
+
+    color:
+        #ffffff;
+
+    font-size:
+        14px;
+
+    transition:
+        border-color .18s ease,
+        background .18s ease,
+        box-shadow .18s ease;
+}
+
+
+.field input::placeholder {
+    color: #5f5e69;
+}
+
+
+.field input:focus {
+
+    border-color:
+        rgba(201,169,98,.72);
+
+    background:
+        #20202a;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(201,169,98,.08);
+}
+
+
+/* =========================================================
+   SUBMIT
+========================================================= */
+
+.submit-btn {
+
+    width: 100%;
+
+    min-height:
+        52px;
+
+    margin-top: 6px;
+
+    border-radius:
+        14px;
+
+    cursor:
+        pointer;
+
+    color:
+        #17120c;
+
+    font-size:
+        13px;
+
+    font-weight:
+        900;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent-light),
+            var(--accent-dark)
+        );
+
+    box-shadow:
+        0 12px 30px
+        rgba(169,129,63,.2);
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease;
+}
+
+
+.submit-btn:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 17px 34px
+        rgba(169,129,63,.28);
+}
+
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   OVERLAY
+========================================================= */
+
+.overlay {
+
+    position: absolute;
+
+    top: 0;
+    right: 0;
+
+    width: 50%;
+    height: 100%;
+
+    z-index: 10;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        clamp(
+            14px,
+            4vw,
+            54px
+        );
+
+    text-align: center;
+
+    color: #fff;
+
+    background:
+
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(255,255,255,.17),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 90% 90%,
+            rgba(255,255,255,.08),
+            transparent 30%
+        ),
+
+        linear-gradient(
+            145deg,
+            #c9a962,
+            #8d6b36
+        );
+
+    box-shadow:
+        -18px 0 50px
+        rgba(0,0,0,.14);
+
+    transform:
+        translate3d(0,0,0);
+
+    transition:
+        transform
+        650ms
+        cubic-bezier(.77,0,.18,1);
+
+    touch-action:
+        none;
+
+    user-select:
+        none;
+
+    cursor:
+        grab;
+
+    will-change:
+        transform;
+}
+
+
+.overlay.dragging {
+    cursor:
+        grabbing;
+
+    transition:
+        none;
+}
+
+
+/* =========================================================
+   OVERLAY CONTENT
+========================================================= */
+
+.overlay-content {
+
+    width: 100%;
+
+    max-width:
+        320px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   BADGE
+========================================================= */
+
+.overlay-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height:
+        28px;
+
+    padding:
+        0 12px;
+
+    margin-bottom:
+        18px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.25);
+
+    border-radius:
+        999px;
+
+    background:
+        rgba(255,255,255,.09);
+
+    backdrop-filter:
+        blur(12px);
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        .15em;
+
+    text-transform:
+        uppercase;
+}
+
+
+/* =========================================================
+   OVERLAY TITLE
+========================================================= */
+
+.overlay h2 {
+
+    margin-bottom:
+        14px;
+
+    font-size:
+        clamp(
+            28px,
+            4vw,
+            40px
+        );
+
+    line-height:
+        1.04;
+
+    letter-spacing:
+        -.045em;
+}
+
+
+/* =========================================================
+   OVERLAY DESCRIPTION
+========================================================= */
+
+.overlay-description {
+
+    max-width:
+        320px;
+
+    margin:
+        0 auto 24px;
+
+    color:
+        rgba(255,255,255,.85);
+
+    font-size:
+        13px;
+
+    line-height:
+        1.7;
+}
+
+
+/* =========================================================
+   HINT
+========================================================= */
+
+.overlay-hint {
+
+    margin-bottom:
+        12px;
+
+    color:
+        rgba(255,255,255,.62);
+
+    font-size:
+        10px;
+
+    line-height:
+        1.5;
+}
+
+
+/* =========================================================
+   ARROW
+========================================================= */
+
+.arrow-btn {
+
+    width:
+        64px;
+
+    height:
+        64px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border:
+        1px solid
+        rgba(255,255,255,.35);
+
+    border-radius:
+        50%;
+
+    color:
+        #fff;
+
+    background:
+        rgba(255,255,255,.1);
+
+    backdrop-filter:
+        blur(12px);
+
+    cursor:
+        pointer;
+
+    font-size:
+        28px;
+
+    transition:
+        transform .2s ease,
+        background .2s ease;
+}
+
+
+.arrow-btn:hover {
+
+    transform:
+        scale(1.08);
+
+    background:
+        rgba(255,255,255,.18);
+}
+
+
+.arrow-btn:active {
+
+    transform:
+        scale(.96);
+}
+
+
+/* =========================================================
+   DESKTOP / TABLET
+========================================================= */
+
+@media (min-width: 701px) {
+
+    .auth-container.signup-open
+    .overlay {
+
+        transform:
+            translate3d(
+                -100%,
+                0,
+                0
+            );
+    }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (min-width: 701px)
+and (max-width: 1000px) {
+
+    .auth-container {
+
+        width:
+            min(
+                94vw,
+                900px
+            );
+
+        height:
+            min(
+                82dvh,
+                620px
+            );
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    body {
+
+        display:
+            flex;
+
+        align-items:
+            center;
+
+        justify-content:
+            center;
+
+        padding:
+            8px;
+
+        overflow:
+            hidden;
+    }
+
+
+    /*
+     * CONTAINER MENGIKUTI DEVICE.
+     *
+     * BUKAN ukuran isi.
+     */
+    .auth-container {
+
+        width:
+            min(
+                94vw,
+                480px
+            );
+
+        height:
+            min(
+                88dvh,
+                760px
+            );
+
+        margin:
+            0 auto;
+
+        border-radius:
+            clamp(
+                18px,
+                5vw,
+                25px
+            );
+    }
+
+
+    /* ---------------------------------------------
+       STACK FORM VERTICAL
+    --------------------------------------------- */
+
+    .forms {
+
+        flex-direction:
+            column;
+    }
+
+
+    .form-panel {
+
+        width:
+            100%;
+
+        height:
+            50%;
+
+        flex:
+            0 0 50%;
+
+        padding:
+            clamp(
+                12px,
+                5vw,
+                32px
+            );
+    }
+
+
+    /*
+     * Isi form hanya memenuhi
+     * ruang yang tersedia.
+     */
+    .form-content {
+
+        max-width:
+            380px;
+    }
+
+
+    /* ---------------------------------------------
+       OVERLAY VERTICAL
+    --------------------------------------------- */
+
+    .overlay {
+
+        top:
+            auto;
+
+        right:
+            0;
+
+        bottom:
+            0;
+
+        width:
+            100%;
+
+        height:
+            50%;
+
+        padding:
+            clamp(
+                12px,
+                5vw,
+                32px
+            );
+
+        transform:
+            translate3d(
+                0,
+                0,
+                0
+            );
+
+        box-shadow:
+            0 -20px 55px
+            rgba(0,0,0,.16);
+    }
+
+
+    /*
+     * Login -> Sign Up:
+     * panel bergerak ke ATAS
+     */
+    .auth-container.signup-open
+    .overlay {
+
+        transform:
+            translate3d(
+                0,
+                -100%,
+                0
+            );
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONE
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .auth-container {
+
+        width:
+            96vw;
+
+        height:
+            90dvh;
+    }
+
+
+    .form-panel,
+    .overlay {
+
+        padding:
+            10px;
+    }
+}
+
+
+/* =========================================================
+   LANDSCAPE PHONE
+========================================================= */
+
+@media (max-width: 700px)
+and (orientation: landscape) {
+
+    body {
+        padding:
+            6px;
+    }
+
+
+    .auth-container {
+
+        width:
+            min(
+                94vw,
+                820px
+            );
+
+        height:
+            94dvh;
+    }
+}
+
+
+/* =========================================================
+   FOCUS
+========================================================= */
+
+button:focus-visible,
+input:focus-visible {
+
+    outline:
+        2px solid
+        rgba(229,202,133,.85);
+
+    outline-offset:
+        3px;
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .overlay,
+    .arrow-btn,
+    .submit-btn,
+    .field input {
+
+        transition:
+            none !important;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     MAIN CONTAINER
+========================================================= -->
+
+<main
+    class="auth-container"
+    id="authContainer"
+>
+
+
+    <!-- =====================================================
+         TWO FORMS
+    ====================================================== -->
+
+    <div
+        class="forms"
+        id="forms"
+    >
+
+
+        <!-- ================================================
+             LOGIN
+        ================================================= -->
+
+        <section
+            class="form-panel"
+            id="loginPanel"
+        >
+
+            <div
+                class="form-content-scale"
+                id="loginScale"
+            >
+
+                <div
+                    class="form-content"
+                >
+
+                    <span class="form-kicker">
+                        Welcome Back
+                    </span>
+
+
+                    <h1>
+                        Login
+                    </h1>
+
+
+                    <p class="form-description">
+                        Masuk ke akun kamu dan
+                        lanjutkan perjalananmu.
+                    </p>
+
+
+                    <form
+                        id="loginForm"
+                    >
+
+                        <div class="field">
+
+                            <label
+                                for="loginEmail"
+                            >
+                                Email
+                            </label>
+
+                            <input
+                                id="loginEmail"
+                                type="email"
+                                autocomplete="email"
+                                placeholder="you@example.com"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label
+                                for="loginPassword"
+                            >
+                                Password
+                            </label>
+
+                            <input
+                                id="loginPassword"
+                                type="password"
+                                autocomplete="current-password"
+                                placeholder="••••••••"
+                                required
+                            >
+
+                        </div>
+
+
+                        <button
+                            class="submit-btn"
+                            type="submit"
+                        >
+                            Login
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================
+             SIGN UP
+        ================================================= -->
+
+        <section
+            class="form-panel"
+            id="signupPanel"
+        >
+
+            <div
+                class="form-content-scale"
+                id="signupScale"
+            >
+
+                <div
+                    class="form-content"
+                >
+
+                    <span class="form-kicker">
+                        New Account
+                    </span>
+
+
+                    <h1>
+                        Sign Up
+                    </h1>
+
+
+                    <p class="form-description">
+                        Buat akun baru dan mulai
+                        perjalanan trading kamu.
+                    </p>
+
+
+                    <form
+                        id="signupForm"
+                    >
+
+                        <div class="field">
+
+                            <label
+                                for="signupName"
+                            >
+                                Name
+                            </label>
+
+                            <input
+                                id="signupName"
+                                type="text"
+                                autocomplete="name"
+                                placeholder="Nama kamu"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label
+                                for="signupEmail"
+                            >
+                                Email
+                            </label>
+
+                            <input
+                                id="signupEmail"
+                                type="email"
+                                autocomplete="email"
+                                placeholder="you@example.com"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label
+                                for="signupPassword"
+                            >
+                                Password
+                            </label>
+
+                            <input
+                                id="signupPassword"
+                                type="password"
+                                autocomplete="new-password"
+                                placeholder="••••••••"
+                                required
+                            >
+
+                        </div>
+
+
+                        <button
+                            class="submit-btn"
+                            type="submit"
+                        >
+                            Sign Up
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- =====================================================
+         OVERLAY
+         
+         DEFAULT:
+         Menutup SIGN UP
+    ====================================================== -->
+
+    <aside
+        class="overlay"
+        id="overlay"
+    >
+
+        <div
+            class="overlay-content-scale"
+            id="overlayScale"
+        >
+
+            <div
+                class="overlay-content"
+            >
+
+                <div
+                    class="overlay-badge"
+                >
+                    Trazeel Auth
+                </div>
+
+
+                <h2
+                    id="overlayTitle"
+                >
+                    Welcome Back
+                </h2>
+
+
+                <p
+                    class="overlay-description"
+                    id="overlayDescription"
+                >
+                    Sudah punya akun?
+                    Masuk dan lanjutkan
+                    perjalananmu.
+                </p>
+
+
+                <p class="overlay-hint">
+                    Geser panel atau tekan
+                    tombol panah untuk berpindah.
+                </p>
+
+
+                <button
+                    class="arrow-btn"
+                    id="arrowBtn"
+                    type="button"
+                    aria-label="Open sign up"
+                >
+                    →
+                </button>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+</main>
+
+
+<script>
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const authContainer =
+    document.getElementById(
+        "authContainer"
+    );
+
+
+const loginPanel =
+    document.getElementById(
+        "loginPanel"
+    );
+
+
+const signupPanel =
+    document.getElementById(
+        "signupPanel"
+    );
+
+
+const loginScale =
+    document.getElementById(
+        "loginScale"
+    );
+
+
+const signupScale =
+    document.getElementById(
+        "signupScale"
+    );
+
+
+const overlay =
+    document.getElementById(
+        "overlay"
+    );
+
+
+const overlayScale =
+    document.getElementById(
+        "overlayScale"
+    );
+
+
+const arrowBtn =
+    document.getElementById(
+        "arrowBtn"
+    );
+
+
+const overlayTitle =
+    document.getElementById(
+        "overlayTitle"
+    );
+
+
+const overlayDescription =
+    document.getElementById(
+        "overlayDescription"
+    );
+
+
+const loginForm =
+    document.getElementById(
+        "loginForm"
+    );
+
+
+const signupForm =
+    document.getElementById(
+        "signupForm"
+    );
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let signupOpen = false;
+
+let dragging = false;
+
+let didDrag = false;
+
+let pointerStartX = 0;
+
+let pointerStartY = 0;
+
+let overlayStartX = 0;
+
+let overlayStartY = 0;
+
+let resizeTimer = null;
+
+
+/*
+ * Minimum swipe distance.
+ */
+const SWIPE_THRESHOLD = 75;
+
+
+/* =========================================================
+   MOBILE CHECK
+========================================================= */
+
+function isMobile() {
+
+    return window.matchMedia(
+        "(max-width: 700px)"
+    ).matches;
+
+}
+
+
+/* =========================================================
+   UPDATE OVERLAY TEXT
+========================================================= */
+
+function updateOverlayContent() {
+
+    if (signupOpen) {
+
+        overlayTitle.textContent =
+            "Create Account";
+
+
+        overlayDescription.textContent =
+            "Belum punya akun? Daftar sekarang dan mulai perjalananmu.";
+
+
+        arrowBtn.textContent =
+            "←";
+
+
+        arrowBtn.setAttribute(
+            "aria-label",
+            "Back to login"
+        );
+
+    } else {
+
+        overlayTitle.textContent =
+            "Welcome Back";
+
+
+        overlayDescription.textContent =
+            "Sudah punya akun? Masuk dan lanjutkan perjalananmu.";
+
+
+        arrowBtn.textContent =
+            "→";
+
+
+        arrowBtn.setAttribute(
+            "aria-label",
+            "Open sign up"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SET STATE CLASS
+========================================================= */
+
+function applyState(
+    animate = true
+) {
+
+    if (!animate) {
+
+        const oldTransition =
+            overlay.style.transition;
+
+
+        overlay.style.transition =
+            "none";
+
+
+        authContainer.classList.toggle(
+            "signup-open",
+            signupOpen
+        );
+
+
+        requestAnimationFrame(
+            () => {
+
+                requestAnimationFrame(
+                    () => {
+
+                        overlay.style.transition =
+                            oldTransition;
+
+                    }
+                );
+
+            }
+        );
+
+    } else {
+
+        authContainer.classList.toggle(
+            "signup-open",
+            signupOpen
+        );
+
+    }
+
+
+    updateOverlayContent();
+
+}
+
+
+/* =========================================================
+   SCALE CONTENT TO AVAILABLE SPACE
+========================================================= */
+
+/*
+ * Ini inti dari responsive yang lu minta.
+ *
+ * Container:
+ *      mengikuti ukuran device
+ *
+ * Content:
+ *      dihitung dari ruang yang tersedia
+ *      lalu di-scale.
+ *
+ * Jadi:
+ *
+ * HP kecil
+ *   -> isi mengecil
+ *
+ * HP besar
+ *   -> isi membesar
+ *
+ * Desktop
+ *   -> isi normal
+ */
+
+function scaleContentToPanel(
+    panel,
+    scaleElement
+) {
+
+    if (!panel || !scaleElement) {
+        return;
+    }
+
+
+    /*
+     * Reset scale sementara.
+     */
+    scaleElement.style.transform =
+        "scale(1)";
+
+
+    /*
+     * Pastikan browser sudah
+     * memperbarui layout.
+     */
+    void scaleElement.offsetWidth;
+
+
+    /*
+     * Ukuran area panel.
+     */
+    const availableWidth =
+        panel.clientWidth;
+
+
+    const availableHeight =
+        panel.clientHeight;
+
+
+    /*
+     * Ukuran asli content.
+     */
+    const contentWidth =
+        scaleElement.scrollWidth;
+
+
+    const contentHeight =
+        scaleElement.scrollHeight;
+
+
+    if (
+        availableWidth <= 0 ||
+        availableHeight <= 0 ||
+        contentWidth <= 0 ||
+        contentHeight <= 0
+    ) {
+
+        return;
+    }
+
+
+    /*
+     * Sisakan sedikit ruang aman
+     * supaya tidak menempel tepi.
+     */
+    const safeWidth =
+        availableWidth * 0.88;
+
+
+    const safeHeight =
+        availableHeight * 0.88;
+
+
+    /*
+     * Hitung scale horizontal
+     * dan vertical.
+     */
+    const widthScale =
+        safeWidth /
+        contentWidth;
+
+
+    const heightScale =
+        safeHeight /
+        contentHeight;
+
+
+    /*
+     * Ambil yang paling membatasi.
+     *
+     * Maksimum 1:
+     * isi tidak akan dibesarkan
+     * melebihi ukuran naturalnya.
+     */
+    const scale =
+        Math.min(
+            1,
+            widthScale,
+            heightScale
+        );
+
+
+    /*
+     * Jangan biarkan terlalu kecil.
+     *
+     * Kalau layar terlalu kecil,
+     * tetap ada batas minimum agar
+     * interaksi masih nyaman.
+     */
+    const finalScale =
+        Math.max(
+            0.62,
+            scale
+        );
+
+
+    scaleElement.style.transform =
+        `scale(${finalScale})`;
+}
+
+
+/* =========================================================
+   SCALE ALL CONTENT
+========================================================= */
+
+function resizeInnerContent() {
+
+    /*
+     * Tunggu layout selesai.
+     */
+    requestAnimationFrame(
+        () => {
+
+            scaleContentToPanel(
+                loginPanel,
+                loginScale
+            );
+
+
+            scaleContentToPanel(
+                signupPanel,
+                signupScale
+            );
+
+
+            /*
+             * Overlay juga ikut scale.
+             */
+            scaleContentToPanel(
+                overlay,
+                overlayScale
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TOGGLE AUTH
+========================================================= */
+
+function toggleAuth() {
+
+    signupOpen =
+        !signupOpen;
+
+
+    applyState(true);
+
+
+    resizeInnerContent();
+
+}
+
+
+/* =========================================================
+   ARROW CLICK
+========================================================= */
+
+arrowBtn.addEventListener(
+    "click",
+    function(event) {
+
+        event.stopPropagation();
+
+
+        /*
+         * Kalau sebelumnya merupakan drag,
+         * jangan toggle dua kali.
+         */
+        if (didDrag) {
+
+            didDrag =
+                false;
+
+            return;
+        }
+
+
+        toggleAuth();
+
+    }
+);
+
+
+/* =========================================================
+   POINTER DOWN
+========================================================= */
+
+overlay.addEventListener(
+    "pointerdown",
+    function(event) {
+
+        /*
+         * Panah ditangani sendiri.
+         */
+        if (
+            event.target.closest(
+                ".arrow-btn"
+            )
+        ) {
+
+            return;
+        }
+
+
+        dragging =
+            true;
+
+
+        didDrag =
+            false;
+
+
+        pointerStartX =
+            event.clientX;
+
+
+        pointerStartY =
+            event.clientY;
+
+
+        /*
+         * Posisi awal panel.
+         */
+
+        if (isMobile()) {
+
+            overlayStartY =
+                signupOpen
+                    ? -overlay.offsetHeight
+                    : 0;
+
+        } else {
+
+            overlayStartX =
+                signupOpen
+                    ? -overlay.offsetWidth
+                    : 0;
+
+        }
+
+
+        overlay.classList.add(
+            "dragging"
+        );
+
+
+        try {
+
+            overlay.setPointerCapture(
+                event.pointerId
+            );
+
+        } catch (error) {
+
+            /*
+             * Aman diabaikan.
+             */
+        }
+
+    }
+);
+
+
+/* =========================================================
+   POINTER MOVE
+========================================================= */
+
+overlay.addEventListener(
+    "pointermove",
+    function(event) {
+
+        if (!dragging) {
+            return;
+        }
+
+
+        const deltaX =
+            event.clientX -
+            pointerStartX;
+
+
+        const deltaY =
+            event.clientY -
+            pointerStartY;
+
+
+        if (
+            Math.abs(deltaX) > 7 ||
+            Math.abs(deltaY) > 7
+        ) {
+
+            didDrag =
+                true;
+        }
+
+
+        /* ================================================
+           MOBILE
+        ================================================= */
+
+        if (isMobile()) {
+
+            let nextY =
+                overlayStartY +
+                deltaY;
+
+
+            const distance =
+                overlay.offsetHeight;
+
+
+            const minY =
+                -distance;
+
+
+            const maxY =
+                0;
+
+
+            nextY =
+                Math.max(
+                    minY,
+                    Math.min(
+                        maxY,
+                        nextY
+                    )
+                );
+
+
+            overlay.style.transform =
+                `translate3d(
+                    0,
+                    ${nextY}px,
+                    0
+                )`;
+
+
+            return;
+        }
+
+
+        /* ================================================
+           DESKTOP / TABLET
+        ================================================= */
+
+        let nextX =
+            overlayStartX +
+            deltaX;
+
+
+        const distance =
+            overlay.offsetWidth;
+
+
+        const minX =
+            -distance;
+
+
+        const maxX =
+            0;
+
+
+        nextX =
+            Math.max(
+                minX,
+                Math.min(
+                    maxX,
+                    nextX
+                )
+            );
+
+
+        overlay.style.transform =
+            `translate3d(
+                ${nextX}px,
+                0,
+                0
+            )`;
+
+    }
+);
+
+
+/* =========================================================
+   FINISH DRAG
+========================================================= */
+
+function finishDrag(event) {
+
+    if (!dragging) {
+        return;
+    }
+
+
+    dragging =
+        false;
+
+
+    overlay.classList.remove(
+        "dragging"
+    );
+
+
+    const deltaX =
+        event.clientX -
+        pointerStartX;
+
+
+    const deltaY =
+        event.clientY -
+        pointerStartY;
+
+
+    /* ================================================
+       MOBILE
+    ================================================= */
+
+    if (isMobile()) {
+
+        /*
+         * Swipe UP
+         * Login -> Sign Up
+         */
+        if (
+            !signupOpen &&
+            deltaY <
+                -SWIPE_THRESHOLD
+        ) {
+
+            signupOpen =
+                true;
+        }
+
+
+        /*
+         * Swipe DOWN
+         * Sign Up -> Login
+         */
+        else if (
+            signupOpen &&
+            deltaY >
+                SWIPE_THRESHOLD
+        ) {
+
+            signupOpen =
+                false;
+        }
+
+    }
+
+
+    /* ================================================
+       DESKTOP / TABLET
+    ================================================= */
+
+    else {
+
+        /*
+         * Swipe LEFT
+         * Login -> Sign Up
+         */
+        if (
+            !signupOpen &&
+            deltaX <
+                -SWIPE_THRESHOLD
+        ) {
+
+            signupOpen =
+                true;
+        }
+
+
+        /*
+         * Swipe RIGHT
+         * Sign Up -> Login
+         */
+        else if (
+            signupOpen &&
+            deltaX >
+                SWIPE_THRESHOLD
+        ) {
+
+            signupOpen =
+                false;
+        }
+
+    }
+
+
+    /*
+     * Hapus transform manual.
+     */
+    overlay.style.transform =
+        "";
+
+
+    applyState(true);
+
+
+    resizeInnerContent();
+
+
+    try {
+
+        overlay.releasePointerCapture(
+            event.pointerId
+        );
+
+    } catch (error) {
+
+        /*
+         * Aman diabaikan.
+         */
+    }
+
+}
+
+
+overlay.addEventListener(
+    "pointerup",
+    finishDrag
+);
+
+
+/* =========================================================
+   POINTER CANCEL
+========================================================= */
+
+overlay.addEventListener(
+    "pointercancel",
+    function(event) {
+
+        dragging =
+            false;
+
+
+        overlay.classList.remove(
+            "dragging"
+        );
+
+
+        overlay.style.transform =
+            "";
+
+
+        applyState(false);
+
+
+        resizeInnerContent();
+
+
+        try {
+
+            overlay.releasePointerCapture(
+                event.pointerId
+            );
+
+        } catch (error) {
+
+            /*
+             * Aman diabaikan.
+             */
+        }
+
+    }
+);
+
+
+/* =========================================================
+   RESIZE / ROTATE
+========================================================= */
+
+function handleResize() {
+
+    clearTimeout(
+        resizeTimer
+    );
+
+
+    resizeTimer =
+        setTimeout(
+            function() {
+
+                /*
+                 * Kembalikan transform
+                 * manual dari gesture.
+                 */
+                overlay.style.transform =
+                    "";
+
+
+                /*
+                 * Recalculate ukuran
+                 * isi terhadap device baru.
+                 */
+                resizeInnerContent();
+
+
+                /*
+                 * Pastikan state overlay
+                 * benar.
+                 */
+                applyState(false);
+
+            },
+            80
+        );
+
+}
+
+
+window.addEventListener(
+    "resize",
+    handleResize
+);
+
+
+window.addEventListener(
+    "orientationchange",
+    handleResize
+);
+
+
+/* =========================================================
+   FONT LOAD
+========================================================= */
+
+if (
+    document.fonts &&
+    document.fonts.ready
+) {
+
+    document.fonts.ready.then(
+        () => {
+
+            resizeInnerContent();
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   FORM DEMO
+========================================================= */
+
+loginForm.addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        alert(
+            "Login form submitted."
+        );
+
+    }
+);
+
+
+signupForm.addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        alert(
+            "Sign Up form submitted."
+        );
+
+    }
+);
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+function initialize() {
+
+    signupOpen =
+        false;
+
+
+    updateOverlayContent();
+
+
+    applyState(false);
+
+
+    resizeInnerContent();
+
+}
+
+
+/*
+ * Jalankan setelah halaman selesai.
+ */
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initialize,
+        {
+            once: true
+        }
+    );
+
+} else {
+
+    initialize();
+
+}
+
+</script>
+
+</body>
+</html>
