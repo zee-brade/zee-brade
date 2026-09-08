@@ -511,7 +511,7 @@ button, .feature-card, .setting-button, .journal-card { -webkit-tap-highlight-co
     border-radius:14px; background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.05);
 }
 .psych-row-main { display:flex; align-items:center; gap:9px; min-width:0; }
-.psych-emoji { font-size:17px; }
+.psych-emoji { width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto; } .psych-emoji svg { width:22px; height:22px; display:block; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
 .psych-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .psych-name strong { display:block; font-size:11px; }
 .psych-name span { display:block; margin-top:3px; color:var(--text-muted); font-size:8px; }
@@ -792,6 +792,9 @@ button, .feature-card, .setting-button, .journal-card { -webkit-tap-highlight-co
     transition:all var(--transition);
 }
 .feel-choice span { font-size:20px; }
+.feel-choice .feel-icon { display:grid; place-items:center; width:22px; height:22px; }
+.feel-choice .feel-icon svg, .ui-icon svg { width:1em; height:1em; display:block; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.ui-icon { display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; vertical-align:-4px; flex:0 0 auto; }
 .feel-choice strong { font-size:8px; }
 .feel-choice.selected { color:#f3efe6; background:var(--accent-soft); border-color:rgba(201,169,104,.38); box-shadow:0 0 0 1px rgba(201,169,104,.05) inset; }
 
@@ -824,7 +827,8 @@ button, .feature-card, .setting-button, .journal-card { -webkit-tap-highlight-co
     display:flex; gap:10px; padding:13px; margin-bottom:15px; border-radius:16px;
     background:rgba(201,169,104,.06); border:1px solid rgba(201,169,104,.10);
 }
-.locked-notice > span { font-size:16px; }
+.locked-notice > span { font-size:16px; display:inline-flex; align-items:center; justify-content:center; }
+.locked-notice > span .ui-icon { width:17px; height:17px; vertical-align:0; }
 .locked-notice strong { display:block; font-size:10px; }
 .locked-notice p { margin-top:3px; color:var(--text-muted); font-size:9px; line-height:1.5; }
 
@@ -968,7 +972,7 @@ button, .feature-card, .setting-button, .journal-card { -webkit-tap-highlight-co
 .calendar-symbol { display:inline-grid; place-items:center; }
 .calendar-symbol > svg { width:15px; height:15px; }
 .insight-icon > svg { width:22px; height:22px; }
-.psychology-face > svg { width:32px; height:32px; }
+.psychology-face > svg { width:32px; height:32px; display:block; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
 .choice-icon > svg { width:21px; height:21px; }
 .nav-icon svg { fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
 .notification-dot { z-index:2; }
@@ -1592,3 +1596,319 @@ body[data-theme="light"] .intro-content .trazeel-logo-img {
 @media (prefers-reduced-motion: reduce) {
   .auth-gate-screen .border-star,.auth-gate-screen .arrow-btn,.auth-gate-screen .arrow-btn::before,.auth-gate-screen .overlay,.auth-gate-screen .submit-btn,.auth-gate-screen .field input,.auth-gate-screen .form-panel { animation:none !important; transition:none !important; }
 }
+
+
+/* =========================================================
+   FINAL PROFILE CARD REDESIGN
+   The separate cover/header is removed visually. The entire
+   profile is now a single premium surface.
+========================================================= */
+
+.social-profile-cover {
+    display: none !important;
+    height: 0 !important;
+    background: none !important;
+}
+
+.social-profile-card {
+    position: relative !important;
+    overflow: hidden !important;
+    isolation: isolate !important;
+    margin-top: 2px !important;
+    border: 1px solid rgba(201,169,104,.22) !important;
+    border-radius: 28px !important;
+    background:
+        radial-gradient(circle at 88% 10%, rgba(232,205,148,.20), transparent 24%),
+        radial-gradient(circle at 8% 90%, rgba(156,124,66,.16), transparent 29%),
+        radial-gradient(circle at 55% 42%, rgba(255,255,255,.022), transparent 42%),
+        linear-gradient(145deg, #1b1917 0%, #121216 52%, #1a1612 100%) !important;
+    box-shadow:
+        0 24px 70px rgba(0,0,0,.34),
+        inset 0 1px 0 rgba(255,255,255,.045) !important;
+}
+
+.social-profile-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 78% 20%, rgba(232,205,148,.09), transparent 23%),
+        radial-gradient(circle at 16% 78%, rgba(201,169,104,.07), transparent 25%);
+}
+
+.social-profile-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(232,205,148,.50),
+        rgba(255,255,255,.12),
+        rgba(232,205,148,.50),
+        transparent
+    );
+}
+
+.social-profile-body {
+    position: relative !important;
+    z-index: 2 !important;
+    padding: 24px 20px 20px !important;
+}
+
+.social-profile-top {
+    display: flex !important;
+    align-items: flex-end !important;
+    gap: 14px !important;
+    margin-top: 0 !important;
+}
+
+.social-avatar {
+    position: relative !important;
+    width: 82px !important;
+    height: 82px !important;
+    flex: 0 0 auto !important;
+    border-radius: 24px !important;
+    border: 3px solid rgba(248,243,233,.95) !important;
+    background: linear-gradient(135deg, rgba(201,169,104,.97), rgba(232,205,148,.88)) !important;
+    box-shadow:
+        0 16px 34px rgba(0,0,0,.30),
+        0 0 0 1px rgba(255,255,255,.04) !important;
+}
+
+.social-avatar .avatar-edit-badge {
+    border-color: #171615 !important;
+    box-shadow: 0 8px 18px rgba(0,0,0,.28) !important;
+}
+
+.social-profile-copy {
+    min-width: 0 !important;
+    flex: 1 !important;
+    padding-bottom: 4px !important;
+}
+
+.social-profile-copy h1 {
+    margin-top: 5px !important;
+    font-size: 25px !important;
+    letter-spacing: -.045em !important;
+    text-shadow: 0 2px 18px rgba(0,0,0,.16) !important;
+}
+
+.social-profile-copy p:last-child {
+    margin-top: 4px !important;
+    color: #aaa297 !important;
+    font-size: 11px !important;
+}
+
+.profile-edit-btn {
+    margin-bottom: 5px !important;
+    min-height: 36px !important;
+    padding: 0 13px !important;
+    color: var(--text) !important;
+    background: rgba(255,255,255,.045) !important;
+    border: 1px solid rgba(201,169,104,.18) !important;
+    border-radius: 11px !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+
+.profile-bio {
+    max-width: 590px !important;
+    margin: 15px 0 0 96px !important;
+    color: #b0aaa0 !important;
+    font-size: 12px !important;
+    line-height: 1.6 !important;
+}
+
+.profile-stats {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    margin-top: 17px !important;
+    padding-top: 15px !important;
+    border-top: 1px solid rgba(255,255,255,.07) !important;
+}
+
+.profile-stats div {
+    min-width: 0 !important;
+    padding: 12px 8px !important;
+    text-align: center !important;
+    border: 1px solid rgba(201,169,104,.08) !important;
+    border-radius: 15px !important;
+    background: linear-gradient(
+        180deg,
+        rgba(255,255,255,.034),
+        rgba(255,255,255,.014)
+    ) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+
+.profile-stats strong {
+    display: block !important;
+    font-size: 15px !important;
+    letter-spacing: -.02em !important;
+}
+
+.profile-stats span {
+    display: block !important;
+    margin-top: 4px !important;
+    color: #817a70 !important;
+    font-size: 8px !important;
+    text-transform: uppercase !important;
+    letter-spacing: .08em !important;
+}
+
+/* Override old cover animation rules from the motion system. */
+.social-profile-card .social-profile-cover {
+    display: none !important;
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+}
+
+/* The old profile animation stays, but now applies only to real content. */
+.social-profile-card .social-avatar {
+    opacity: 0;
+    animation: premiumScale 720ms var(--motion-ease) 300ms both;
+}
+.social-profile-card .social-profile-copy {
+    opacity: 0;
+    animation: premiumSlideLeft 680ms var(--motion-ease) 360ms both;
+}
+.social-profile-card .profile-bio {
+    opacity: 0;
+    animation: premiumFadeUp 650ms var(--motion-ease) 440ms both;
+}
+.social-profile-card .profile-stats {
+    opacity: 0;
+    animation: premiumFadeUp 650ms var(--motion-ease) 520ms both;
+}
+
+/* Light appearance */
+body[data-theme="light"] .social-profile-card {
+    border-color: rgba(169,129,63,.20) !important;
+    background:
+        radial-gradient(circle at 88% 10%, rgba(232,205,148,.24), transparent 24%),
+        radial-gradient(circle at 8% 90%, rgba(169,129,63,.10), transparent 29%),
+        radial-gradient(circle at 55% 42%, rgba(255,255,255,.38), transparent 42%),
+        linear-gradient(145deg, #fffaf0 0%, #fffdf8 52%, #f5eee2 100%) !important;
+    box-shadow:
+        0 24px 70px rgba(58,46,26,.12),
+        inset 0 1px 0 rgba(255,255,255,.80) !important;
+}
+
+body[data-theme="light"] .social-profile-card::before {
+    background:
+        radial-gradient(circle at 78% 20%, rgba(201,169,104,.10), transparent 23%),
+        radial-gradient(circle at 16% 78%, rgba(169,129,63,.06), transparent 25%);
+}
+
+body[data-theme="light"] .social-profile-card::after {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(169,129,63,.38),
+        rgba(169,129,63,.10),
+        rgba(169,129,63,.38),
+        transparent
+    );
+}
+
+body[data-theme="light"] .social-avatar {
+    border-color: #fffdf8 !important;
+    box-shadow:
+        0 16px 34px rgba(74,58,26,.14),
+        0 0 0 1px rgba(169,129,63,.07) !important;
+}
+
+body[data-theme="light"] .social-avatar .avatar-edit-badge {
+    border-color: #fffdf8 !important;
+}
+
+body[data-theme="light"] .social-profile-copy p:last-child {
+    color: #8c8272 !important;
+}
+
+body[data-theme="light"] .profile-edit-btn {
+    background: rgba(255,255,255,.68) !important;
+    border-color: rgba(169,129,63,.15) !important;
+}
+
+body[data-theme="light"] .profile-bio {
+    color: #6b6154 !important;
+}
+
+body[data-theme="light"] .profile-stats {
+    border-top-color: rgba(35,31,25,.07) !important;
+}
+
+body[data-theme="light"] .profile-stats div {
+    border-color: rgba(169,129,63,.10) !important;
+    background: linear-gradient(
+        180deg,
+        rgba(255,255,255,.78),
+        rgba(246,240,228,.78)
+    ) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.82) !important;
+}
+
+body[data-theme="light"] .profile-stats span {
+    color: #8c8272 !important;
+}
+
+@media (max-width: 560px) {
+    .social-profile-body {
+        padding: 20px 15px 17px !important;
+    }
+
+    .social-profile-top {
+        align-items: flex-end !important;
+    }
+
+    .profile-bio {
+        margin-left: 0 !important;
+    }
+
+    .profile-edit-btn {
+        margin-left: auto !important;
+    }
+
+    .profile-stats {
+        gap: 7px !important;
+    }
+
+    .profile-stats div {
+        padding: 10px 6px !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .social-profile-card,
+    .social-profile-card *,
+    .social-profile-card::before,
+    .social-profile-card::after {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .social-profile-card .social-avatar,
+    .social-profile-card .social-profile-copy,
+    .social-profile-card .profile-bio,
+    .social-profile-card .profile-stats {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+    }
+}
+
+.detail-value-with-icon { display:flex; align-items:center; gap:7px; }
+.detail-feel-icon { width:17px; height:17px; vertical-align:0; }
+.detail-feel-icon svg { width:17px; height:17px; display:block; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
