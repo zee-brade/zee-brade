@@ -306,12 +306,12 @@ async function handleSupabaseSignOut() {
 }
 
 const FEEL_META = {
-    calm: { label: "Calm", emoji: "😎" },
-    neutral: { label: "Neutral", emoji: "😐" },
-    fear: { label: "Fear", emoji: "😨" },
-    revenge: { label: "Revenge", emoji: "😤" },
-    overconfident: { label: "Overconfident", emoji: "🔥" },
-    anxious: { label: "Anxious", emoji: "😰" }
+    calm: { label: "Calm", icon: "calm" },
+    neutral: { label: "Neutral", icon: "neutral" },
+    fear: { label: "Fear", icon: "fear" },
+    revenge: { label: "Revenge", icon: "revenge" },
+    overconfident: { label: "Overconfident", icon: "overconfident" },
+    anxious: { label: "Anxious", icon: "anxious" }
 };
 
 const state = {
@@ -1952,7 +1952,7 @@ function handleJournalSubmit(
     );
 
     showToast(
-        "Journal berhasil ditambahkan dan dikunci. 🔒"
+        "Journal berhasil ditambahkan dan dikunci."
     );
 }
 
@@ -2531,7 +2531,7 @@ function renderJournalCard(
                 </span>
 
                 <strong>
-                    Tap to view • <span aria-hidden="true">🔒</span>
+                    Tap to view • <span class="ui-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v2"></path></svg></span>
                 </strong>
             </div>
         </button>
@@ -2713,13 +2713,10 @@ function openJournalDetail(id) {
                 journal.method
             )}
 
-            ${detailGroup(
+            ${detailGroupWithIcon(
                 "Feel",
-                `${getFeelEmoji(
-                    journal.feel
-                )} ${formatFeelLabel(
-                    journal.feel
-                )}`
+                getFeelEmoji(journal.feel),
+                formatFeelLabel(journal.feel)
             )}
         </div>
     `;
@@ -2755,6 +2752,28 @@ function openJournalDetail(id) {
         .innerHTML = html;
 
     openModal(detailModal);
+}
+
+function detailGroupWithIcon(
+    label,
+    iconHtml,
+    value,
+    extraClass = ""
+) {
+    return `
+        <div
+            class="detail-group ${extraClass}"
+        >
+            <span>
+                ${escapeHTML(label)}
+            </span>
+
+            <strong class="detail-value-with-icon">
+                <span class="ui-icon detail-feel-icon" aria-hidden="true">${iconHtml}</span>
+                ${escapeHTML(String(value ?? "-"))}
+            </strong>
+        </div>
+    `;
 }
 
 function detailGroup(
@@ -3507,7 +3526,7 @@ function renderPsychologyProfile() {
             feel
         );
 
-    psychologyFace.textContent =
+    psychologyFace.innerHTML =
         getFeelEmoji(feel);
 
     profilePsychologyNote.textContent =
@@ -4313,11 +4332,15 @@ function formatFeelLabel(
 function getFeelEmoji(
     feel
 ) {
-    return (
-        FEEL_META[feel]
-            ?.emoji ||
-        ""
-    );
+    const icons = {
+        calm: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 14.5c.9 1.1 2 1.5 3.5 1.5s2.6-.4 3.5-1.5M9 10h.01M15 10h.01"></path></svg>',
+        neutral: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 14h7M9 10h.01M15 10h.01"></path></svg>',
+        fear: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 15.5c1-1 2-1.5 3.5-1.5s2.5.5 3.5 1.5M9 10h.01M15 10h.01"></path></svg>',
+        revenge: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8 9.5l2 1M16 9.5l-2 1M8.5 15h7M7 6l2 1M17 6l-2 1"></path></svg>',
+        overconfident: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.2 3.5c.9 3.4-1.9 4.4-1.2 7.1.4-1.2 1.4-2.2 2.7-2.8.6 1.8 2.8 3 2.8 6a4.5 4.5 0 1 1-8.9 0c0-2.3 1.2-4.1 2.8-5.7-.1 2 .4 2.9 1.2 3.5.1-2.5.2-4.8-2-6.9 1.1.3 2.1 1 2.6 1.8z"></path></svg>',
+        anxious: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 15.5c1.1-.8 2.1-1.2 3.5-1.2s2.4.4 3.5 1.2M9 10h.01M15 10h.01M8 6.5l1.2 1M16 6.5l-1.2 1"></path></svg>'
+    };
+    return icons[feel] || "";
 }
 
 function capitalize(
@@ -4993,7 +5016,7 @@ function renderNotificationCenter() {
     if (!filtered.length) {
         list.innerHTML = `
             <div class="notification-empty">
-                <div class="notification-empty-icon">✓</div>
+                <div class="notification-empty-icon ui-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m6.5 12.5 3.5 3.5 7.5-8"></path></svg></div>
                 <strong>Nothing new here.</strong>
                 <p>
                     ${
