@@ -4,7 +4,7 @@ const $$ = (s, root=document) => [...root.querySelectorAll(s)];
 const state = {
   route: "home",
   shots: 1,
-  size: "4:3",
+  size: "4:5",
   filter: "Original",
   background: "Ivory",
   countdown: 3,
@@ -18,7 +18,6 @@ const state = {
   gestureBlur: false,
   shareData: null,
   currentSessionId: null,
-  handTick: 0,
   gestureHits: 0,
   handsTimer: null,
   handsLoading: false,
@@ -126,6 +125,9 @@ function soundShutter(){soundTone(900,.055,"square",.022); setTimeout(()=>soundT
 function soundWhoosh(){soundTone(180,.18,"sawtooth",.012);setTimeout(()=>soundTone(310,.22,"sine",.01),60)}
 
 async function initCameraPage(){
+  if(state.captures.length && state.captures.length>=state.shots){
+    state.captures=[]; state.finalBlob=null; state.finalDataUrl=null;
+  }
   setupShotCount(); updateCameraControls(); renderCaptureSlots();
   const stage=$('#camera-stage'); stage.className=`camera-stage glass ${sizeClass(state.size)}`;
   state.gestureHits=0;
@@ -156,7 +158,7 @@ async function startCamera(){
     fallback.style.display='grid';
     fallback.querySelector('span').textContent='Camera permission needed';
     fallback.querySelector('p').textContent='Allow camera access, then reload or try again.';
-    updateStatus('Camera blocked');
+    updateStatus('Camera blocked',false);
   }
 }
 function stopCameraIfLeaving(route){
@@ -169,7 +171,7 @@ function stopCameraIfLeaving(route){
     setGesture(false);
   }
 }
-function updateStatus(text){$('#status-text').textContent=text;}
+function updateStatus(text,ok=true){$('#status-text').textContent=text;$('#status-dot')?.classList.toggle('status-dot--warn',!ok);}
 function loadScriptOnce(src){
   return new Promise((resolve,reject)=>{
     const found=document.querySelector(`script[data-src="${src}"]`);
@@ -305,7 +307,6 @@ async function openEditor(){
   navigate('editor'); state.frameIndex=0; state.finalBlob=null; state.finalDataUrl=null;
   await sleep(160); renderFrameChoices(); await renderFinal();
 }
-function frameCount(){return FRAME_STYLES.length*state.shots}
 function renderFrameChoices(){
   const grid=$("#frame-grid");grid.innerHTML="";
   FRAME_STYLES.forEach((style,si)=>{const c=document.createElement("button");c.className="frame-choice";const canvas=document.createElement("canvas");canvas.width=170;canvas.height=Math.round(170/frameAspect());renderFrame(canvas.getContext("2d"),canvas.width,canvas.height,si,state.captures);c.appendChild(canvas);const sm=document.createElement("small");sm.textContent=style.name;c.appendChild(sm);c.onclick=()=>{state.frameIndex=si;renderFrameChoices();renderFinal()};if(si===state.frameIndex)c.classList.add("active");grid.appendChild(c)})
@@ -394,10 +395,17 @@ async function refreshFrame(){renderFrameChoices();await renderFinal()}
 
 function storageKey(){return "photobooth-history-v1"}
 function getHistory(){try{return JSON.parse(localStorage.getItem(storageKey())||"[]")}catch(e){return[]}}
-function setHistory(items){localStorage.setItem(storageKey(),JSON.stringify(items.slice(0,30)))}
+function setHistory(items){
+  try{localStorage.setItem(storageKey(),JSON.stringify(items.slice(0,30)));return true}
+  catch(e){
+    try{localStorage.setItem(storageKey(),JSON.stringify(items.slice(0,8)));return true}
+    catch(e2){return false}
+  }
+}
 function saveFinalToHistory(){
-  if(!state.finalDataUrl)return;
-  const items=getHistory();items.unshift({id:randomId(),dataUrl:state.finalDataUrl,shots:state.shots,size:state.size,frame:FRAME_STYLES[state.frameIndex].name,createdAt:new Date().toISOString()});setHistory(items);showToast("Saved to your memory wall");
+  if(!state.finalDataUrl)return false;
+  const items=getHistory();items.unshift({id:randomId(),dataUrl:state.finalDataUrl,shots:state.shots,size:state.size,frame:FRAME_STYLES[state.frameIndex].name,createdAt:new Date().toISOString()});
+  return setHistory(items);
 }
 function renderHistory(){const grid=$("#photos-grid"),empty=$("#empty-state"),items=getHistory();grid.innerHTML="";empty.classList.toggle("show",!items.length);items.forEach((item,index)=>grid.appendChild(historyCard(item,index)));}
 function renderHomeHistory(){const grid=$("#home-history-grid"),items=getHistory().slice(0,3);grid.innerHTML="";if(!items.length){grid.innerHTML=`<div class="empty-state show glass" style="grid-column:1/-1"><div class="empty-art">✦</div><h2>No saved frames yet.</h2><p>Take your first photo to fill this little wall.</p><button class="primary-btn compact" data-route="camera">Take a photo</button></div>`;$$('[data-route="camera"]',grid).forEach(b=>b.onclick=()=>navigate("camera"));return;}items.forEach((item,index)=>grid.appendChild(historyCard(item,index)));}
@@ -409,10 +417,10 @@ async function saveFinal(){
     await renderFinal();
   }
   if(!state.finalBlob || !state.finalDataUrl){showToast('Could not prepare the final image');return;}
-  saveFinalToHistory();
+  const savedToWall=saveFinalToHistory();
   // Prefer the rendered Blob for mobile browsers, with a data URL fallback.
   downloadBlob(state.finalBlob,`photobooth-${Date.now()}.jpg`);
-  showToast('Saved — frame included');
+  showToast(savedToWall?'Saved — frame included':'Downloaded — memory wall storage is full');
 }
 function downloadBlob(blob,name){
   const url=URL.createObjectURL(blob);
@@ -438,12 +446,12 @@ function wireCamera(){
   $("#camera-reset").onclick=()=>{state.captures=[];renderCaptureSlots();showToast("Session reset")};
   $("#shutter-btn").onclick=()=>takePhoto();
   $("#size-control").onclick=()=>openDrawer("size");$("#filter-control").onclick=()=>openDrawer("filter");$("#background-control").onclick=()=>openDrawer("background");$("#countdown-control").onclick=()=>openDrawer("countdown");
-  $("#drawer-close").onclick=()=>$("#control-drawer").classList.remove("open");
+  $("#drawer-close").onclick=()=>{const d=$("#control-drawer");d.classList.remove("open");d.setAttribute("aria-hidden","true")};
   $("#editor-back").onclick=()=>navigate("camera");$("#editor-home").onclick=()=>navigate("home");
   $("#retake-btn").onclick=()=>{state.captures=[];state.finalBlob=null;state.finalDataUrl=null;state.imageCache.clear();navigate("camera")};
   $("#download-final-btn").onclick=()=>saveFinal();$("#share-final-btn").onclick=()=>{if(state.finalDataUrl)shareImage(state.finalDataUrl);else showToast("Preparing your final image…")};
 }
 function updateStatusIdle(){updateStatus("Ready")}
 
-function boot(){makeAmbient();initNav();wireCamera();renderHomeHistory();updateStatusIdle();window.addEventListener("resize",updateNavPill);document.addEventListener("visibilitychange",()=>{if(document.hidden&&state.stream)state.stream.getTracks().forEach(t=>t.enabled=false);else if(state.stream)state.stream.getTracks().forEach(t=>t.enabled=true)});}
+function boot(){makeAmbient();initNav();wireCamera();renderHomeHistory();updateStatusIdle();const statEl=$('#stat-frame-count');if(statEl)statEl.textContent=FRAME_STYLES.length;window.addEventListener("resize",updateNavPill);document.addEventListener("visibilitychange",()=>{if(document.hidden&&state.stream)state.stream.getTracks().forEach(t=>t.enabled=false);else if(state.stream)state.stream.getTracks().forEach(t=>t.enabled=true)});}
 boot();
