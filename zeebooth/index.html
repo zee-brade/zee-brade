@@ -1,360 +1,163 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart AI Photobooth</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- MediaPipe Libraries for AI Hand Tracking & Camera Setup -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a; /* Tailwind slate-900 */
-            color: white;
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        /* Mirror the video so it acts like a real mirror */
-        .mirrored {
-            transform: scaleX(-1);
-        }
-
-        /* Smooth transition for the blur effect */
-        #webcam {
-            transition: filter 0.3s ease, transform 0.3s ease;
-        }
-
-        /* The custom blur class applied when hands are detected */
-        .sensor-blur {
-            filter: blur(16px);
-            transform: scaleX(-1) scale(1.05); /* Slight zoom so blur edges don't show background */
-        }
-
-        /* Camera flash animation */
-        @keyframes flashAnim {
-            0% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-        .flash-active {
-            animation: flashAnim 0.8s ease-out forwards;
-            background-color: white;
-            z-index: 50;
-        }
-
-        /* Hide scrollbars but allow scrolling */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #3b82f6;
-            border-radius: 4px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FAF2E3" />
+  <title>PHOTObooth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="min-h-screen flex flex-col p-4 md:p-8">
+<body>
+  <div id="page-bg" class="page-bg" aria-hidden="true"></div>
+  <div id="ambient-frames" class="ambient-frames" aria-hidden="true"></div>
+  <div id="transition-blob" class="transition-blob" aria-hidden="true"></div>
 
-    <header class="text-center mb-8">
-        <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-2">
-            AI Photobooth
-        </h1>
-        <p class="text-slate-400 text-sm md:text-base">
-            Angkat tanganmu ke kamera untuk efek sensor (blur)! ✋
-        </p>
+  <main class="app-shell">
+    <header class="topbar glass">
+      <button class="brand-btn" data-route="home" aria-label="Go home">
+        <span class="brand-mark"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="8" width="32" height="24" rx="8" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="20" cy="20" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="20" cy="20" r="2.5" fill="currentColor"/><circle cx="29" cy="13" r="1.8" fill="currentColor"/></svg></span>
+        <span class="brand-copy"><b>PHOTO</b>booth</span>
+      </button>
+      <div class="topbar-meta"><span id="status-dot" class="status-dot"></span><span id="status-text">Ready</span></div>
     </header>
 
-    <main class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 flex-grow">
-        
-        <!-- Left Column: Camera View & Controls -->
-        <div class="flex flex-col gap-6">
-            <!-- Camera Container -->
-            <div class="relative bg-slate-800 rounded-3xl overflow-hidden shadow-2xl aspect-[4/3] md:aspect-video border-4 border-slate-700 flex items-center justify-center group">
-                
-                <!-- Loading State / AI Init -->
-                <div id="loadingText" class="absolute inset-0 flex flex-col items-center justify-center z-10 bg-slate-900 bg-opacity-80 transition-opacity duration-500">
-                    <svg class="animate-spin h-10 w-10 text-blue-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <p class="font-semibold tracking-wide">Menyalakan Kamera & AI...</p>
-                </div>
-
-                <!-- Video Element -->
-                <video id="webcam" class="w-full h-full object-cover mirrored" autoplay playsinline></video>
-                
-                <!-- Sensor Indicator Icon (Visible when hand detected) -->
-                <div id="sensorIndicator" class="absolute top-4 right-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg opacity-0 transition-opacity duration-300 flex items-center gap-2">
-                    <span class="relative flex h-3 w-3">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
-                    </span>
-                    SENSOR AKTIF
-                </div>
-
-                <!-- Countdown Overlay -->
-                <div id="countdown" class="absolute inset-0 flex items-center justify-center text-8xl font-black text-white drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] hidden z-20">
-                    3
-                </div>
-
-                <!-- Flash Effect Overlay -->
-                <div id="flashOverlay" class="absolute inset-0 hidden pointer-events-none"></div>
-            </div>
-
-            <!-- Controls Section -->
-            <div class="flex flex-col sm:flex-row items-center gap-4 justify-between bg-slate-800 p-5 rounded-2xl shadow-xl border border-slate-700">
-                <div class="text-sm text-slate-300 text-center sm:text-left flex-1">
-                    <span id="statusMsg" class="text-green-400 font-semibold flex items-center justify-center sm:justify-start gap-2">
-                        <span class="w-2 h-2 rounded-full bg-green-500 block"></span> Sistem Siap
-                    </span>
-                </div>
-                
-                <button id="snapBtn" disabled class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl shadow-lg transform transition-all active:scale-95 text-lg flex items-center justify-center gap-3">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    Jepret Foto
-                </button>
-            </div>
+    <section id="view-home" class="view active-view" data-view="home">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">A SOFT LITTLE PHOTO STUDIO</span>
+          <h1>Capture the moment.<br><em>Keep the feeling.</em></h1>
+          <p class="hero-description">A minimal browser photobooth for quick portraits, playful frames, and tiny memories worth keeping.</p>
+          <div class="hero-actions">
+            <button id="start-camera-btn" class="primary-btn magnetic-btn">
+              <span class="btn-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6H9l1.3-2h3.4L15 6h2.5A2.5 2.5 0 0 1 20 8.5v8A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12.5" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>
+              Open camera
+            </button>
+            <button class="ghost-btn" data-route="photos">View history</button>
+          </div>
+          <div class="micro-stats">
+            <div><strong>28</strong><span>frame styles</span></div>
+            <div><strong>4</strong><span>photo layouts</span></div>
+            <div><strong>∞</strong><span>little moments</span></div>
+          </div>
         </div>
 
-        <!-- Right Column: Result / Gallery -->
-        <div class="bg-slate-800 rounded-3xl p-6 border-2 border-dashed border-slate-600 flex flex-col items-center justify-center min-h-[400px] relative">
-            <h2 class="text-xl font-bold text-slate-300 mb-6 absolute top-6 left-6">Hasil Jepretan</h2>
-            
-            <!-- Empty State -->
-            <div id="emptyState" class="text-slate-500 flex flex-col items-center gap-3 mt-10">
-                <svg class="w-16 h-16 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                <p>Belum ada foto.</p>
-            </div>
+        <div class="hero-orbit">
+          <div class="orbit-card orbit-card-main glass"><div class="orbit-photo photo-a"></div><div class="orbit-caption"><span>soft frame</span><b>01 / 07</b></div></div>
+          <div class="orbit-card orbit-card-small glass"><div class="orbit-photo photo-b"></div><div class="orbit-caption"><span>daily glow</span><b>04 / 28</b></div></div>
+          <div class="orbit-pill glass"><span>✦</span> made for moments</div>
+        </div>
+      </div>
 
-            <!-- Result Image Container (Hidden initially) -->
-            <div id="resultContainer" class="hidden flex-col items-center w-full mt-10 space-y-6">
-                <div class="relative bg-white p-3 pb-10 rounded shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-300 w-full max-w-sm mx-auto">
-                    <img id="previewImg" src="" alt="Captured Photo" class="w-full rounded bg-slate-900 border border-slate-200">
-                    <p class="text-slate-800 font-bold text-center mt-3 text-sm" id="photoDate"></p>
-                </div>
-                
-                <button id="downloadBtn" class="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg shadow transition-colors flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    Simpan Foto
-                </button>
-            </div>
+      <div class="home-sections">
+        <article class="info-card glass reveal-card">
+          <span class="card-kicker">HOW IT WORKS</span>
+          <h2>Three little steps.</h2>
+          <div class="steps-row">
+            <div class="step"><span>01</span><div><b>Capture</b><p>Choose 1–4 shots, set your countdown, and snap.</p></div></div>
+            <div class="step"><span>02</span><div><b>Customize</b><p>Adjust size, filter, background, and pick a frame.</p></div></div>
+            <div class="step"><span>03</span><div><b>Keep it</b><p>Download, save to history, or share the final artwork.</p></div></div>
+          </div>
+        </article>
+        <article class="info-card glass reveal-card compact-info">
+          <span class="card-kicker">GESTURE MODE</span>
+          <h2>✌️ = soft blur.</h2>
+          <p>Raise two fingers in front of the camera and the live preview gets a 40% blur treatment. It is a tiny visual cue, not a replacement for privacy controls.</p>
+        </article>
+      </div>
+
+      <section class="history-preview">
+        <div class="section-heading"><div><span class="card-kicker">RECENT MEMORIES</span><h2>Your latest frames.</h2></div><button class="text-btn" data-route="photos">See all →</button></div>
+        <div id="home-history-grid" class="history-grid"></div>
+      </section>
+    </section>
+
+    <section id="view-camera" class="view" data-view="camera">
+      <div class="camera-layout">
+        <div class="camera-top glass">
+          <button id="camera-back" class="icon-btn" aria-label="Back">←</button>
+          <div class="camera-title"><span>PHOTObooth</span><small id="capture-progress">ready to capture</small></div>
+          <button id="camera-reset" class="icon-btn" aria-label="Reset session">↺</button>
         </div>
 
-    </main>
+        <div class="camera-stage-wrap">
+          <div id="camera-stage" class="camera-stage glass ratio-portrait">
+            <video id="camera-video" autoplay playsinline muted></video>
+            <canvas id="camera-overlay"></canvas>
+            <div id="camera-fallback" class="camera-fallback"><span>Camera preview</span><p>Tap the shutter to begin.</p></div>
+            <div class="camera-vignette"></div>
+            <div id="gesture-indicator" class="gesture-indicator">✌️ blur 40%</div>
+            <div id="countdown-display" class="countdown-display" aria-hidden="true"></div>
+            <div id="flash-overlay" class="flash-overlay"></div>
+          </div>
+        </div>
 
-    <!-- Error Toast Setup -->
-    <div id="toast" class="fixed bottom-4 right-4 bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        <span id="toastMsg">Error message</span>
-    </div>
+        <div class="capture-strip glass">
+          <div class="capture-strip-head"><span>Captured</span><b id="captured-count">0 / 1</b></div>
+          <div id="capture-slots" class="capture-slots"></div>
+        </div>
 
-    <!-- Hidden Canvas used for capturing the image -->
-    <canvas id="captureCanvas" class="hidden"></canvas>
+        <div class="camera-controls glass">
+          <button id="size-control" class="control-chip"><span>Size</span><b>4:5</b></button>
+          <button id="filter-control" class="control-chip"><span>Filter</span><b>Original</b></button>
+          <button id="background-control" class="control-chip"><span>Background</span><b>Ivory</b></button>
+          <button id="countdown-control" class="control-chip"><span>Countdown</span><b>3s</b></button>
+        </div>
 
-    <script>
-        // DOM Elements
-        const videoElement = document.getElementById('webcam');
-        const loadingText = document.getElementById('loadingText');
-        const sensorIndicator = document.getElementById('sensorIndicator');
-        const snapBtn = document.getElementById('snapBtn');
-        const countdownOverlay = document.getElementById('countdown');
-        const flashOverlay = document.getElementById('flashOverlay');
-        const statusMsg = document.getElementById('statusMsg');
-        
-        const emptyState = document.getElementById('emptyState');
-        const resultContainer = document.getElementById('resultContainer');
-        const previewImg = document.getElementById('previewImg');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const photoDate = document.getElementById('photoDate');
-        const captureCanvas = document.getElementById('captureCanvas');
+        <button id="shutter-btn" class="shutter-btn" aria-label="Take photo"><span class="shutter-inner"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6H9l1.3-2h3.4L15 6h2.5A2.5 2.5 0 0 1 20 8.5v8A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><circle cx="12" cy="12.5" r="3.5" fill="none" stroke="currentColor" stroke-width="1.9"/></svg></span></button>
 
-        let isAppReady = false;
-        let isCountingDown = false;
-        let isHandDetected = false;
-        let latestPhotoUrl = '';
+        <div class="photo-count-control glass">
+          <span>Shots</span>
+          <div id="shot-count-options" class="segmented"><button data-shots="1">1</button><button data-shots="2">2</button><button data-shots="3">3</button><button data-shots="4">4</button></div>
+        </div>
+      </div>
 
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMsg').textContent = message;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 5000);
-        }
+      <div id="control-drawer" class="drawer glass" aria-hidden="true">
+        <div class="drawer-grab"></div>
+        <div class="drawer-head"><h3 id="drawer-title">Control</h3><button id="drawer-close" class="icon-btn">×</button></div>
+        <div id="drawer-content"></div>
+      </div>
+    </section>
 
-        // Initialize MediaPipe Hands
-        const hands = new Hands({locateFile: (file) => {
-            return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-        }});
+    <section id="view-editor" class="view" data-view="editor">
+      <div class="editor-layout">
+        <div class="editor-top glass"><button id="editor-back" class="icon-btn">←</button><div><span>FRAME STUDIO</span><small>Make the final little piece.</small></div><button id="editor-home" class="icon-btn">⌂</button></div>
+        <div class="editor-workspace">
+          <div id="final-preview-wrap" class="final-preview-wrap glass"><canvas id="final-canvas" aria-label="Final photo preview"></canvas><div id="render-loading" class="render-loading"><div class="spinner"></div><span>Rendering...</span></div></div>
+          <div class="editor-panel glass">
+            <div class="editor-meta"><div><span class="card-kicker">FRAME STYLE</span><h2 id="frame-title">Style 01</h2></div><span id="frame-counter">01 / 28</span></div>
+            <div id="frame-grid" class="frame-grid"></div>
+            <div class="editor-actions"><button id="retake-btn" class="ghost-btn">Retake</button><button id="download-final-btn" class="primary-btn">Download final</button><button id="share-final-btn" class="soft-btn">Share</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        hands.setOptions({
-            maxNumHands: 2,
-            modelComplexity: 1,
-            minDetectionConfidence: 0.6,
-            minTrackingConfidence: 0.6
-        });
+    <section id="view-photos" class="view" data-view="photos">
+      <div class="photos-layout">
+        <div class="photos-head"><div><span class="card-kicker">MEMORY WALL</span><h1>Your saved frames.</h1><p>Every card is the final artwork, frame included.</p></div><button class="primary-btn compact" data-route="camera">New photo</button></div>
+        <div id="photos-grid" class="history-grid large-grid"></div>
+        <div id="empty-state" class="empty-state glass"><div class="empty-art">✦</div><h2>No saved frames yet.</h2><p>Your first little memory will live here.</p><button class="primary-btn compact" data-route="camera">Take a photo</button></div>
+      </div>
+    </section>
 
-        // AI Result Callback
-        hands.onResults((results) => {
-            if (!isAppReady) {
-                isAppReady = true;
-                loadingText.style.opacity = '0';
-                setTimeout(() => loadingText.classList.add('hidden'), 500);
-                snapBtn.removeAttribute('disabled');
-            }
+    <nav class="liquid-nav glass" aria-label="Primary navigation">
+      <span id="nav-pill" class="nav-pill" aria-hidden="true"></span>
+      <button class="nav-item active" data-route="home"><span>⌂</span><small>Home</small></button>
+      <button class="nav-item" data-route="camera"><span>◉</span><small>Camera</small></button>
+      <button class="nav-item" data-route="photos"><span>▣</span><small>Photos</small></button>
+      <button class="nav-item" data-route="about"><span>✦</span><small>About</small></button>
+    </nav>
+  </main>
 
-            // Check if hands are detected in the frame
-            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
-                if (!isHandDetected) {
-                    isHandDetected = true;
-                    videoElement.classList.add('sensor-blur');
-                    sensorIndicator.style.opacity = '1';
-                }
-            } else {
-                if (isHandDetected) {
-                    isHandDetected = false;
-                    videoElement.classList.remove('sensor-blur');
-                    sensorIndicator.style.opacity = '0';
-                }
-            }
-        });
+  <div id="toast" class="toast glass" role="status" aria-live="polite"></div>
 
-        // Camera setup using MediaPipe CameraUtils
-        const camera = new Camera(videoElement, {
-            onFrame: async () => {
-                try {
-                    await hands.send({image: videoElement});
-                } catch (err) {
-                    console.error("AI Error:", err);
-                }
-            },
-            width: 1280,
-            height: 720
-        });
-
-        // Start everything
-        camera.start().catch((err) => {
-            console.error("Camera Setup Error:", err);
-            loadingText.innerHTML = `<span class="text-red-400">Gagal akses kamera. Pastikan izin kamera diberikan.</span>`;
-            showToast("Akses kamera ditolak. Silakan refresh dan izinkan browser memakai kamera.");
-            statusMsg.innerHTML = `<span class="text-red-400">Error Kamera</span>`;
-        });
-
-        // Take Photo Click Event
-        snapBtn.addEventListener('click', () => {
-            if(isCountingDown || !isAppReady) return;
-            
-            isCountingDown = true;
-            snapBtn.setAttribute('disabled', 'true');
-            
-            let count = 3;
-            countdownOverlay.textContent = count;
-            countdownOverlay.classList.remove('hidden');
-
-            // Play a small click sound (using Web Audio API synthesized beep) if desired, but visual is enough.
-            
-            const timerInterval = setInterval(() => {
-                count--;
-                if(count > 0) {
-                    countdownOverlay.textContent = count;
-                    countdownOverlay.classList.remove('scale-150', 'opacity-0');
-                    
-                    // Simple animation toggle
-                    countdownOverlay.style.transform = 'scale(1.5)';
-                    setTimeout(() => countdownOverlay.style.transform = 'scale(1)', 50);
-
-                } else {
-                    clearInterval(timerInterval);
-                    countdownOverlay.textContent = "📸";
-                    
-                    setTimeout(() => {
-                        capturePhoto();
-                        
-                        // Hide countdown
-                        countdownOverlay.classList.add('hidden');
-                        isCountingDown = false;
-                        snapBtn.removeAttribute('disabled');
-                    }, 200); // Small delay to let user see camera before freeze
-                }
-            }, 1000);
-        });
-
-        function capturePhoto() {
-            // Flash Effect
-            flashOverlay.classList.remove('hidden', 'flash-active');
-            // Trigger reflow
-            void flashOverlay.offsetWidth; 
-            flashOverlay.classList.add('flash-active');
-            setTimeout(() => flashOverlay.classList.add('hidden'), 800);
-
-            // Prepare Canvas
-            const ctx = captureCanvas.getContext('2d');
-            captureCanvas.width = videoElement.videoWidth || 1280;
-            captureCanvas.height = videoElement.videoHeight || 720;
-
-            // Important: Handle the mirroring effect so the final photo looks like what user saw
-            // Translate to right edge and flip horizontal
-            ctx.translate(captureCanvas.width, 0);
-            ctx.scale(-1, 1);
-
-            // If the sensor was active (hand detected), apply blur to the captured image too!
-            if (isHandDetected) {
-                ctx.filter = 'blur(16px)';
-            } else {
-                ctx.filter = 'none';
-            }
-
-            // Draw current video frame to canvas
-            ctx.drawImage(videoElement, 0, 0, captureCanvas.width, captureCanvas.height);
-            
-            // Reset filter
-            ctx.filter = 'none';
-            
-            // Convert to Image URL
-            latestPhotoUrl = captureCanvas.toDataURL('image/jpeg', 0.9);
-            
-            // Update UI Gallery
-            previewImg.src = latestPhotoUrl;
-            
-            // Format Date
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute:'2-digit' });
-            photoDate.textContent = `A.I. Photobooth • ${dateStr} ${timeStr}`;
-
-            emptyState.classList.add('hidden');
-            resultContainer.classList.remove('hidden');
-            resultContainer.classList.add('flex');
-            
-            // Scroll down on mobile to see the result
-            if(window.innerWidth < 1024) {
-                resultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }
-
-        downloadBtn.addEventListener('click', () => {
-            if (!latestPhotoUrl) return;
-            const link = document.createElement('a');
-            link.href = latestPhotoUrl;
-            link.download = `AI-Photobooth-${Date.now()}.jpg`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        });
-
-    </script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <script src="script.js"></script>
 </body>
 </html>
-```
