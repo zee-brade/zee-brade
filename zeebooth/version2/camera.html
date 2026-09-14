@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#d9e0e6">
+  <meta name="description" content="Zeebooth camera">
+  <title>Zeebooth · Camera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/camera.css">
+</head>
+<body data-page="camera">
+  <header class="site-header compact-header">
+    <a class="brand-mini" href="index.html">ZEEBOOTH</a>
+    <nav class="glass-nav" aria-label="Primary navigation">
+      <a class="nav-link" href="index.html" data-nav="home">Home</a>
+      <a class="nav-link" href="photos.html" data-nav="photos">Photos</a>
+      <a class="nav-link" href="history.html" data-nav="history">Riwayat</a>
+    </nav>
+  </header>
+
+  <main class="camera-page">
+    <section class="camera-layout">
+      <div class="camera-column">
+        <div class="camera-topline">
+          <div>
+            <span class="section-kicker">Camera</span>
+            <h1>Make the moment.</h1>
+          </div>
+          <button id="gestureToggle" class="toggle glass-card" type="button" aria-pressed="true">
+            <span class="toggle-dot"></span>
+            <span>Gestures</span>
+            <span id="gestureStatus">ON</span>
+          </button>
+        </div>
+
+        <div class="camera-stage glass-card" id="cameraStage">
+          <video id="cameraVideo" autoplay playsinline muted></video>
+          <canvas id="effectCanvas" aria-hidden="true"></canvas>
+          <div id="effectOverlay" class="effect-overlay"></div>
+          <div id="countdownOverlay" class="countdown-overlay" aria-live="polite"></div>
+          <div id="cameraHint" class="camera-hint">Allow camera access to begin.</div>
+          <div class="camera-corner top-left"></div>
+          <div class="camera-corner top-right"></div>
+          <div class="camera-corner bottom-left"></div>
+          <div class="camera-corner bottom-right"></div>
+        </div>
+
+        <div class="camera-controls">
+          <div class="control-strip glass-card">
+            <label>
+              <span>Aspect</span>
+              <select id="aspectSelect">
+                <option value="1:1">1:1</option>
+                <option value="4:5">4:5</option>
+                <option value="3:4" selected>3:4</option>
+                <option value="4:3">4:3</option>
+                <option value="16:9">16:9</option>
+                <option value="9:16">9:16</option>
+              </select>
+            </label>
+            <label>
+              <span>Photos</span>
+              <select id="shotsSelect">
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </label>
+            <label>
+              <span>Countdown</span>
+              <select id="countdownSelect">
+                <option value="0">None</option>
+                <option value="3" selected>3s</option>
+                <option value="5">5s</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="shutter-row">
+            <button id="shutterButton" class="shutter-button" type="button" aria-label="Take photo">
+              <span class="shutter-inner"></span>
+            </button>
+          </div>
+
+          <p class="camera-tip">✌️ blur · 🖐️ flower · 🫶 heart</p>
+        </div>
+      </div>
+
+      <aside class="camera-side glass-card">
+        <div class="side-block">
+          <span class="section-kicker">Session</span>
+          <h2 id="sessionProgress">0 / 1</h2>
+          <p>Your selected photo count will appear here.</p>
+        </div>
+
+        <div class="side-block">
+          <span class="section-kicker">Captured</span>
+          <div id="captureStrip" class="capture-strip">
+            <div class="empty-slot">Your shots will appear here.</div>
+          </div>
+        </div>
+
+        <div class="side-actions">
+          <button id="resetSessionButton" class="btn btn-secondary" type="button">Reset</button>
+          <button id="finishSessionButton" class="btn btn-primary" type="button">Edit result</button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div id="permissionDialog" class="modal-shell hidden">
+    <div class="modal-card glass-card">
+      <span class="section-kicker">Camera access</span>
+      <h2>Let Zeebooth see the moment.</h2>
+      <p>Camera access is required for the photobooth. Your captured images stay in this browser unless you download them.</p>
+      <button id="startCameraButton" class="btn btn-primary" type="button">Enable camera</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/effects.js"></script>
+  <script src="js/gesture.js"></script>
+  <script src="js/camera.js"></script>
+</body>
+</html>
