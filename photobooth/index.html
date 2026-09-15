@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7efe9">
+<meta name="color-scheme" content="light">
+<title>Zeebooth — Photobooth Estetik di Browser</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="noise"></div>
+<div class="backdrop"><div class="orb orb-a"></div><div class="orb orb-b"></div></div>
+
+<header class="topbar">
+  <button class="brand" data-go="home" aria-label="Zeebooth home"><span class="brand-mark">Z</span><span>ZEEBOOTH</span></button>
+  <div class="top-meta"><span class="live-dot"></span><span id="topStatus">Studio siap digunakan</span></div>
+</header>
+
+<main class="shell">
+  <section id="home" class="view on">
+    <div class="hero">
+      <div class="hero-copy">
+        <span class="kicker">STUDIO FOTO DIGITAL / 01</span>
+        <h1>Seperti photobooth favorit di mal.<br><span>Kini hadir langsung di browser.</span></h1>
+        <p>Kamera langsung, timer, sensor gesture, preview crop, pilihan frame terkurasi, dan hasil siap simpan — semuanya dalam satu pengalaman photobooth.</p>
+        <div class="hero-actions">
+          <button class="btn primary xlarge" data-go="camera">Mulai Sesi <span>↗</span></button>
+          <button class="btn secondary" data-go="photos">Galeri</button>
+        </div>
+        <div class="proof-row">
+          <div><b>01</b><span>Frame<br>pilihan</span></div>
+          <div><b>02</b><span>Pose<br>bareng</span></div>
+          <div><b>03</b><span>Siap<br>dicetak</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-photo hero-photo-main"><div class="photo-overlay"><span>LIVE / 4:5</span><b>ZEEBOOTH</b></div></div>
+        <div class="hero-photo hero-photo-small hps-1"></div>
+        <div class="hero-photo hero-photo-small hps-2"></div>
+        <div class="hero-tag tag-a">PORTRAIT<br>STUDIO</div>
+        <div class="hero-tag tag-b">01—2026</div>
+      </div>
+    </div>
+
+    <div class="feature-grid">
+      <article class="feature-card feature-dark">
+        <span class="kicker">RUANG KAMERA</span>
+        <h2>Pengalaman booth<br>yang terasa nyata.</h2>
+        <p>Cermin, garis bantu, arah kamera, timer, filter, flash, dan sensor gesture tersedia sebagai kontrol booth yang rapi.</p>
+        <button class="text-btn" data-go="camera">Buka kamera <span>→</span></button>
+      </article>
+      <article class="feature-card feature-light">
+        <div class="mini-frame-preview frame-mini-4"><i></i><i></i><i></i><i></i></div>
+        <span class="kicker">FRAME STUDIO</span>
+        <h2>Layout yang terarah,<br>dibuat untuk hasil yang konsisten.</h2>
+        <p>Setiap jumlah foto punya komposisi terkurasi, margin print, hirarki tipografi, footer, dan material yang konsisten.</p>
+      </article>
+      <article class="feature-card feature-light compact-stat">
+        <span class="kicker">SPESIFIKASI BOOTH</span>
+        <div class="stat"><b>1920×1440</b><span>Input kamera rekomendasi</span></div>
+        <div class="stat"><b>1—4 foto</b><span>Foto per sesi</span></div>
+        <div class="stat"><b>4:5 / 2:3 / 3:2</b><span>Format foto</span></div>
+      </article>
+    </div>
+
+    <div class="home-banner">
+      <div><span class="kicker">SIAP KAPAN SAJA</span><h3>Satu sesi. Satu cerita. Satu frame yang terkurasi.</h3></div>
+      <button class="btn primary" data-go="camera">Mulai sesi</button>
+    </div>
+  </section>
+
+  <section id="camera" class="view">
+    <div class="section-head">
+      <div><span class="kicker">RUANG KAMERA / 02</span><h2>Atur Sesi Foto.</h2><p id="cameraSub">Pilih format, atur pose, lalu tekan Shutter.</p></div>
+      <div class="session-badge"><span id="progress">0 / 1</span><small>foto</small></div>
+    </div>
+
+    <div class="booth-grid">
+      <div class="booth-console">
+        <div class="camera-shell">
+          <div class="camera-topline"><span>KAMERA DEPAN</span><span id="cameraResolution">MENUNGGU</span></div>
+          <div class="stage" id="stage">
+            <video id="video" autoplay playsinline muted></video>
+            <canvas id="guide"></canvas>
+            <div class="safe-frame"></div>
+            <div class="kamera-hud hud-tl"><span class="hud-rec"><i></i> REC</span><span id="hudLens">1×</span></div>
+            <div class="kamera-hud hud-tr"><span id="hudTimer">03s</span><span id="hudMode">MANUAL</span></div>
+            <div class="grid-lines" id="gridLines"></div>
+            <div class="vignette"></div>
+            <div class="count" id="count"></div>
+            <div class="gesture-state" id="gestureLabel"></div>
+            <div class="flashfx" id="flashfx"></div>
+            <div class="fx" id="fx"></div>
+            <div class="permission" id="permission">
+              <div class="permission-card">
+                <div class="camera-glyph">⌁</div>
+                <span class="kicker">AKSES KAMERA</span>
+                <h3>Masuk ke dalam booth.</h3>
+                <p>Kamera browser hanya digunakan selama sesi dan mulai aktif setelah tombol di bawah ditekan.</p>
+                <button class="btn primary" id="enable">Aktifkan kamera</button>
+                <small id="permMsg">Akses kamera hanya diminta setelah tombol di bawah ditekan.</small>
+              </div>
+            </div>
+          </div>
+          <div class="shutter-deck">
+            <button class="icon-btn" id="reset" aria-label="Reset sesi foto"><span>↺</span><small>Reset</small></button>
+            <button class="shutter" id="shutter" aria-label="Ambil foto secara manual"><span class="shutter-core"></span><b>SHUTTER</b></button>
+            <button class="icon-btn" id="finish" aria-label="Buka editor frame"><span>→</span><small>Editor</small></button>
+          </div>
+          <div class="capture-strip" id="strip"><span class="capture-empty">Preview foto akan muncul di sini.</span></div>
+        </div>
+      </div>
+
+      <aside class="booth-controls">
+        <div class="control-card kamera-mode-card">
+          <div class="control-header"><div><span class="kicker">PENGATURAN LANGSUNG</span><b>Pengaturan booth</b></div><span class="control-chip" id="readyChip">BELUM AKTIF</span></div>
+          <div class="control-group"><label>Format</label><div class="option-grid three" id="ratios"><button class="active" data-r="4:5"><b>4:5</b><span>Portrait</span></button><button data-r="2:3"><b>2:3</b><span>Strip</span></button><button data-r="3:2"><b>3:2</b><span>Landscape</span></button></div></div>
+          <div class="control-group"><label>Jumlah foto</label><div class="option-grid four" id="shots"><button class="active" data-n="1">1</button><button data-n="2">2</button><button data-n="3">3</button><button data-n="4">4</button></div></div>
+          <div class="control-group"><label>Hitung mundur</label><div class="option-grid three" id="countdowns"><button data-c="0">Off</button><button class="active" data-c="3">3 detik</button><button data-c="5">5 detik</button></div></div>
+        </div>
+
+        <div class="control-card">
+          <div class="control-header"><div><span class="kicker">KAMERA</span><b>Kamera & gaya</b></div></div>
+          <div class="quick-grid">
+            <button class="quick active" id="mirrorToggle"><span class="quick-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h12l-3-3m7 13H8l3 3M7 4l-3 3 3 3m10 4 3 3-3 3"/></svg></span><span>Mirror</span><small>Pratinjau</small></button>
+            <button class="quick active" id="gridToggle"><span class="quick-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 4v16M4 12h16"/></svg></span><span>Garis bantu</span><small>garis bantu</small></button>
+            <button class="quick" id="cameraSwitch"><span class="quick-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l4-3 4 3M12 2v20M8 19l4 3 4-3"/></svg></span><span>Flip</span><small>Kamera</small></button>
+            <button class="quick active" id="soundToggle"><span class="quick-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/></svg></span><span>Sound</span><small>Shutter</small></button>
+          </div>
+          <div class="control-group"><label>Filter</label><div class="filter-grid" id="filters"><button class="filter active" data-filter="clean"><i></i><span>Natural</span></button><button class="filter filter-soft" data-filter="soft"><i></i><span>Lembut</span></button><button class="filter filter-mono" data-filter="mono"><i></i><span>Monokrom</span></button><button class="filter filter-warm" data-filter="warm"><i></i><span>Hangat</span></button></div></div>
+        </div>
+
+        <div class="control-card">
+          <div class="control-header"><div><span class="kicker">GESTURE CONTROL</span><b>Sensor gesture</b></div><button id="gesture" class="switch on" aria-label="Aktifkan atau nonaktifkan sensor gesture"><i></i></button></div>
+          <div class="sensor-copy"><div class="sensor-line"><span class="sensor-dot"></span><span id="sensorStatus">Menunggu kamera…</span></div><p>Gunakan gesture <b>Peace</b>, <b>Open Palm</b>, atau <b>Heart</b> sebagai indikator pose. Sensor hanya mendeteksi gesture; pengambilan foto tetap dilakukan secara manual melalui Shutter.</p></div>
+        </div>
+
+        <div class="booth-tip" id="hint">Aktifkan kamera untuk membuka semua kontrol.</div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="editor" class="view">
+    <div class="section-head editor-head">
+      <div><span class="kicker">FRAME STUDIO / 03</span><h2>Desain Hasil Foto.</h2><p id="editorText"></p></div>
+      <div class="editor-actions"><button class="btn secondary" data-go="camera">Foto ulang</button><button class="btn primary" id="save">Simpan frame</button></div>
+    </div>
+    <div class="studio-grid">
+      <div class="print-stage-card">
+        <div class="print-stage-top"><span>KOMPOSIT LANGSUNG</span><span id="frameInfo">FRAME / —</span></div>
+        <div class="print-stage"><div class="final" id="final"><div class="frame-mark"></div><div class="photo-grid" id="photoGrid"></div><div class="frame-copy"><span id="frameThemeLabel">ZEEBOOTH</span><b id="decor">2026</b></div></div></div>
+        <div class="print-stage-bottom"><span>Preview sesuai dengan hasil export.</span><span id="exportInfo">PNG / KUALITAS TINGGI</span></div>
+      </div>
+      <aside class="editor-controls">
+        <div class="control-card">
+          <div class="control-header"><div><span class="kicker">TEMA FRAME</span><b>Pilih tema visual</b></div></div>
+          <div class="theme-grid" id="themes"></div>
+        </div>
+        <div class="control-card">
+          <div class="control-header"><div><span class="kicker">LAYOUT</span><b>Pilihan layout</b></div></div>
+          <div class="layout-grid" id="layouts"></div>
+        </div>
+        <div class="control-card">
+          <div class="control-header"><div><span class="kicker">DETAIL</span><b>Finishing hasil</b></div></div>
+          <div class="finish-grid" id="finishes"><button class="finish active" data-finish="editorial">Editorial</button><button class="finish" data-finish="contact">Contact sheet</button><button class="finish" data-finish="clean">Bersih</button></div>
+          <div class="detail-row"><label>Tampilan foto</label><div class="option-grid two" id="fit"><button class="active" data-fit="cover">Isi penuh</button><button data-fit="contain">Utuh</button></div></div>
+          <div class="detail-row"><label>Posisi foto</label><input id="posX" type="range" min="25" max="75" value="50"><input id="posY" type="range" min="25" max="75" value="50"></div>
+        </div>
+        <div class="editor-tip">Layout frame menyesuaikan jumlah foto dan rasio kamera agar komposisi tetap rapi dan crop tetap proporsional.</div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="photos" class="view">
+    <div class="section-head"><div><span class="kicker">GALERI / 04</span><h2>Frame Tersimpan.</h2><p>Simpan hasil, lihat kembali, atau mulai sesi photobooth baru.</p></div><button class="btn primary" data-go="camera">Sesi baru</button></div>
+    <div class="photo-grid-list" id="photosList"></div>
+    <div class="empty-state" id="photosEmpty"><span>04</span><h3>Belum ada frame tersimpan.</h3><p>Selesaikan satu sesi photobooth dan hasil akhirnya akan muncul di sini.</p><button class="btn primary" data-go="camera">Buka booth</button></div>
+  </section>
+
+  <section id="history" class="view">
+    <div class="section-head"><div><span class="kicker">RIWAYAT SESI / 05</span><h2>Sesi Terbaru.</h2><p>Ringkasan sesi photobooth yang tersimpan.</p></div><button class="btn secondary" data-go="photos">Foto</button></div>
+    <div class="history-list" id="historyList"></div>
+    <div class="empty-state" id="historyEmpty"><span>05</span><h3>Belum ada sesi tersimpan.</h3><p>Riwayat sesi yang tersimpan akan ditampilkan di sini.</p></div>
+  </section>
+</main>
+
+<nav class="dock">
+  <button data-go="home" class="active"><span>⌂</span><b>Beranda</b></button>
+  <button data-go="camera"><span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/></svg></span><b>Booth</b></button>
+  <button data-go="photos"><span>▦</span><b>Foto</b></button>
+  <button data-go="history"><span>↺</span><b>Riwayat</b></button>
+</nav>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
