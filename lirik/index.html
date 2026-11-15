@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Merry Christmas, Please Don't Call - Coding Lyric</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #050505;
+      color: #d4d4d4;
+      font-family: 'Fira Code', monospace;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    #viewport {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #0c0c0e 0%, #030303 100%);
+    }
+
+    #camera {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: 0 0;
+      will-change: transform;
+    }
+
+    #editor {
+      padding: 260px 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .file-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #111115;
+      border: 1px solid #26262e;
+      border-bottom: 2px solid #ff3b3b;
+      color: #a9b1d6;
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 6px 6px 0 0;
+      width: fit-content;
+      margin-bottom: 10px;
+      margin-left: 44px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .file-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ff3b3b;
+      box-shadow: 0 0 8px #ff3b3b;
+    }
+
+    .line {
+      display: flex;
+      align-items: center;
+      font-size: 28px;
+      line-height: 1.9;
+      white-space: nowrap;
+      opacity: 0.28;
+      filter: blur(0.6px);
+      transform: scale(0.98);
+      transform-origin: left center;
+      transition: opacity 0.45s ease, filter 0.45s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .line.active {
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1.04);
+    }
+
+    .line-num {
+      width: 48px;
+      color: #44475a;
+      font-size: 0.72em;
+      flex-shrink: 0;
+    }
+
+    .fn { color: #eceff4; }
+    .punct { color: #ff4d4d; font-weight: 600; }
+    .str { color: #ff9e64; text-shadow: 0 0 12px rgba(255, 158, 100, 0.35); }
+    .key { color: #7aa2f7; }
+    .comment { color: #565f89; font-style: italic; }
+
+    .cursor {
+      display: inline-block;
+      width: 14px;
+      height: 1.18em;
+      background-color: #ff3b3b;
+      box-shadow: 0 0 14px #ff3b3b, 0 0 28px rgba(255, 59, 59, 0.85);
+      margin-left: 5px;
+      vertical-align: middle;
+      border-radius: 2px;
+      animation: blink 0.75s infinite;
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0.15; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="viewport">
+    <div id="camera">
+      <div id="editor">
+        <div class="file-tab">
+          <span class="file-dot"></span>
+          <span>please_dont_call.html</span>
+        </div>
+        <div id="lines-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // 1. PENGATURAN GERAK & ZOOM KAMERA
+    // ==========================================
+    const CAMERA_CONFIG = {
+      zoomTyping: 1.48,     // Zoom-in saat teks sedang diketik
+      zoomIdle: 1.04,       // Zoom-out saat baris selesai diketik
+      smoothness: 0.09,     // Kehalusan ayunan kamera
+      focusOffsetX: 0.48    // Posisi fokus kursor di layar
+    };
+
+    // ==========================================
+    // 2. LIRIK & TIMING SESUAI VIDEO (40.2 DETIK)
+    // ==========================================
+    const scriptLines = [
+      {
+        // 00:01 - 00:03: "one ticket out of your gaze"
+        time: 0.8,
+        speed: 55,
+        tokens: [
+          { text: 'one.ticket', type: 'fn' },
+          { text: '( ', type: 'punct' },
+          { text: '"out_of"', type: 'str' },
+          { text: ' ){ ', type: 'punct' },
+          { text: 'your: ', type: 'key' },
+          { text: '"gaze"', type: 'str' },
+          { text: ' };', type: 'punct' }
+        ]
+      },
+      {
+        // 00:05 - 00:08: "one ticket off of your carousel"
+        time: 4.6,
+        speed: 55,
+        tokens: [
+          { text: 'one.ticket', type: 'fn' },
+          { text: '( ', type: 'punct' },
+          { text: '"off_of"', type: 'str' },
+          { text: ' ){ ', type: 'punct' },
+          { text: 'your: ', type: 'key' },
+          { text: '"carousel"', type: 'str' },
+          { text: ' };', type: 'punct' }
+        ]
+      },
+      {
+        // 00:09 - 00:13: "but you should know that i died slow"
+        time: 8.8,
+        speed: 62,
+        tokens: [
+          { text: 'but.you', type: 'fn' },
+          { text: '( ', type: 'punct' },
+          { text: '"should_know"', type: 'str' },
+          { text: ' ){ ', type: 'punct' },
+          { text: 'that_i: ', type: 'key' },
+          { text: '"died_slow"', type: 'str' },
+          { text: ' };', type: 'punct' }
+        ]
+      },
+      {
+        // 00:14 - 00:17: "running through the halls of your haunted home"
+        time: 13.8,
+        speed: 48,
+        tokens: [
+          { text: 'running.through', type: 'fn' },
+          { text: '( ', type: 'punct' },
+          { text: '"the_halls"', type: 'str' },
+          { text: ' ){ ', type: 'punct' },
+          { text: 'of_your: ', type: 'key' },
+          { text: '"haunted_home"', type: 'str' },
+          { text: ' };', type: 'punct' }
+        ]
+      },
+      {
+        // 00:18 - 00:21: "and the toughest part is that we both know"
+        time: 17.8,
+        speed: 48,
+        tokens: [
+          { text: 'and.the', type: 'fn' },
+          { text: '( ', type: 'punct' },
+          { text: '"toughest_part"', type: 'str' },
+          { text: ' ){ ', type: 'punct' },
+          { text: 'is_that: ', type: 'key' },
+          { text: '"we_both_know"', type: 'str' },
+          { text: ' };', type: 'punct' }
+        ]
+      },
+      {
+        // 00:22 - 00:23: "what happened to you"
+        time: 21.6,
+        speed: 52,
+        tokens: [
+          { text: 'what.happened', type: 'fn' },
+          { text: '( ', type: 'punct' },
+          { text: '"to_you"', type: 'str' },
+          { text: ' );', type: 'punct' }
+        ]
+      },
+      {
+        // 00:24 - 00:26: "why you're out on your own"
+        time: 23.9,
+        speed: 50,
+        tokens: [
+          { text: 'why.youre', type: 'fn' },
+          { text: '( ', type: 'punct' },
+          { text: '"out_on"', type: 'str' },
+          { text: ' ){ ', type: 'punct' },
+          { text: 'your: ', type: 'key' },
+          { text: '"own"', type: 'str' },
+          { text: ' };', type: 'punct' }
+        ]
+      },
+      {
+        // 00:27 - 00:30: "merry christmas, please don't call."
+        time: 26.8,
+        speed: 55,
+        tokens: [
+          { text: 'merry.christmas', type: 'fn' },
+          { text: '( ', type: 'punct' },
+          { text: '"please"', type: 'str' },
+          { text: ' ){ ', type: 'punct' },
+          { text: 'dont: ', type: 'key' },
+          { text: '"call"', type: 'str' },
+          { text: ' };', type: 'punct' }
+        ]
+      },
+      {
+        // 00:31 - 00:35: "merry christmas, i'm not yours at all"
+        time: 31.0,
+        speed: 55,
+        tokens: [
+          { text: 'merry.christmas', type: 'fn' },
+          { text: '( ', type: 'punct' },
+          { text: '"im_not"', type: 'str' },
+          { text: ' ){ ', type: 'punct' },
+          { text: 'yours: ', type: 'key' },
+          { text: '"at_all"', type: 'str' },
+          { text: ' };', type: 'punct' }
+        ]
+      },
+      {
+        // 00:36 - 00:38: "merry christmas, please don't call"
+        time: 35.3,
+        speed: 55,
+        tokens: [
+          { text: 'merry.christmas', type: 'fn' },
+          { text: '( ', type: 'punct' },
+          { text: '"please"', type: 'str' },
+          { text: ' ){ ', type: 'punct' },
+          { text: 'dont: ', type: 'key' },
+          { text: '"call"', type: 'str' },
+          { text: ' };', type: 'punct' }
+        ]
+      }
+    ];
+
+    const viewport = document.getElementById('viewport');
+    const camera = document.getElementById('camera');
+    const linesContainer = document.getElementById('lines-container');
+    const glitchChars = '@#$%&*~!?<>[]{}ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+    let activeLineEl = null;
+    let activeCursor = null;
+    let isTyping = false;
+    let timeouts = [];
+
+    let camX = 0;
+    let camY = 0;
+    let camZoom = 1.65;
+    let targetX = 0;
+    let targetY = 0;
+    let targetZoom = 1.48;
+
+    function getResponsiveScale() {
+      const vw = viewport.clientWidth;
+      const vh = viewport.clientHeight;
+      return Math.min(Math.max(Math.min(vw / 1280, vh / 720), 0.7), 1.4);
+    }
+
+    function updateCameraTarget() {
+      const vw = viewport.clientWidth;
+      const vh = viewport.clientHeight;
+      const baseScale = getResponsiveScale();
+
+      if (!activeLineEl || !activeCursor) {
+        targetZoom = 1.65 * baseScale;
+        targetX = (vw * 0.45) - (460 * targetZoom);
+        targetY = (vh * 0.48) - (310 * targetZoom);
+        return;
+      }
+
+      if (isTyping) {
+        targetZoom = CAMERA_CONFIG.zoomTyping * baseScale;
+        const cursorWorldX = activeCursor.offsetLeft;
+        const lineWorldY = activeLineEl.offsetTop + (activeLineEl.offsetHeight / 2);
+
+        targetX = (vw * CAMERA_CONFIG.focusOffsetX) - (cursorWorldX * targetZoom);
+        targetY = (vh * 0.48) - (lineWorldY * targetZoom);
+      } else {
+        targetZoom = CAMERA_CONFIG.zoomIdle * baseScale;
+        const lineCenterX = activeLineEl.offsetLeft + Math.min(activeLineEl.offsetWidth * 0.52, 340);
+        const lineWorldY = activeLineEl.offsetTop + (activeLineEl.offsetHeight / 2);
+
+        targetX = (vw * 0.5) - (lineCenterX * targetZoom);
+        targetY = (vh * 0.48) - (lineWorldY * targetZoom);
+      }
+    }
+
+    function animateCamera() {
+      updateCameraTarget();
+
+      camX += (targetX - camX) * CAMERA_CONFIG.smoothness;
+      camY += (targetY - camY) * CAMERA_CONFIG.smoothness;
+      camZoom += (targetZoom - camZoom) * CAMERA_CONFIG.smoothness;
+
+      camera.style.transform = `translate3d(${camX.toFixed(2)}px, ${camY.toFixed(2)}px, 0) scale(${camZoom.toFixed(4)})`;
+      requestAnimationFrame(animateCamera);
+    }
+
+    function typeLine(lineData, index) {
+      document.querySelectorAll('.line').forEach(el => el.classList.remove('active'));
+      if (activeCursor) activeCursor.remove();
+
+      isTyping = true;
+
+      const lineEl = document.createElement('div');
+      lineEl.className = 'line active';
+      activeLineEl = lineEl;
+
+      const numEl = document.createElement('span');
+      numEl.className = 'line-num';
+      numEl.textContent = index + 1;
+      lineEl.appendChild(numEl);
+
+      const contentEl = document.createElement('span');
+      lineEl.appendChild(contentEl);
+
+      const cursorEl = document.createElement('span');
+      cursorEl.className = 'cursor';
+      lineEl.appendChild(cursorEl);
+      activeCursor = cursorEl;
+
+      linesContainer.appendChild(lineEl);
+
+      const chars = [];
+      lineData.tokens.forEach(token => {
+        for (const ch of token.text) {
+          chars.push({ char: ch, type: token.type });
+        }
+      });
+
+      let i = 0;
+      function nextChar() {
+        if (i >= chars.length) {
+          const doneTimer = setTimeout(() => {
+            isTyping = false;
+          }, 220);
+          timeouts.push(doneTimer);
+          return;
+        }
+
+        const current = chars[i];
+        const span = document.createElement('span');
+        span.className = current.type;
+        contentEl.appendChild(span);
+
+        let scrambleCount = 0;
+        const scrambleInterval = setInterval(() => {
+          if (current.char === ' ' || scrambleCount >= 2) {
+            clearInterval(scrambleInterval);
+            span.textContent = current.char;
+          } else {
+            span.textContent = glitchChars[Math.floor(Math.random() * glitchChars.length)];
+            scrambleCount++;
+          }
+        }, 18);
+
+        i++;
+        const charTimer = setTimeout(nextChar, lineData.speed);
+        timeouts.push(charTimer);
+      }
+
+      nextChar();
+    }
+
+    function startExperience() {
+      timeouts.forEach(t => clearTimeout(t));
+      timeouts = [];
+      linesContainer.innerHTML = '';
+      activeLineEl = null;
+      activeCursor = null;
+      isTyping = false;
+
+      updateCameraTarget();
+      camX = targetX;
+      camY = targetY;
+      camZoom = targetZoom;
+
+      scriptLines.forEach((line, idx) => {
+        const lineTimer = setTimeout(() => {
+          typeLine(line, idx);
+        }, line.time * 1000);
+        timeouts.push(lineTimer);
+      });
+    }
+
+    // Tekan Spasi atau R untuk restart animasi dari detik 0
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' || e.key.toLowerCase() === 'r') {
+        e.preventDefault();
+        startExperience();
+      }
+    });
+
+    requestAnimationFrame(animateCamera);
+    startExperience();
+  </script>
+</body>
+</html>
