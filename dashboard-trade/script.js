@@ -1,5 +1,5 @@
 /* =========================================================
-   TRADION
+   TRAZEEL
    Functional SPA + Journal + Statistics
 ========================================================= */
 
@@ -12,298 +12,7 @@ const STORAGE = {
     language: "tradion_language_v1"
 };
 
-/* =========================================================
-   SUPABASE AUTH
-   Browser client using the public publishable key.
-========================================================= */
-
-const SUPABASE_URL =
-    "https://wzngesxfeuxesgzihsyo.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_ThK42W9h5FtHunR-piPSfQ_bXIfhYNj";
-
-let supabaseClient = null;
-let supabaseAuthReady = false;
-let supabaseAuthBusy = false;
-
-function loadSupabaseSDK() {
-    if (window.supabase?.createClient) {
-        return Promise.resolve();
-    }
-
-    const existing = document.querySelector(
-        'script[data-trazeel-supabase-sdk="true"]'
-    );
-
-    if (existing) {
-        return new Promise((resolve, reject) => {
-            existing.addEventListener("load", resolve, { once: true });
-            existing.addEventListener("error", () => reject(new Error("Supabase SDK failed to load.")), { once: true });
-        });
-    }
-
-    return new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
-        script.async = true;
-        script.dataset.trazeelSupabaseSdk = "true";
-        script.onload = resolve;
-        script.onerror = () => reject(new Error("Supabase SDK failed to load."));
-        document.head.appendChild(script);
-    });
-}
-
-function getSupabaseUserName(user) {
-    const metadataName =
-        user?.user_metadata?.display_name ||
-        user?.user_metadata?.full_name ||
-        user?.user_metadata?.name;
-
-    if (metadataName) return String(metadataName).trim();
-
-    return deriveLoginUser(user?.email || "").name;
-}
-
-function rememberSupabaseUser(user) {
-    if (!user) return;
-
-    const existing = state.user && typeof state.user === "object"
-        ? state.user
-        : deriveLoginUser(user.email || "");
-
-    state.user = {
-        ...existing,
-        name: existing.name || getSupabaseUserName(user),
-        email: user.email || existing.email || "",
-        authUserId: user.id,
-        authProvider: "supabase",
-        createdAt: existing.createdAt || user.created_at || new Date().toISOString()
-    };
-
-    localStorage.setItem(
-        STORAGE.user,
-        JSON.stringify(state.user)
-    );
-
-    if (!userNameInput.value.trim()) {
-        userNameInput.value = state.user.name || "";
-    }
-}
-
-function clearLocalAuthState() {
-    localStorage.removeItem(STORAGE.user);
-    localStorage.removeItem(STORAGE.setupCompleted);
-    localStorage.removeItem(STORAGE.profile);
-    localStorage.removeItem("trazeel_auth_signup_v1");
-
-    state.user = null;
-    state.authenticated = false;
-    state.profile = {
-        username: "",
-        bio: "Membangun konsistensi, satu trade setiap kali.",
-        avatar: null
-    };
-}
-
-function handleSupabaseAuthStateChange(event, session) {
-    if (event === "INITIAL_SESSION") {
-        if (session?.user) {
-            state.authenticated = true;
-            rememberSupabaseUser(session.user);
-        } else {
-            state.authenticated = false;
-        }
-        return;
-    }
-
-    if (event === "SIGNED_IN" && session?.user) {
-        state.authenticated = true;
-        rememberSupabaseUser(session.user);
-
-        if (state.introFinished) {
-            const setupCompleted =
-                localStorage.getItem(STORAGE.setupCompleted) === "true";
-
-            if (setupCompleted && state.user) {
-                openMainApp();
-            } else {
-                userNameInput.value = state.user.name || "";
-                showScreen(setupScreen);
-                showSetupStep(1);
-            }
-        }
-
-        return;
-    }
-
-    if (event === "TOKEN_REFRESHED" && session?.user) {
-        state.authenticated = true;
-        rememberSupabaseUser(session.user);
-        return;
-    }
-
-    if (event === "USER_UPDATED" && session?.user) {
-        state.authenticated = true;
-        rememberSupabaseUser(session.user);
-        return;
-    }
-
-    if (event === "SIGNED_OUT") {
-        clearLocalAuthState();
-
-        if (state.introFinished) {
-            window.location.hash = "";
-            showScreen(welcomeScreen);
-        }
-    }
-}
-
-async function initializeSupabaseAuth() {
-    try {
-        await loadSupabaseSDK();
-
-        if (!window.supabase?.createClient) {
-            throw new Error("Supabase client is unavailable.");
-        }
-
-        supabaseClient = window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_PUBLISHABLE_KEY,
-            {
-                auth: {
-                    autoRefreshToken: true,
-                    persistSession: true,
-                    detectSessionInUrl: true
-                }
-            }
-        );
-
-        supabaseClient.auth.onAuthStateChange(
-            handleSupabaseAuthStateChange
-        );
-
-        const { data, error } =
-            await supabaseClient.auth.getSession();
-
-        if (error) throw error;
-
-        supabaseAuthReady = true;
-
-        if (data?.session?.user) {
-            state.authenticated = true;
-            rememberSupabaseUser(data.session.user);
-        } else {
-            state.authenticated = false;
-        }
-    } catch (error) {
-        console.error("Supabase initialization error:", error);
-        supabaseClient = null;
-        supabaseAuthReady = false;
-        state.authenticated = false;
-    }
-}
-
-function formatAuthError(error) {
-    const message = String(error?.message || "").toLowerCase();
-
-    if (message.includes("invalid login credentials")) {
-        return state.language === "en"
-            ? "Email or password is incorrect."
-            : "Email atau password salah.";
-    }
-
-    if (message.includes("email not confirmed")) {
-        return state.language === "en"
-            ? "Email is not confirmed yet. Check your inbox first."
-            : "Email belum dikonfirmasi. Cek inbox email lo dulu.";
-    }
-
-    if (message.includes("user already registered")) {
-        return state.language === "en"
-            ? "That email is already registered."
-            : "Email itu sudah terdaftar.";
-    }
-
-    if (message.includes("password should be at least")) {
-        return state.language === "en"
-            ? "Password is too short."
-            : "Password terlalu pendek.";
-    }
-
-    if (message.includes("rate limit") || message.includes("too many requests")) {
-        return state.language === "en"
-            ? "Too many attempts. Please wait a moment and try again."
-            : "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.";
-    }
-
-    return error?.message || (state.language === "en"
-        ? "Authentication failed. Please try again."
-        : "Autentikasi gagal. Coba lagi.");
-}
-
-function setAuthFormBusy(form, busy, idleText) {
-    const button = form?.querySelector('button[type="submit"]');
-    if (!button) return;
-
-    button.disabled = busy;
-    button.dataset.idleText = idleText;
-    button.textContent = busy
-        ? (state.language === "en" ? "Please wait..." : "Tunggu sebentar...")
-        : idleText;
-}
-
-function ensureAuthSignOutButton() {
-    const resetButton = $("resetAppBtn");
-    if (!resetButton || $("supabaseSignOutBtn")) return;
-
-    const button = document.createElement("button");
-    button.className = "setting-button";
-    button.id = "supabaseSignOutBtn";
-    button.type = "button";
-    button.innerHTML = `
-        <div>
-            <strong data-i18n="signOut">Sign out</strong>
-            <span data-i18n="signOutDesc">Keluar dari akun Trazeel</span>
-        </div>
-        <span>›</span>
-    `;
-
-    resetButton.parentElement?.insertBefore(button, resetButton);
-    button.addEventListener("click", handleSupabaseSignOut);
-}
-
-async function handleSupabaseSignOut() {
-    if (supabaseAuthBusy) return;
-
-    if (!supabaseClient) {
-        clearLocalAuthState();
-        showScreen(welcomeScreen);
-        showToast(state.language === "en" ? "Signed out." : "Berhasil keluar.");
-        return;
-    }
-
-    supabaseAuthBusy = true;
-
-    try {
-        const { error } = await supabaseClient.auth.signOut({
-            scope: "local"
-        });
-
-        if (error) throw error;
-
-        showToast(
-            state.language === "en"
-                ? "Signed out successfully."
-                : "Berhasil keluar dari akun."
-        );
-    } catch (error) {
-        console.error("Supabase sign out error:", error);
-        showToast(formatAuthError(error));
-    } finally {
-        supabaseAuthBusy = false;
-    }
-}
+/* Remote authentication removed. Local auth is in local-auth.js. */
 
 const FEEL_META = {
     calm: { label: "Calm", icon: "calm" },
@@ -447,15 +156,14 @@ const toast = $("toast");
 const deleteJournalBtn = $("deleteJournalBtn");
 
 document.addEventListener("DOMContentLoaded", init);
-
-async function init() {
+function init() {
     loadData();
     bindEvents();
     initializePreferences();
     setTodayDefaults();
     initializeNotificationSystem();
-    ensureAuthSignOutButton();
-    await initializeSupabaseAuth();
+    ensureLocalSignOutButton();
+    initializeLocalAccountSystem();
     initializeIntro();
 }
 
@@ -575,36 +283,7 @@ function bindEvents() {
     window.addEventListener("hashchange", handleHashRoute);
 }
 
-function initializeIntro() {
-    const setupCompleted =
-        localStorage.getItem(STORAGE.setupCompleted) === "true";
-
-    setTimeout(() => {
-        introScreen.classList.add("exit");
-
-        setTimeout(() => {
-            introScreen.classList.add("hidden");
-            state.introFinished = true;
-
-            const storedUser = state.user;
-
-            if (state.authenticated && setupCompleted && storedUser) {
-                openMainApp();
-                handleHashRoute();
-            } else if (state.authenticated) {
-                if (storedUser?.name) {
-                    userNameInput.value = storedUser.name;
-                }
-                showScreen(setupScreen);
-                showSetupStep(1);
-            } else {
-                showScreen(welcomeScreen);
-            }
-        }, 520);
-    }, 1900);
-}
-
-
+/* Local startup routing is in local-auth.js. */
 
 /* =========================================================
    AUTH GATE
@@ -629,19 +308,20 @@ function isAuthMobile() {
 
 function updateAuthOverlayContent() {
     const mobile = isAuthMobile();
+    const en = state.language === "en";
 
     if (!authSignupOpen) {
-        authOverlayTitle.textContent = "Welcome Back";
-        authOverlayDescription.textContent = "Sudah punya akun? Masuk dan lanjutkan perjalananmu.";
+        authOverlayTitle.textContent = t("welcomeBackShort");
+        authOverlayDescription.textContent = t("loginDescription");
         authArrowBtn.textContent = mobile ? "↑" : "←";
-        authArrowBtn.setAttribute("aria-label", "Open sign up");
-        authSwitchHint.textContent = "Geser untuk Sign Up";
+        authArrowBtn.setAttribute("aria-label", en ? "Open sign up" : "Buka pendaftaran");
+        authSwitchHint.textContent = t("swipeToSignup");
     } else {
-        authOverlayTitle.textContent = "Create Account";
-        authOverlayDescription.textContent = "Belum punya akun? Daftar sekarang dan mulai perjalananmu.";
+        authOverlayTitle.textContent = t("newAccount");
+        authOverlayDescription.textContent = t("signupDescription");
         authArrowBtn.textContent = mobile ? "↓" : "→";
-        authArrowBtn.setAttribute("aria-label", "Back to login");
-        authSwitchHint.textContent = "Geser untuk Login";
+        authArrowBtn.setAttribute("aria-label", en ? "Back to login" : "Kembali ke masuk");
+        authSwitchHint.textContent = t("swipeToLogin");
     }
 }
 
@@ -894,215 +574,13 @@ function handleAuthResize() {
 window.addEventListener("resize", handleAuthResize);
 window.addEventListener("orientationchange", handleAuthResize);
 
-function deriveLoginUser(email) {
-    const localPart = String(email || "").split("@")[0].trim();
-    const name = localPart
-        ? localPart.replace(/[._-]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()).slice(0, 30)
-        : "Trader";
-    return {
-        name,
-        accountName: "Main Account",
-        startingBalance: 0,
-        currency: "USD",
-        createdAt: new Date().toISOString(),
-        email: String(email || "").trim(),
-        authProvider: "login"
-    };
-}
-
-async function handleAuthLogin(event) {
-    event.preventDefault();
-
-    if (supabaseAuthBusy) return;
-
-    const email =
-        authLoginForm.querySelector('input[name="email"]')?.value.trim();
-
-    const password =
-        authLoginForm.querySelector('input[name="password"]')?.value || "";
-
-    if (!email || !password) {
-        showToast(
-            state.language === "en"
-                ? "Enter your email and password."
-                : "Isi email dan password dulu."
-        );
-        return;
-    }
-
-    if (!supabaseClient || !supabaseAuthReady) {
-        showToast(
-            state.language === "en"
-                ? "Authentication service is unavailable. Refresh the page and try again."
-                : "Layanan autentikasi belum siap. Refresh halaman lalu coba lagi."
-        );
-        return;
-    }
-
-    supabaseAuthBusy = true;
-    setAuthFormBusy(authLoginForm, true, "Login");
-
-    try {
-        const { data, error } =
-            await supabaseClient.auth.signInWithPassword({
-                email,
-                password
-            });
-
-        if (error) throw error;
-
-        if (data?.user) {
-            state.authenticated = true;
-            rememberSupabaseUser(data.user);
-        }
-
-        showToast(
-            state.language === "en"
-                ? "Login successful. Welcome back."
-                : "Login berhasil. Selamat datang kembali."
-        );
-    } catch (error) {
-        console.error("Supabase login error:", error);
-        showToast(formatAuthError(error));
-    } finally {
-        supabaseAuthBusy = false;
-        setAuthFormBusy(authLoginForm, false, "Login");
-    }
-}
-
-async function handleAuthSignup(event) {
-    event.preventDefault();
-
-    if (supabaseAuthBusy) return;
-
-    const name = authSignupName?.value.trim();
-    const email =
-        authSignupForm.querySelector('input[name="email"]')?.value.trim();
-    const password =
-        authSignupForm.querySelector('input[name="password"]')?.value || "";
-
-    if (!name || !email || !password) {
-        showToast(
-            state.language === "en"
-                ? "Complete your name, email, and password."
-                : "Lengkapi nama, email, dan password dulu."
-        );
-        return;
-    }
-
-    if (!supabaseClient || !supabaseAuthReady) {
-        showToast(
-            state.language === "en"
-                ? "Authentication service is unavailable. Refresh the page and try again."
-                : "Layanan autentikasi belum siap. Refresh halaman lalu coba lagi."
-        );
-        return;
-    }
-
-    supabaseAuthBusy = true;
-    setAuthFormBusy(authSignupForm, true, "Sign Up");
-
-    try {
-        const { data, error } =
-            await supabaseClient.auth.signUp({
-                email,
-                password,
-                options: {
-                    data: {
-                        display_name: name
-                    }
-                }
-            });
-
-        if (error) throw error;
-
-        localStorage.setItem(
-            "trazeel_auth_signup_v1",
-            JSON.stringify({
-                name,
-                email,
-                createdAt: new Date().toISOString()
-            })
-        );
-
-        userNameInput.value = name;
-        accountNameInput.value = "";
-        startingBalanceInput.value = "";
-        currencyInput.value = "USD";
-
-        if (data?.session?.user) {
-            state.authenticated = true;
-            rememberSupabaseUser(data.session.user);
-            showScreen(setupScreen);
-            showSetupStep(1);
-            showToast(
-                state.language === "en"
-                    ? "Account created. Complete your account setup."
-                    : "Akun berhasil dibuat. Lengkapi account setup lo."
-            );
-        } else {
-            authSignupOpen = false;
-            if (authOverlay) authOverlay.style.transform = "";
-            applyAuthState(true);
-            resizeAuthInnerContent();
-
-            authLoginForm.querySelector('input[name="email"]')?.focus();
-
-            showToast(
-                state.language === "en"
-                    ? "Account created. Check your email to confirm the account, then log in."
-                    : "Akun berhasil dibuat. Cek email untuk konfirmasi akun, lalu login."
-            );
-        }
-    } catch (error) {
-        console.error("Supabase signup error:", error);
-        showToast(formatAuthError(error));
-    } finally {
-        supabaseAuthBusy = false;
-        setAuthFormBusy(authSignupForm, false, "Sign Up");
-    }
-}
+/* Local login/signup handlers are in local-auth.js. */
 
 /* =========================================================
    STORAGE
 ========================================================= */
 
-function loadData() {
-    state.user = safeJSONParse(
-        localStorage.getItem(STORAGE.user),
-        null
-    );
-
-    const journals = safeJSONParse(
-        localStorage.getItem(STORAGE.journals),
-        []
-    );
-    const profile = safeJSONParse(localStorage.getItem(STORAGE.profile), null);
-    state.journals = Array.isArray(journals) ? journals : [];
-    if (profile && typeof profile === "object") state.profile = { ...state.profile, ...profile };
-    state.theme = localStorage.getItem(STORAGE.theme) || "system";
-    state.language = localStorage.getItem(STORAGE.language) || "id";
-}
-
-function saveUser() {
-    localStorage.setItem(
-        STORAGE.user,
-        JSON.stringify(state.user)
-    );
-
-    localStorage.setItem(
-        STORAGE.setupCompleted,
-        "true"
-    );
-}
-
-function saveJournals() {
-    localStorage.setItem(STORAGE.journals, JSON.stringify(state.journals));
-}
-
-function saveProfile() {
-    localStorage.setItem(STORAGE.profile, JSON.stringify(state.profile));
-}
+/* Account-scoped persistence is in local-auth.js. */
 
 function initializePreferences() {
     applyTheme(state.theme, false);
@@ -1222,7 +700,7 @@ function handleSetupStepOne() {
         setFieldError(
             userNameInput,
             $("userNameError"),
-            "Isi nama lo dulu."
+            t("setupNameError")
         );
 
         return;
@@ -1236,84 +714,7 @@ function handleSetupStepOne() {
     showSetupStep(2);
 }
 
-function handleFinishSetup() {
-    const name =
-        userNameInput.value.trim();
-
-    const accountName =
-        accountNameInput.value.trim();
-
-    const balance =
-        Number(startingBalanceInput.value);
-
-    const currency =
-        currencyInput.value;
-
-    let valid = true;
-
-    if (!name) {
-        setFieldError(
-            userNameInput,
-            $("userNameError"),
-            "Isi nama lo dulu."
-        );
-
-        showSetupStep(1);
-
-        return;
-    }
-
-    if (!accountName) {
-        setFieldError(
-            accountNameInput,
-            $("accountNameError"),
-            "Isi nama account."
-        );
-
-        valid = false;
-    } else {
-        clearFieldError(
-            accountNameInput,
-            $("accountNameError")
-        );
-    }
-
-    if (
-        !Number.isFinite(balance) ||
-        balance < 0
-    ) {
-        setFieldError(
-            startingBalanceInput,
-            $("startingBalanceError"),
-            "Masukkan balance yang valid."
-        );
-
-        valid = false;
-    } else {
-        clearFieldError(
-            startingBalanceInput,
-            $("startingBalanceError")
-        );
-    }
-
-    if (!valid) return;
-
-    state.user = {
-        name,
-        accountName,
-        startingBalance: balance,
-        currency,
-        createdAt:
-            new Date().toISOString()
-    };
-
-    saveUser();
-    openMainApp();
-
-    showToast(
-        "Account berhasil disiapkan."
-    );
-}
+/* Local setup completion is in local-auth.js. */
 
 function setTodayDefaults() {
     const today =
@@ -1797,7 +1198,6 @@ function compressImage(
                             maxWidth /
                                 img.width
                         );
-
                     const canvas =
                         document.createElement(
                             "canvas"
@@ -2076,13 +1476,13 @@ function validateJournal(
     needText(
         data.date,
         "journalDate",
-        "Pilih tanggal."
+        t("validationSelectDate")
     );
 
     needText(
         data.pair,
         "journalPair",
-        "Isi pair."
+        t("validationPair")
     );
 
     if (
@@ -2091,7 +1491,7 @@ function validateJournal(
     ) {
         if (!data.category) {
             showToast(
-                "Pilih kategori Future: Forex atau Crypto."
+                t("validationFutureCategory")
             );
 
             valid = false;
@@ -2100,7 +1500,7 @@ function validateJournal(
         if (!data.position) {
             setCustomFieldError(
                 "journalPosition",
-                "Pilih BUY atau SELL."
+                t("validationPosition")
             );
 
             valid = false;
@@ -2118,7 +1518,7 @@ function validateJournal(
     ) {
         if (!data.marketType) {
             showToast(
-                "Pilih jenis trade."
+                t("validationMarketType")
             );
 
             valid = false;
@@ -2131,7 +1531,7 @@ function validateJournal(
     ) {
         setCustomFieldError(
             "journalPnl",
-            "Pilih Profit/Loss dan isi nominalnya."
+            t("validationPnl")
         );
 
         valid = false;
@@ -2145,37 +1545,37 @@ function validateJournal(
     needNumber(
         data.entryPrice,
         "journalEntry",
-        "Isi entry price."
+        t("validationEntry")
     );
 
     needNumber(
         data.sl,
         "journalSl",
-        "Isi stop loss."
+        t("validationStopLoss")
     );
 
     needNumber(
         data.tp,
         "journalTp",
-        "Isi take profit."
+        t("validationTakeProfit")
     );
 
     needText(
         data.setup,
         "journalSetup",
-        "Isi setup."
+        t("validationSetup")
     );
 
     needText(
         data.method,
         "journalMethod",
-        "Isi method."
+        t("validationMethod")
     );
 
     if (!data.feel) {
         setCustomFieldError(
             "journalFeel",
-            "Pilih kondisi feel."
+            t("validationFeel")
         );
 
         valid = false;
@@ -2283,12 +1683,9 @@ function renderJournal() {
     journalCountLabel.textContent =
         filtered.length;
 
-    journalCountText.textContent =
-        state.selectedDate
-            ? "on selected date"
-            : filtered.length === 1
-              ? "journal"
-              : "journals";
+    journalCountText.textContent = state.selectedDate
+        ? t("onSelectedDate")
+        : filtered.length === 1 ? t("journalSingular") : t("journals");
 
     clearDateFilterBtn.classList.toggle(
         "visible",
@@ -2531,7 +1928,7 @@ function renderJournalCard(
                 </span>
 
                 <strong>
-                    Tap to view • <span class="ui-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v2"></path></svg></span>
+                    ${escapeHTML(t("tapToView"))} • <span class="ui-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v2"></path></svg></span>
                 </strong>
             </div>
         </button>
@@ -2548,12 +1945,9 @@ function renderEmptyJournalState(
                     <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
                 </div>
 
-                <h2>
-                    No journal on this date.
-                </h2>
+                <h2>${escapeHTML(t("noJournalDate"))}</h2>
 
-                <p>
-                    Tidak ada record yang memakai tanggal
+                <p>${escapeHTML(t("noJournalDateDescription"))}
                     <strong>
                         ${escapeHTML(
                             formatDateLong(
@@ -2568,7 +1962,7 @@ function renderEmptyJournalState(
                     type="button"
                     id="clearEmptyDateBtn"
                 >
-                    Clear date filter
+                    ${escapeHTML(t("clearFilter"))}
                 </button>
             </div>
         `;
@@ -2580,22 +1974,15 @@ function renderEmptyJournalState(
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 4.5v17M8 6h8M8 10h8"/></svg>
             </div>
 
-            <h2>
-                No journal entries yet.
-            </h2>
-
-            <p>
-                Trade pertama lo bisa menjadi titik awal
-                dari data yang nantinya membentuk statistics
-                dan psychology dashboard.
-            </p>
+            <h2>${escapeHTML(t("noJournalEntries"))}</h2>
+            <p>${escapeHTML(t("firstTradeDescription"))}</p>
 
             <button
                 class="primary-btn"
                 type="button"
                 id="emptyAddJournalBtn"
             >
-                Add First Trade
+                ${escapeHTML(t("addFirstTrade"))}
                 <span>→</span>
             </button>
         </div>
@@ -2640,12 +2027,12 @@ function openJournalDetail(id) {
     let html = `
         <div class="detail-grid two">
             ${detailGroup(
-                "Market",
+                t("market"),
                 marketLabel
             )}
 
             ${detailGroup(
-                "Pair",
+                t("pair"),
                 journal.pair
             )}
         </div>
@@ -2654,7 +2041,7 @@ function openJournalDetail(id) {
             journal.marketType ===
             "future"
                 ? detailGroup(
-                      "Position",
+                      t("position"),
                       capitalize(
                           journal.position
                       )
@@ -2663,14 +2050,14 @@ function openJournalDetail(id) {
         }
 
         ${detailGroup(
-            "Date",
+            t("date"),
             formatDateLong(
                 journal.date
             )
         )}
 
         ${detailGroup(
-            "Final PNL",
+            t("finalPNL"),
             formatSignedNumber(
                 journal.pnl
             ),
@@ -2679,28 +2066,19 @@ function openJournalDetail(id) {
 
         <div class="detail-grid two">
             ${detailGroup(
-                "Entry Price",
+                t("entryPrice"),
                 formatRawNumber(
                     journal.entryPrice
                 )
             )}
 
             ${detailGroup(
-                "Setup",
+                t("setup"),
                 journal.setup
             )}
         </div>
-
-        <div class="detail-grid two">
             ${detailGroup(
-                "Stop Loss",
-                formatRawNumber(
-                    journal.sl
-                )
-            )}
-
-            ${detailGroup(
-                "Take Profit",
+                t("takeProfit"),
                 formatRawNumber(
                     journal.tp
                 )
@@ -2709,12 +2087,12 @@ function openJournalDetail(id) {
 
         <div class="detail-grid two">
             ${detailGroup(
-                "Method",
+                t("method"),
                 journal.method
             )}
 
             ${detailGroupWithIcon(
-                "Feel",
+                t("feel"),
                 getFeelEmoji(journal.feel),
                 formatFeelLabel(journal.feel)
             )}
@@ -2736,13 +2114,13 @@ function openJournalDetail(id) {
         `;
     } else {
         html += detailGroup(
-            "Screenshot",
-            "Not provided (optional)"
+            t("screenshot"),
+            t("notProvidedOptional")
         );
     }
 
     html += detailGroup(
-        "Created",
+        t("created"),
         formatCreatedAt(
             journal.createdAt
         )
@@ -2801,49 +2179,24 @@ function detailGroup(
 }
 
 function deleteSelectedJournal() {
-    const journal =
-        state.journals.find(
-            (item) =>
-                item.id ===
-                state.selectedJournalId
-        );
-
+    const journal = state.journals.find((item) => item.id === state.selectedJournalId);
     if (!journal) return;
 
-    const confirmed =
-        window.confirm(
-            `Delete journal ${formatDateUpper(
-                journal.date
-            )} • ${journal.pair}?\n\nRecord ini tidak dapat dipulihkan setelah dihapus.`
-        );
-
+    const confirmed = window.confirm(interpolate(t("deleteJournalConfirm"), {
+        date: formatDateUpper(journal.date),
+        pair: journal.pair
+    }));
     if (!confirmed) return;
 
-    state.journals =
-        state.journals.filter(
-            (item) =>
-                item.id !==
-                state.selectedJournalId
-        );
-
+    state.journals = state.journals.filter((item) => item.id !== state.selectedJournalId);
     saveJournals();
     syncNotificationInsights();
-
-    state.selectedJournalId =
-        null;
-
-    closeModal(
-        detailModal
-    );
-
+    state.selectedJournalId = null;
+    closeModal(detailModal);
     updateAllAnalytics();
     renderJournal();
-
-    showToast(
-        "Journal dihapus."
-    );
+    showToast(t("journalDeleted"));
 }
-
 
 /* =========================================================
    STATISTICS
@@ -3021,7 +2374,7 @@ function renderStatistics() {
 
     $("statWinRateMeta")
         .textContent =
-        `${stats.wins} wins / ${stats.total} trades`;
+        `${stats.wins} ${t("winsCount")} / ${stats.total} ${t("tradeCountPlural")}`;
 
     $("statAvgRR")
         .textContent =
@@ -3059,7 +2412,7 @@ function renderStatistics() {
                             2
                         )
               }`
-            : "No journal data";
+            : t("statisticsNoJournalMeta");
 
     renderPerformanceBars();
     renderPsychologyStatistics();
@@ -3072,9 +2425,7 @@ function renderPerformanceBars() {
 
     if (!state.journals.length) {
         container.innerHTML = `
-            <div class="stats-empty-message">
-                Chart akan muncul setelah journal memiliki data.
-            </div>
+            <div class="stats-empty-message">${escapeHTML(t("chartEmpty"))}</div>
         `;
 
         return;
@@ -3185,11 +2536,7 @@ function renderPsychologyStatistics() {
         Object.entries(groups);
 
     if (!entries.length) {
-        container.innerHTML = `
-            <div class="stats-empty-message">
-                Belum ada data psychology.
-            </div>
-        `;
+        container.innerHTML = `<div class="stats-empty-message">${escapeHTML(t("noPsychData"))}</div>`;
 
         return;
     }
@@ -3238,24 +2585,12 @@ function renderPsychologyStatistics() {
                                         )}
                                     </strong>
 
-                                    <span>
-                                        ${
-                                            data.count
-                                        }
-                                        trade${
-                                            data.count ===
-                                            1
-                                                ? ""
-                                                : "s"
-                                        }
-                                    </span>
+                                    <span>${data.count} ${data.count === 1 ? t("tradeCountSingular") : t("tradeCountPlural")}</span>
                                 </div>
                             </div>
 
                             <div class="psych-metric">
-                                <span>
-                                    Win rate
-                                </span>
+                                <span>${escapeHTML(t("winRateMetric"))}</span>
 
                                 <strong>
                                     ${formatNumber(
@@ -3266,9 +2601,7 @@ function renderPsychologyStatistics() {
                             </div>
 
                             <div class="psych-metric">
-                                <span>
-                                    Avg PNL
-                                </span>
+                                <span>${escapeHTML(t("avgPNL"))}</span>
 
                                 <strong
                                     class="${
@@ -3305,11 +2638,8 @@ function renderPsychologyInsight() {
         Object.entries(groups);
 
     if (!entries.length) {
-        title.textContent =
-            "Belum ada cukup data.";
-
-        text.textContent =
-            "Setelah beberapa trade dicatat, bagian ini akan membaca hubungan antara feel dan hasil trading lo.";
+        title.textContent = t("insightNoDataTitle");
+        text.textContent = t("insightNoDataBody");
 
         return;
     }
@@ -3318,11 +2648,8 @@ function renderPsychologyInsight() {
         state.journals.length <
         3
     ) {
-        title.textContent =
-            "Tambahkan beberapa trade lagi.";
-
-        text.textContent =
-            "Data psychology akan lebih bermakna setelah ada beberapa journal, supaya perbandingan antar kondisi tidak terlalu tipis.";
+        title.textContent = t("insightNeedMoreTitle");
+        text.textContent = t("insightNeedMoreBody");
 
         return;
     }
@@ -3376,10 +2703,7 @@ function renderPsychologyInsight() {
         best.count >= 2 &&
         worst.count >= 2
     ) {
-        title.textContent =
-            `${formatFeelLabel(
-                best.feel
-            )} terlihat paling sehat.`;
+        title.textContent = interpolate(t("insightBestTitle"), { feel: formatFeelLabel(best.feel) });
 
         const bestName =
             formatFeelLabel(
@@ -3391,14 +2715,13 @@ function renderPsychologyInsight() {
                 worst.feel
             );
 
-        text.textContent =
-            `Dari ${
-                best.count
-            } trade saat ${bestName}, rata-rata PNL tercatat ${formatSignedNumber(
-                best.avgPnl
-            )}. ${worstName} berada di ${formatSignedNumber(
-                worst.avgPnl
-            )} rata-rata. Gunakan pola ini sebagai bahan evaluasi, bukan sebagai alasan untuk memaksa setup.`;
+        text.textContent = interpolate(t("insightBestBody"), {
+            count: best.count,
+            best: bestName,
+            bestPnl: formatSignedNumber(best.avgPnl),
+            worst: worstName,
+            worstPnl: formatSignedNumber(worst.avgPnl)
+        });
 
         return;
     }
@@ -3410,17 +2733,9 @@ function renderPsychologyInsight() {
                 a[1].count
         )[0];
 
-    title.textContent =
-        `${formatFeelLabel(
-            mostFrequent[0]
-        )} paling sering muncul.`;
-
-    text.textContent =
-        `Kondisi ${formatFeelLabel(
-            mostFrequent[0]
-        )} muncul pada ${
-            mostFrequent[1].count
-        } trade. Belum ada perbedaan yang cukup kuat untuk membuat kesimpulan besar, jadi kumpulkan data tanpa mengubah catatan masa lalu.`;
+    const frequentFeel = formatFeelLabel(mostFrequent[0]);
+    title.textContent = interpolate(t("insightMostTitle"), { feel: frequentFeel });
+    text.textContent = interpolate(t("insightMostBody"), { feel: frequentFeel, count: mostFrequent[1].count });
 }
 
 function groupByFeel() {
@@ -3493,8 +2808,7 @@ function renderPsychologyProfile() {
         psychologyFace.innerHTML =
             `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4.5A3.5 3.5 0 0 0 5.5 8c0 .8.27 1.54.72 2.13A3.5 3.5 0 0 0 8 16.5c0 1.93 1.57 3.5 3.5 3.5H12V4.5z"/><path d="M15 4.5A3.5 3.5 0 0 1 18.5 8c0 .8-.27 1.54-.72 2.13A3.5 3.5 0 0 1 16 16.5c0 1.93-1.57 3.5-3.5 3.5H12V4.5z"/><path d="M8.5 7.5h1M7.5 12h2M15.5 7.5h-1M16.5 12h-2"/></svg>`;
 
-        profilePsychologyNote.textContent =
-            "Psychology di halaman ini akan membaca data kondisi psikologi dari journal trading lo.";
+        profilePsychologyNote.textContent = t("profilePsychologyNoData");
 
         return;
     }
@@ -3529,17 +2843,12 @@ function renderPsychologyProfile() {
     psychologyFace.innerHTML =
         getFeelEmoji(feel);
 
-    profilePsychologyNote.textContent =
-        `${formatFeelLabel(
-            feel
-        )} adalah kondisi yang paling sering tercatat (${
-            data.count
-        } trade). Win rate ${formatNumber(
-            winRate,
-            0
-        )}% dengan average PNL ${formatSignedNumber(
-            avgPnl
-        )}. Insight lebih dalam tersedia di Statistics.`;
+    profilePsychologyNote.textContent = interpolate(t("profilePsychologySummary"), {
+        feel: formatFeelLabel(feel),
+        count: data.count,
+        winRate: formatNumber(winRate, 0),
+        avgPnl: formatSignedNumber(avgPnl)
+    });
 }
 
 
@@ -3598,7 +2907,6 @@ function updateUserInterface() {
             todayPnl,
             currency
         );
-
     homeTodayResult.className =
         todayPnl >= 0
             ? "positive"
@@ -3755,19 +3063,19 @@ function saveAccountEditor() {
     const currency = accountEditCurrency.value;
 
     if (!name) {
-        showToast(state.language === "en" ? "Name is required." : "Nama wajib diisi.");
+        showToast(t("editNameRequired"));
         accountEditName.focus();
         return;
     }
 
     if (!accountName) {
-        showToast(state.language === "en" ? "Account name is required." : "Nama account wajib diisi.");
+        showToast(t("editAccountNameRequired"));
         accountEditAccountName.focus();
         return;
     }
 
     if (!Number.isFinite(balance) || balance < 0) {
-        showToast(state.language === "en" ? "Starting balance is invalid." : "Starting balance tidak valid.");
+        showToast(t("editBalanceInvalid"));
         accountEditBalance.focus();
         return;
     }
@@ -3781,7 +3089,7 @@ function saveAccountEditor() {
     updateAllAnalytics();
     closeModal(accountEditModal);
 
-    showToast(state.language === "en" ? "Account information updated." : "Informasi account berhasil diperbarui.");
+    showToast(t("accountInfoUpdated"));
 }
 
 function openProfileEditor() {
@@ -3797,20 +3105,20 @@ function saveProfileEditor() {
     if (!state.user) return;
     const name = profileEditName.value.trim();
     const username = profileEditUsername.value.trim().replace(/^@+/, "").replace(/\s+/g, "").toLowerCase();
-    if (!name) { showToast(state.language === "en" ? "Display name is required." : "Nama profil wajib diisi."); profileEditName.focus(); return; }
+    if (!name) { showToast(t("displayNameRequired")); profileEditName.focus(); return; }
     state.user.name = name;
     state.profile.username = username;
     state.profile.bio = profileEditBio.value.trim() || I18N[state.language].defaultBio;
     saveUser(); saveProfile(); updateUserInterface(); closeModal(profileEditModal);
-    showToast(state.language === "en" ? "Profile updated." : "Profile berhasil diperbarui.");
+    showToast(t("profileUpdated"));
 }
 
 async function handleProfileAvatarUpload(event) {
     const file = event.target.files?.[0];
     if (!file) return;
-    if (!file.type.startsWith("image/")) { showToast(state.language === "en" ? "Please choose an image file." : "Pilih file gambar."); event.target.value = ""; return; }
-    try { state.profile.avatar = await compressImage(file, 720, 0.82); saveProfile(); renderProfileAvatar(); showToast(state.language === "en" ? "Profile photo updated." : "Foto profil berhasil diperbarui."); }
-    catch (error) { console.error(error); showToast(state.language === "en" ? "Could not process the profile photo." : "Gagal memproses foto profil."); }
+    if (!file.type.startsWith("image/")) { showToast(t("chooseImageFile")); event.target.value = ""; return; }
+    try { state.profile.avatar = await compressImage(file, 720, 0.82); saveProfile(); renderProfileAvatar(); showToast(t("profilePhotoUpdated")); }
+    catch (error) { console.error(error); showToast(t("profilePhotoFailed")); }
     finally { event.target.value = ""; }
 }
 
@@ -3822,28 +3130,51 @@ function renderProfileAvatar() {
 
 const I18N = {
     id: {
-        getStarted:"Get Started", continue:"Continue", back:"← Back", enterDashboard:"Enter Dashboard",
-        personalDashboard:"PERSONAL DASHBOARD", welcomeBack:"Welcome back to your trading space.", accountBalance:"ACCOUNT BALANCE", todaysResult:"TODAY'S RESULT", tradesLabel:"TRADES", winRateLabel:"WIN RATE",
-        yourWorkspace:"YOUR WORKSPACE", everythingInOnePlace:"Everything in one place.", tradingJournal:"Trading Journal", statistics:"Statistics", psychologyTitle:"Psychology", profileSettings:"Profile & Settings", readyToLog:"READY TO LOG?", recordNextTrade:"Record your next trade.",
-        journal:"JOURNAL", yourTrades:"Your trades.", filterDate:"FILTER DATE", journals:"journals", journalSingular:"journal", readTheData:"Read the data.", totalTrades:"TOTAL TRADES", journalEntries:"Journal entries", basedOnSltp:"Based on SL / TP", netResultLabel:"NET RESULT", performance:"PERFORMANCE", journalResultOverview:"Journal result overview", psychologyInsight:"PSYCHOLOGY INSIGHT", seeThePattern:"See the pattern.",
-        profileLabel:"TRADER PROFILE", editProfile:"Edit", defaultBio:"Membangun konsistensi, satu trade setiap kali.", trades:"Trades", winRate:"Win Rate", netResult:"Net PNL", account:"ACCOUNT", accountInformation:"Informasi account", editAccount:"Edit", editAccountTitle:"Edit Account", saveAccount:"Save Account", name:"Nama", accountName:"Account", startingBalance:"Starting Balance", currency:"Currency", psychology:"PSYCHOLOGY", yourCurrentProfile:"Profil psikologi lo saat ini.", dominantState:"DOMINANT STATE", settings:"SETTINGS", preferences:"Preferences", appearance:"Appearance", appearanceDesc:"Pilih tampilan Trazeel.", language:"Bahasa", languageDesc:"Pilih bahasa interface.", tradingPreferences:"Trading Preferences", tradingPreferencesDesc:"Risk, session, timeframe", resetDashboard:"Reset Dashboard", resetDashboardDesc:"Hapus seluruh data lokal", signOut:"Sign out", signOutDesc:"Keluar dari akun Trazeel",
-        editProfileTitle:"Edit Profile", saveProfile:"Save Profile", displayName:"Display Name", username:"Username", bio:"Bio", whatDidYouTrade:"What did you trade?", chooseMarket:"Choose the market.", futureMarkets:"Future dibagi menjadi Forex atau Crypto.", chooseTradeType:"Pilih jenis transaksi terlebih dahulu.", spotNotice:"Position tidak diperlukan untuk transaksi Spot.", profit:"Profit", loss:"Loss", tradePositive:"Trade berakhir positif", tradeNegative:"Trade berakhir negatif", screenshot:"Screenshot", close:"Close", deleteJournal:"Delete Journal",
-        home:"Home", journalNav:"Journal", statsNav:"Stats", profileNav:"Profile", changeProfilePhoto:"Change profile photo", notifications:"Notifications", clearDateFilter:"Clear date filter",
-        namePlaceholder:"Contoh: Zril", accountPlaceholder:"Main Account", balancePlaceholder:"1000", pairPlaceholder:"Contoh: XAUUSD", entryPlaceholder:"3342.50", setupPlaceholder:"Liquidity Sweep", methodPlaceholder:"SMC / Price Action / etc.", yourNamePlaceholder:"Your name", usernamePlaceholder:"@trader", bioPlaceholder:"Tell something about your trading journey...", uploadPrompt:"Upload trading screenshot", showing7Of:"Showing 7 of", sortedNewest:"All journals are ordered from the most recently added.", showingAll:"Showing all", allDisplayed:"All journals are already displayed", seeMore:"See more", noData:"Belum ada data.", noPsychData:"Belum ada data psychology.", statsEmpty:"Chart akan muncul setelah journal memiliki data."
+        getStarted:"Mulai", continue:"Lanjutkan", back:"← Kembali", enterDashboard:"Masuk ke Dashboard",
+        introTagline:"Ruang trading pribadi lo.", welcomeTo:"Selamat datang di", welcomeBody:"Tempat pribadi untuk mencatat, memahami, dan mengevaluasi perjalanan trading lo.", restoreAccountBackup:"Pulihkan akun dari backup",
+        welcomeBackShort:"Selamat datang kembali", login:"Masuk", loginDescription:"Masuk ke akun dan lanjutkan perjalanan trading lo.", newAccount:"Akun Baru", signUp:"Daftar", signupDescription:"Buat akun baru dan mulai perjalanan trading lo.", accountId:"ID Akun", password:"Password", name:"Nama", trazeelAuth:"Autentikasi Trazeel", authGestureHint:"Geser panel atau tekan tombol panah untuk berpindah.", swipeToSignup:"Geser untuk Daftar", swipeToLogin:"Geser untuk Masuk",
+        accountSetup:"PENGATURAN AKUN", setupNameTitle:"Yuk kenalan dengan", setupNameDescription:"Nama ini akan digunakan untuk menyambut lo di dashboard.", yourNameRequired:"Nama lo *", setupAccountTitle:"Atur", setupAccountDescription:"Data ini menjadi dasar informasi awal dashboard.", accountNameRequired:"Nama akun *", startingBalanceRequired:"Saldo awal *", currencyRequired:"Mata uang *",
+        personalDashboard:"DASHBOARD PRIBADI", welcomeBack:"Selamat datang kembali di ruang trading lo.", accountBalance:"SALDO AKUN", todaysResult:"HASIL HARI INI", tradesLabel:"TRADE", winRateLabel:"WIN RATE", yourWorkspace:"RUANG KERJA LO", everythingInOnePlace:"Semua dalam satu tempat.", tradingJournal:"Trading Journal", statistics:"Statistik", psychologyTitle:"Psikologi", profileSettings:"Profil & Pengaturan", readyToLog:"SIAP MENCATAT?", recordNextTrade:"Catat trade berikutnya.",
+        journal:"JOURNAL", yourTrades:"Trade lo.", filterDate:"FILTER TANGGAL", journals:"journal", journalSingular:"journal", readTheData:"Baca datanya.", totalTrades:"TOTAL TRADE", journalEntries:"Catatan journal", basedOnSltp:"Berdasarkan SL / TP", netResultLabel:"HASIL BERSIH", performance:"PERFORMA", journalResultOverview:"Ringkasan hasil journal", psychologyInsight:"INSIGHT PSIKOLOGI", seeThePattern:"Lihat polanya.",
+        profileLabel:"PROFIL TRADER", editProfile:"Edit", defaultBio:"Membangun konsistensi, satu trade setiap kali.", trades:"Trade", winRate:"Win Rate", netResult:"PNL Bersih", account:"AKUN", accountInformation:"Informasi akun", editAccount:"Edit", editAccountTitle:"Edit Akun", saveAccount:"Simpan Akun", startingBalance:"Saldo Awal", currency:"Mata Uang", psychology:"PSIKOLOGI", yourCurrentProfile:"Profil psikologi lo saat ini.", dominantState:"KONDISI DOMINAN", settings:"PENGATURAN", preferences:"Preferensi", appearance:"Tampilan", appearanceDesc:"Pilih tampilan Trazeel.", language:"Bahasa", languageDesc:"Pilih bahasa antarmuka.", tradingPreferences:"Preferensi Trading", tradingPreferencesDesc:"Risk, sesi, dan timeframe", resetDashboard:"Reset Dashboard", resetDashboardDesc:"Hapus seluruh data lokal", signOut:"Keluar", signOutDesc:"Keluar dari akun Trazeel",
+        editProfileTitle:"Edit Profil", saveProfile:"Simpan Profil", displayName:"Nama Tampilan", username:"Username", bio:"Bio", whatDidYouTrade:"Apa yang lo tradingkan?", chooseMarket:"Pilih market.", futureMarkets:"Future terbagi menjadi Forex atau Crypto.", chooseTradeType:"Pilih jenis transaksi terlebih dahulu.", spotNotice:"Position tidak diperlukan untuk transaksi Spot.", profit:"Profit", loss:"Loss", tradePositive:"Trade berakhir profit", tradeNegative:"Trade berakhir loss", screenshot:"Screenshot", close:"Tutup", deleteJournal:"Hapus Journal",
+        home:"Home", journalNav:"Journal", statsNav:"Statistik", profileNav:"Profil", changeProfilePhoto:"Ganti foto profil", notifications:"Notifikasi", clearDateFilter:"Hapus filter tanggal", namePlaceholder:"Contoh: Zril", accountPlaceholder:"Akun Utama", balancePlaceholder:"1000", pairPlaceholder:"Contoh: XAUUSD", entryPlaceholder:"3342.50", setupPlaceholder:"Liquidity Sweep", methodPlaceholder:"SMC / Price Action / dll.", yourNamePlaceholder:"Nama lo", usernamePlaceholder:"@trader", bioPlaceholder:"Ceritakan perjalanan trading lo...", uploadPrompt:"Upload screenshot trading", showing7Of:"Menampilkan 7 dari", sortedNewest:"Semua journal diurutkan dari yang paling baru ditambahkan.", showingAll:"Menampilkan semua", allDisplayed:"Semua journal sudah ditampilkan", seeMore:"Lihat lainnya", add:"+ Tambah", noData:"Belum ada data.", noPsychData:"Belum ada data psikologi.", statsEmpty:"Grafik akan muncul setelah journal memiliki data.",
+        introTagline:"Ruang trading pribadi lo.", tradingSpace:"Ruang Trading", active:"AKTIF", journalFeatureDescription:"Catat entry, setup, hasil trade, kondisi psikologi, dan alasan di balik setiap keputusan.", statisticsFeatureDescription:"Ubah data journal menjadi insight tentang performa trading lo.", psychologyFeatureDescription:"Lihat ringkasan kondisi psikologi berdasarkan trade yang sudah dicatat.", profileFeatureDescription:"Kelola informasi akun, preferensi, dan pengaturan dashboard.", quickActionDescription:"Jangan cuma mengingat trade. Catat.", journalPageDescription:"Catat keputusan trading, bukan cuma hasil akhirnya.", statisticsPageDescription:"Data journal dirangkum menjadi gambaran performa dan pola trading lo.", averageRR:"RATA-RATA RR", chartEmpty:"Grafik akan muncul setelah journal memiliki data.", psychologyByFeel:"PSIKOLOGI BERDASARKAN FEEL", profilePhoto:"Foto profil", noLocalAccounts:"Belum ada akun lokal.", deviceAccounts:"AKUN DI PERANGKAT", accountSwitcher:"Pergantian Akun", addAccount:"+ Tambahkan akun", localAccountsDescription:"Maksimal 3 akun dalam satu perangkat. Setiap akun harus menyetujui Quick Switch sebelum bisa dibuka melalui pintasan.", localData:"DATA LOKAL", backupVault:"Backup Vault", offline:"Offline", deviceBackup:"Cadangan perangkat", backupLocationNotSelected:"Lokasi backup belum dipilih.", chooseBackupLocation:"Pilih lokasi backup", backupNow:"Backup sekarang", restoreBackup:"Pulihkan backup", backupDescription:"Backup mencakup maksimal 3 akun, journal, foto, profil, dan preferensi. File tersimpan di lokasi perangkat yang lo pilih, bukan dikirim ke server.", newRecord:"CATATAN BARU", addJournal:"Tambah Journal", viewOnly:"Hanya Dilihat", journalReadOnlyDescription:"Journal yang sudah disimpan tidak dapat diedit. Data hanya bisa dilihat atau dihapus.", accountPermission:"IZIN AKUN", allowQuickSwitchTitle:"Izinkan Quick Switch?", allowQuickSwitchDescription:"Izinkan akun ini muncul di pintasan pergantian akun?", allow:"Izinkan", notNow:"Jangan sekarang",
+        feelCalm:"Tenang", feelNeutral:"Netral", feelFear:"Takut", feelRevenge:"Balas Dendam", feelOverconfident:"Terlalu Percaya Diri", feelAnxious:"Cemas",
+        market:"Market", pair:"Pair", position:"Position", date:"Tanggal", finalPNL:"PNL Akhir", entryPrice:"Harga Entry", setup:"Setup", stopLoss:"Stop Loss", takeProfit:"Take Profit", method:"Metode", feel:"Feel", created:"Dibuat", notProvidedOptional:"Tidak diisi (opsional)", screenshotLabel:"SCREENSHOT", tapToView:"Ketuk untuk melihat", noJournalDate:"Tidak ada journal pada tanggal ini.", noJournalDateDescription:"Tidak ada catatan untuk tanggal", clearFilter:"Hapus filter tanggal", noJournalEntries:"Belum ada catatan journal.", firstTradeDescription:"Trade pertama bisa menjadi awal data yang membentuk statistik dan insight psikologi lo.", addFirstTrade:"Catat Trade Pertama", tradeCountSingular:"trade", tradeCountPlural:"trade", winRateMetric:"Win rate", avgPNL:"Rata-rata PNL",
+        insightNoDataTitle:"Belum ada cukup data.", insightNoDataBody:"Setelah beberapa trade dicatat, bagian ini akan membaca hubungan antara feel dan hasil trading lo.", insightNeedMoreTitle:"Tambahkan beberapa trade lagi.", insightNeedMoreBody:"Insight psikologi akan lebih bermakna setelah ada beberapa journal, supaya perbandingan antar kondisi tidak terlalu tipis.", insightBestTitle:"{feel} terlihat paling sehat.", insightBestBody:"Dari {count} trade saat {best}, rata-rata PNL tercatat {bestPnl}. {worst} berada di {worstPnl} rata-rata. Gunakan pola ini sebagai bahan evaluasi, bukan alasan untuk memaksakan setup.", insightMostTitle:"{feel} paling sering muncul.", insightMostBody:"Kondisi {feel} muncul pada {count} trade. Belum ada perbedaan yang cukup kuat untuk membuat kesimpulan besar, jadi kumpulkan data tanpa mengubah catatan masa lalu.", profilePsychologyNoData:"Bagian ini membaca kondisi psikologi dari journal trading lo.", profilePsychologySummary:"{feel} adalah kondisi yang paling sering tercatat ({count} trade). Win rate {winRate}% dengan rata-rata PNL {avgPnl}. Insight lebih dalam tersedia di Statistik.",
+        notificationTitle:"Notifikasi", notificationSubtitle:"Pantau aktivitas trading lo.", notificationAll:"Semua", notificationTrading:"Trading", notificationRisk:"Risk", notificationPsychology:"Psikologi", notificationMarkAllRead:"Tandai semua dibaca", notificationAllRead:"Semua sudah dibaca", notificationClearAll:"Hapus semua", notificationDelete:"Hapus notifikasi", notificationEmptyTitle:"Belum ada notifikasi.", notificationEmptyFiltered:"Coba pilih kategori lain.", notificationEmptyBody:"Aktivitas penting akan muncul di sini saat Trazeel digunakan.", notificationUnread:"Belum dibaca", notificationConfirmClearAll:"Hapus semua notifikasi? Tindakan ini tidak dapat dibatalkan.", notificationDeleted:"Notifikasi dihapus.", notificationAllDeleted:"Semua notifikasi dihapus.", tradeRecorded:"Trade dicatat", tradeAddedBody:"{pair} berhasil ditambahkan ke journal.", activityReminder:"Pengingat aktivitas", riskReminderBody:"Lo sudah mencatat {count} trade hari ini. Tinjau rencana sebelum membuka posisi berikutnya.", psychologyPattern:"Pola psikologi", psychologyPatternBody:"Kondisi {feel} muncul berulang dalam data journal terbaru lo.",
+        deleteJournalConfirm:"Hapus journal {date} • {pair}?\n\nCatatan ini tidak dapat dipulihkan setelah dihapus.", journalDeleted:"Journal berhasil dihapus.", closeLabel:"Tutup", logout:"Keluar", logoutDescription:"Keluar dari akun aktif", logoutSuccess:"Berhasil keluar. Silakan masuk kembali.", switchAllowed:"Izin Quick Switch diaktifkan.", switchDenied:"Izin Quick Switch tidak diaktifkan.", wait:"Tunggu sebentar...", enterIdPassword:"Masukkan ID dan password.", accountNotFound:"ID tidak ditemukan di perangkat ini. Pulihkan backup jika akun berasal dari perangkat lain.", invalidCredentials:"ID atau password salah.", accountAlreadyActive:"Akun tersebut sedang aktif.", switchAlreadyAllowed:"Akun sudah memiliki izin Quick Switch.", loginSuccess:"Berhasil masuk.", loginFailed:"Gagal masuk.", fillSignup:"Lengkapi nama, ID, dan password.", invalidAccountId:"ID harus 3–24 karakter. Gunakan huruf kecil, angka, titik, garis bawah, atau tanda hubung.", passwordMinLength:"Password minimal 8 karakter.", maxAccounts:"Maksimal 3 akun per perangkat.", idAlreadyUsed:"ID sudah digunakan di perangkat ini.", localAccountCreated:"Akun lokal berhasil dibuat.", accountCreateFailed:"Akun gagal dibuat.", accountPrepared:"Akun berhasil disiapkan.", maxAccountsReached:"Batas maksimal 3 akun sudah tercapai.", noLocalAccount:"Belum ada akun lokal.", switchAccount:"Beralih", allowSwitch:"Izinkan switch", revokePermission:"Cabut izin", switchPermissionTitle:"Izinkan Quick Switch?", switchPermissionDescription:"Izinkan akun ini muncul di pintasan pergantian akun? Jika diizinkan, akun dapat dibuka langsung dari menu Profil tanpa memasukkan ID dan password lagi.", switchSuccess:"Berhasil berpindah akun.", switchRevoked:"Izin Quick Switch dicabut.", backupFolderPermission:"Izin folder perlu diaktifkan kembali.", backupUnsupported:"Browser ini belum mendukung folder backup otomatis. Gunakan Backup sekarang.", backupPermissionDenied:"Izin folder backup tidak diberikan.", backupEnabled:"Backup otomatis berhasil diaktifkan.", backupFolderUnavailable:"Folder backup tidak dapat diakses.", backupCreated:"File backup berhasil dibuat.", backupUpdated:"Backup perangkat berhasil diperbarui.", invalidBackup:"File backup tidak valid atau bukan backup Trazeel.", restoreConfirm:"Pulihkan backup ini? Data akun lokal saat ini akan digantikan. Setelah pemulihan, login menggunakan ID dan password dari backup.", restoreFailed:"Backup gagal dipulihkan. Periksa file JSON.", resetConfirm:"Hapus seluruh akun dan data Trazeel dari perangkat ini? File backup di folder tidak ikut terhapus.", resetSuccess:"Seluruh akun lokal berhasil dihapus.",
+                lockedRecord:"CATATAN TERKUNCI", journalDetail:"Detail Journal", information:"Informasi", stepOne:"LANGKAH 01", stepTwo:"LANGKAH 02", spot:"Spot", buyOnly:"Buy only", future:"Future", forexCrypto:"Forex / Crypto", forex:"Forex", currencyPairs:"Pasangan mata uang", crypto:"Crypto", cryptoFutures:"Crypto futures", dateFieldLabel:"01. Tanggal", pairFieldLabel:"02. Pair", positionFieldLabel:"03. Position", manual:"Manual", select:"Pilih", buy:"BUY", sell:"SELL", finalPNLFieldLabel:"04. PNL Akhir", chooseResult:"Pilih hasil", entryPriceFieldLabel:"05. Harga Entry", sltpFieldLabel:"06. SL / TP", stopLoss:"STOP LOSS", takeProfit:"TAKE PROFIT", setupFieldLabel:"07. Setup", methodFieldLabel:"08. Metode", feelFieldLabel:"09. Feel", psychologyData:"Data psikologi", screenshotFieldLabel:"10. Screenshot", optional:"Opsional", addImage:"Tambah gambar", optionalImageDescription:"Opsional. Gambar akan dikompres untuk penyimpanan lokal.", remove:"Hapus", requiredFieldsNote:"Semua kolom wajib diisi kecuali screenshot.",
+        onSelectedDate:"pada tanggal terpilih", noJournalData:"Belum ada data journal", systemDefault:"Default Sistem", dark:"Gelap", light:"Terang", english:"English", indonesian:"Bahasa Indonesia",
+        accountName:'Nama Akun', welcomeBadge:'RUANG TRADING', setupYouSuffix:'kamu.', setupAccountSuffix:'akun.', saveJournalButton:'Tambah Journal', greetingNight:'Selamat malam', greetingMorning:'Selamat pagi', greetingAfternoon:'Selamat siang', greetingEvening:'Selamat sore', winsCount:'menang', statisticsNoJournalMeta:'Belum ada data journal', justNow:'baru saja', minutesAgo:'{count} menit lalu', hoursAgo:'{count} jam lalu', daysAgo:'{count} hari lalu', accountCurrentlyUsed:'Sedang digunakan', quickSwitchActive:'Quick Switch aktif', switchPermissionMissing:'Izin Quick Switch belum diberikan', backupFolderHint:'Pilih folder satu kali untuk mengaktifkan backup otomatis.', backupManualOnly:'Browser ini menggunakan backup file manual.', backupAutoActive:'Backup otomatis aktif. {filename} akan diperbarui saat data berubah.', backupPermissionAgain:'Izin folder perlu diaktifkan kembali.', setupNameError:'Nama wajib diisi.', setupAccountNameError:'Nama akun wajib diisi.', setupBalanceError:'Masukkan saldo awal yang valid.', validationSelectDate:'Pilih tanggal.', validationPair:'Isi pair.', validationFutureCategory:'Pilih kategori Future: Forex atau Crypto.', validationPosition:'Pilih BUY atau SELL.', validationMarketType:'Pilih jenis trade.', validationPnl:'Pilih Profit/Loss dan isi nominalnya.', validationEntry:'Isi harga entry.', validationStopLoss:'Isi Stop Loss.', validationTakeProfit:'Isi Take Profit.', validationSetup:'Isi setup.', validationMethod:'Isi metode.', validationFeel:'Pilih kondisi psikologi.', editNameRequired:'Nama wajib diisi.', editAccountNameRequired:'Nama akun wajib diisi.', editBalanceInvalid:'Saldo awal tidak valid.', accountInfoUpdated:'Informasi akun berhasil diperbarui.', displayNameRequired:'Nama tampilan wajib diisi.', profileUpdated:'Profil berhasil diperbarui.', chooseImageFile:'Pilih file gambar.', profilePhotoUpdated:'Foto profil berhasil diperbarui.', profilePhotoFailed:'Foto profil tidak dapat diproses.'
     },
     en: {
         getStarted:"Get Started", continue:"Continue", back:"← Back", enterDashboard:"Enter Dashboard",
-        personalDashboard:"PERSONAL DASHBOARD", welcomeBack:"Welcome back to your trading space.", accountBalance:"ACCOUNT BALANCE", todaysResult:"TODAY'S RESULT", tradesLabel:"TRADES", winRateLabel:"WIN RATE",
-        yourWorkspace:"YOUR WORKSPACE", everythingInOnePlace:"Everything in one place.", tradingJournal:"Trading Journal", statistics:"Statistics", psychologyTitle:"Psychology", profileSettings:"Profile & Settings", readyToLog:"READY TO LOG?", recordNextTrade:"Record your next trade.",
+        introTagline:"Your personal trading space.", welcomeTo:"Welcome to", welcomeBody:"A personal space to record, understand, and review your trading journey.", restoreAccountBackup:"Restore account from backup",
+        welcomeBackShort:"Welcome Back", login:"Log In", loginDescription:"Log in to your account and continue your trading journey.", newAccount:"New Account", signUp:"Sign Up", signupDescription:"Create an account and start your trading journey.", accountId:"Account ID", password:"Password", name:"Name", trazeelAuth:"TRAZEEL AUTH", authGestureHint:"Swipe the panel or tap the arrow to switch.", swipeToSignup:"Swipe to Sign Up", swipeToLogin:"Swipe to Log In",
+        accountSetup:"ACCOUNT SETUP", setupNameTitle:"Let’s get to know", setupNameDescription:"This name will be used to welcome you to the dashboard.", yourNameRequired:"Your name *", setupAccountTitle:"Set your", setupAccountDescription:"These details will be used as the dashboard’s starting information.", accountNameRequired:"Account name *", startingBalanceRequired:"Starting balance *", currencyRequired:"Currency *",
+        personalDashboard:"PERSONAL DASHBOARD", welcomeBack:"Welcome back to your trading space.", accountBalance:"ACCOUNT BALANCE", todaysResult:"TODAY’S RESULT", tradesLabel:"TRADES", winRateLabel:"WIN RATE", yourWorkspace:"YOUR WORKSPACE", everythingInOnePlace:"Everything in one place.", tradingJournal:"Trading Journal", statistics:"Statistics", psychologyTitle:"Psychology", profileSettings:"Profile & Settings", readyToLog:"READY TO LOG?", recordNextTrade:"Record your next trade.",
         journal:"JOURNAL", yourTrades:"Your trades.", filterDate:"FILTER DATE", journals:"journals", journalSingular:"journal", readTheData:"Read the data.", totalTrades:"TOTAL TRADES", journalEntries:"Journal entries", basedOnSltp:"Based on SL / TP", netResultLabel:"NET RESULT", performance:"PERFORMANCE", journalResultOverview:"Journal result overview", psychologyInsight:"PSYCHOLOGY INSIGHT", seeThePattern:"See the pattern.",
-        profileLabel:"TRADER PROFILE", editProfile:"Edit", defaultBio:"Building consistency, one trade at a time.", trades:"Trades", winRate:"Win Rate", netResult:"Net PNL", account:"ACCOUNT", accountInformation:"Account information", editAccount:"Edit", editAccountTitle:"Edit Account", saveAccount:"Save Account", name:"Name", accountName:"Account", startingBalance:"Starting Balance", currency:"Currency", psychology:"PSYCHOLOGY", yourCurrentProfile:"Your current psychology profile.", dominantState:"DOMINANT STATE", settings:"SETTINGS", preferences:"Preferences", appearance:"Appearance", appearanceDesc:"Choose how Trazeel looks.", language:"Language", languageDesc:"Choose your interface language.", tradingPreferences:"Trading Preferences", tradingPreferencesDesc:"Risk, session, timeframe", resetDashboard:"Reset Dashboard", resetDashboardDesc:"Delete all local data", signOut:"Sign out", signOutDesc:"Sign out of Trazeel",
-        editProfileTitle:"Edit Profile", saveProfile:"Save Profile", displayName:"Display Name", username:"Username", bio:"Bio", whatDidYouTrade:"What did you trade?", chooseMarket:"Choose the market.", futureMarkets:"Future is divided into Forex or Crypto.", chooseTradeType:"Choose the transaction type first.", spotNotice:"Position is not required for Spot transactions.", profit:"Profit", loss:"Loss", tradePositive:"Trade ended positive", tradeNegative:"Trade ended negative", screenshot:"Screenshot", close:"Close", deleteJournal:"Delete Journal",
-        home:"Home", journalNav:"Journal", statsNav:"Stats", profileNav:"Profile", changeProfilePhoto:"Change profile photo", notifications:"Notifications", clearDateFilter:"Clear date filter",
-        namePlaceholder:"e.g. Zril", accountPlaceholder:"Main Account", balancePlaceholder:"1000", pairPlaceholder:"e.g. XAUUSD", entryPlaceholder:"3342.50", setupPlaceholder:"Liquidity Sweep", methodPlaceholder:"SMC / Price Action / etc.", yourNamePlaceholder:"Your name", usernamePlaceholder:"@trader", bioPlaceholder:"Tell something about your trading journey...", uploadPrompt:"Upload trading screenshot", showing7Of:"Showing 7 of", sortedNewest:"All journals are ordered from the most recently added.", showingAll:"Showing all", allDisplayed:"All journals are already displayed", seeMore:"See more", noData:"No data yet.", noPsychData:"No psychology data yet.", statsEmpty:"The chart will appear after journals have data."
+        profileLabel:"TRADER PROFILE", editProfile:"Edit", defaultBio:"Building consistency, one trade at a time.", trades:"Trades", winRate:"Win Rate", netResult:"Net PNL", account:"ACCOUNT", accountInformation:"Account information", editAccount:"Edit", editAccountTitle:"Edit Account", saveAccount:"Save Account", startingBalance:"Starting Balance", currency:"Currency", psychology:"PSYCHOLOGY", yourCurrentProfile:"Your current psychology profile.", dominantState:"DOMINANT STATE", settings:"SETTINGS", preferences:"Preferences", appearance:"Appearance", appearanceDesc:"Choose how Trazeel looks.", language:"Language", languageDesc:"Choose your interface language.", tradingPreferences:"Trading Preferences", tradingPreferencesDesc:"Risk, session, and timeframe", resetDashboard:"Reset Dashboard", resetDashboardDesc:"Delete all local data", signOut:"Sign out", signOutDesc:"Sign out of Trazeel",
+        editProfileTitle:"Edit Profile", saveProfile:"Save Profile", displayName:"Display Name", username:"Username", bio:"Bio", whatDidYouTrade:"What did you trade?", chooseMarket:"Choose the market.", futureMarkets:"Future is divided into Forex or Crypto.", chooseTradeType:"Choose the transaction type first.", spotNotice:"Position is not required for Spot transactions.", profit:"Profit", loss:"Loss", tradePositive:"Trade ended in profit", tradeNegative:"Trade ended in loss", screenshot:"Screenshot", close:"Close", deleteJournal:"Delete Journal",
+        home:"Home", journalNav:"Journal", statsNav:"Stats", profileNav:"Profile", changeProfilePhoto:"Change profile photo", notifications:"Notifications", clearDateFilter:"Clear date filter", namePlaceholder:"e.g. Zril", accountPlaceholder:"Main Account", balancePlaceholder:"1000", pairPlaceholder:"e.g. XAUUSD", entryPlaceholder:"3342.50", setupPlaceholder:"Liquidity Sweep", methodPlaceholder:"SMC / Price Action / etc.", yourNamePlaceholder:"Your name", usernamePlaceholder:"@trader", bioPlaceholder:"Tell something about your trading journey...", uploadPrompt:"Upload trading screenshot", showing7Of:"Showing 7 of", sortedNewest:"All journals are ordered from the most recently added.", showingAll:"Showing all", allDisplayed:"All journals are already displayed", seeMore:"See more", add:"+ Add", noData:"No data yet.", noPsychData:"No psychology data yet.", statsEmpty:"The chart will appear after journals have data.",
+        tradingSpace:"Trading Space", active:"ACTIVE", journalFeatureDescription:"Record entries, setups, trade results, psychology, and the reasoning behind every decision.", statisticsFeatureDescription:"Turn journal records into insights about your trading performance.", psychologyFeatureDescription:"Review your psychology patterns based on recorded trades.", profileFeatureDescription:"Manage your account information, preferences, and dashboard settings.", quickActionDescription:"Don’t just remember a trade. Record it.", journalPageDescription:"Record your trading decisions, not just the outcome.", statisticsPageDescription:"Journal data is summarized into a view of your performance and trading patterns.", averageRR:"AVG. RR", chartEmpty:"The chart will appear once your journal has data.", psychologyByFeel:"PSYCHOLOGY BY FEEL", profilePhoto:"Profile photo", noLocalAccounts:"No local accounts yet.", deviceAccounts:"DEVICE ACCOUNTS", accountSwitcher:"Account Switcher", addAccount:"+ Add Account", localAccountsDescription:"Up to 3 accounts can be stored on one device. Each account must approve Quick Switch before it can be opened from the shortcut.", localData:"LOCAL DATA", backupVault:"Backup Vault", offline:"Offline", deviceBackup:"Device backup", backupLocationNotSelected:"Backup location has not been selected.", chooseBackupLocation:"Choose backup location", backupNow:"Back up now", restoreBackup:"Restore backup", backupDescription:"Backup includes up to 3 accounts, journals, photos, profiles, and preferences. The file stays in the device location you choose and is not sent to a server.", newRecord:"NEW RECORD", addJournal:"Add Journal", viewOnly:"View only", journalReadOnlyDescription:"Saved journals cannot be edited. Records can only be viewed or deleted.", accountPermission:"ACCOUNT PERMISSION", allowQuickSwitchTitle:"Allow Quick Switch?", allowQuickSwitchDescription:"Allow this account to appear in the account-switch shortcut?", allow:"Allow", notNow:"Not now",
+        feelCalm:"Calm", feelNeutral:"Neutral", feelFear:"Fear", feelRevenge:"Revenge", feelOverconfident:"Overconfident", feelAnxious:"Anxious",
+        market:"Market", pair:"Pair", position:"Position", date:"Date", finalPNL:"Final PNL", entryPrice:"Entry Price", setup:"Setup", stopLoss:"Stop Loss", takeProfit:"Take Profit", method:"Method", feel:"Feel", created:"Created", notProvidedOptional:"Not provided (optional)", screenshotLabel:"SCREENSHOT", tapToView:"Tap to view", noJournalDate:"No journal on this date.", noJournalDateDescription:"No record uses the date", clearFilter:"Clear date filter", noJournalEntries:"No journal entries yet.", firstTradeDescription:"Your first trade can start the data that shapes your statistics and psychology insights.", addFirstTrade:"Add First Trade", tradeCountSingular:"trade", tradeCountPlural:"trades", winRateMetric:"Win rate", avgPNL:"Avg PNL",
+        insightNoDataTitle:"Not enough data yet.", insightNoDataBody:"After a few trades are recorded, this section will look at the relationship between your feel and trading results.", insightNeedMoreTitle:"Add a few more trades.", insightNeedMoreBody:"Psychology insights become more meaningful after a few journals, when comparisons between conditions are more reliable.", insightBestTitle:"{feel} looks strongest so far.", insightBestBody:"Across {count} trades while feeling {best}, the average PNL was {bestPnl}. {worst} averaged {worstPnl}. Use this pattern for review, not as a reason to force a setup.", insightMostTitle:"{feel} appears most often.", insightMostBody:"The {feel} state appeared in {count} trades. There is not enough difference to draw a strong conclusion yet, so keep collecting data without rewriting past records.", profilePsychologyNoData:"This section reads psychology conditions from your trading journal.", profilePsychologySummary:"{feel} is the most frequently recorded state ({count} trades). Win rate is {winRate}% with an average PNL of {avgPnl}. Explore Statistics for deeper insights.",
+        notificationTitle:"Notifications", notificationSubtitle:"Stay on top of your trading activity.", notificationAll:"All", notificationTrading:"Trading", notificationRisk:"Risk", notificationPsychology:"Psychology", notificationMarkAllRead:"Mark all read", notificationAllRead:"All caught up", notificationClearAll:"Clear all", notificationDelete:"Delete notification", notificationEmptyTitle:"Nothing here yet.", notificationEmptyFiltered:"Try another category.", notificationEmptyBody:"Important activity will appear here as you use Trazeel.", notificationUnread:"Unread", notificationConfirmClearAll:"Delete all notifications? This cannot be undone.", notificationDeleted:"Notification deleted.", notificationAllDeleted:"All notifications deleted.", tradeRecorded:"Trade recorded", tradeAddedBody:"{pair} has been added to your journal.", activityReminder:"Activity reminder", riskReminderBody:"You’ve logged {count} trades today. Review your plan before opening another position.", psychologyPattern:"Psychology pattern", psychologyPatternBody:"The {feel} state has appeared repeatedly in your recent journal data.",
+        deleteJournalConfirm:"Delete journal {date} • {pair}?\n\nThis record cannot be recovered after deletion.", journalDeleted:"Journal deleted.", closeLabel:"Close", logout:"Log out", logoutDescription:"Sign out of the active account", logoutSuccess:"You have been logged out. Please sign in again.", switchAllowed:"Quick Switch permission enabled.", switchDenied:"Quick Switch permission was not enabled.", wait:"Please wait...", enterIdPassword:"Enter your ID and password.", accountNotFound:"This ID was not found on this device. Restore a backup if the account is from another device.", invalidCredentials:"Incorrect ID or password.", accountAlreadyActive:"This account is already active.", switchAlreadyAllowed:"This account already has Quick Switch permission.", loginSuccess:"Login successful.", loginFailed:"Login failed.", fillSignup:"Enter your name, ID, and password.", invalidAccountId:"ID must be 3–24 characters. Use lowercase letters, numbers, periods, underscores, or hyphens.", passwordMinLength:"Password must be at least 8 characters.", maxAccounts:"A maximum of 3 accounts is allowed per device.", idAlreadyUsed:"This ID is already used on this device.", localAccountCreated:"Local account created.", accountCreateFailed:"Could not create the account.", accountPrepared:"Account is ready.", maxAccountsReached:"The 3-account device limit has been reached.", noLocalAccount:"No local accounts yet.", switchAccount:"Switch", allowSwitch:"Allow switch", revokePermission:"Revoke permission", switchPermissionTitle:"Allow Quick Switch?", switchPermissionDescription:"Allow this account to appear in the account-switch shortcut? If allowed, it can be opened from Profile without entering the ID and password again.", switchSuccess:"Account switched.", switchRevoked:"Quick Switch permission revoked.", backupFolderPermission:"Folder permission needs to be enabled again.", backupUnsupported:"This browser does not support automatic folder backups. Use Back up now instead.", backupPermissionDenied:"Backup folder permission was not granted.", backupEnabled:"Automatic backup enabled.", backupFolderUnavailable:"The backup folder cannot be accessed.", backupCreated:"Backup file created.", backupUpdated:"Device backup updated.", invalidBackup:"This is not a valid Trazeel backup file.", restoreConfirm:"Restore this backup? Current local account data will be replaced. After restoring, sign in with the ID and password from the backup.", restoreFailed:"Backup restore failed. Check the JSON file.", resetConfirm:"Delete all Trazeel accounts and data from this device? Files in the backup folder will not be deleted.", resetSuccess:"All local accounts have been deleted.",
+                lockedRecord:"LOCKED RECORD", journalDetail:"Journal Detail", information:"Information", stepOne:"STEP 01", stepTwo:"STEP 02", spot:"Spot", buyOnly:"Buy only", future:"Future", forexCrypto:"Forex / Crypto", forex:"Forex", currencyPairs:"Currency pairs", crypto:"Crypto", cryptoFutures:"Crypto futures", dateFieldLabel:"01. Date", pairFieldLabel:"02. Pair", positionFieldLabel:"03. Position", manual:"Manual", select:"Select", buy:"BUY", sell:"SELL", finalPNLFieldLabel:"04. Final PNL", chooseResult:"Choose result", entryPriceFieldLabel:"05. Entry Price", sltpFieldLabel:"06. SL / TP", stopLoss:"STOP LOSS", takeProfit:"TAKE PROFIT", setupFieldLabel:"07. Setup", methodFieldLabel:"08. Method", feelFieldLabel:"09. Feel", psychologyData:"Psychology data", screenshotFieldLabel:"10. Screenshot", optional:"Optional", addImage:"Add image", optionalImageDescription:"Optional. The image will be compressed for local storage.", remove:"Remove", requiredFieldsNote:"All fields are required except the screenshot.",
+        onSelectedDate:"on selected date", noJournalData:"No journal data", systemDefault:"System Default", dark:"Dark", light:"Light", english:"English", indonesian:"Bahasa Indonesia",
+        accountName:'Account', welcomeBadge:'TRADING WORKSPACE', setupYouSuffix:'you.', setupAccountSuffix:'account.', saveJournalButton:'Add Journal', greetingNight:'Good evening', greetingMorning:'Good morning', greetingAfternoon:'Good afternoon', greetingEvening:'Good evening', winsCount:'wins', statisticsNoJournalMeta:'No journal data', justNow:'just now', minutesAgo:'{count}m ago', hoursAgo:'{count}h ago', daysAgo:'{count}d ago', accountCurrentlyUsed:'Currently active', quickSwitchActive:'Quick Switch enabled', switchPermissionMissing:'Quick Switch permission not granted', backupFolderHint:'Choose a folder once to enable automatic backups.', backupManualOnly:'This browser uses manual backup files.', backupAutoActive:'Automatic backup is active. {filename} updates when data changes.', backupPermissionAgain:'Folder permission needs to be enabled again.', setupNameError:'A name is required.', setupAccountNameError:'An account name is required.', setupBalanceError:'Enter a valid starting balance.', validationSelectDate:'Choose a date.', validationPair:'Enter a pair.', validationFutureCategory:'Choose a Future category: Forex or Crypto.', validationPosition:'Choose BUY or SELL.', validationMarketType:'Choose a trade type.', validationPnl:'Choose Profit/Loss and enter the amount.', validationEntry:'Enter the entry price.', validationStopLoss:'Enter the Stop Loss.', validationTakeProfit:'Enter the Take Profit.', validationSetup:'Enter the setup.', validationMethod:'Enter the method.', validationFeel:'Choose a psychology state.', editNameRequired:'A name is required.', editAccountNameRequired:'An account name is required.', editBalanceInvalid:'The starting balance is invalid.', accountInfoUpdated:'Account information updated.', displayNameRequired:'A display name is required.', profileUpdated:'Profile updated.', chooseImageFile:'Choose an image file.', profilePhotoUpdated:'Profile photo updated.', profilePhotoFailed:'The profile photo could not be processed.'
     }
 };
-
 function t(key, fallback = key) { return I18N[state.language]?.[key] ?? fallback; }
+
+function interpolate(template, values = {}) {
+    return String(template).replace(/\{(\w+)\}/g, (_, key) => String(values[key] ?? ""));
+}
 
 function applyLanguage(language, persist = true) {
     state.language = language === "en" ? "en" : "id";
@@ -3854,9 +3185,10 @@ function applyLanguage(language, persist = true) {
 
     document.querySelectorAll("[data-i18n]").forEach((element) => {
         const key = element.dataset.i18n;
-        if (dictionary[key]) element.textContent = dictionary[key];
+        if (Object.prototype.hasOwnProperty.call(dictionary, key)) {
+            element.textContent = dictionary[key];
+        }
     });
-
     document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
         const key = element.dataset.i18nPlaceholder;
         if (dictionary[key]) element.setAttribute("placeholder", dictionary[key]);
@@ -3869,28 +3201,46 @@ function applyLanguage(language, persist = true) {
         const key = element.dataset.i18nTitle;
         if (dictionary[key]) element.setAttribute("title", dictionary[key]);
     });
+    document.querySelectorAll("[data-i18n-alt]").forEach((element) => {
+        const key = element.dataset.i18nAlt;
+        if (dictionary[key]) element.setAttribute("alt", dictionary[key]);
+    });
 
-    if (profileBio && (!state.profile.bio || state.profile.bio === I18N.id.defaultBio || state.profile.bio === I18N.en.defaultBio)) profileBio.textContent = dictionary.defaultBio;
-    if (themeSelect) {
-        const themeLabels = state.language === "en" ? ["System Default","Dark","Light"] : ["Default Sistem","Gelap","Terang"];
-        [...themeSelect.options].forEach((option,index) => option.textContent = themeLabels[index] || option.textContent);
+    if (profileBio && (!state.profile.bio || state.profile.bio === I18N.id.defaultBio || state.profile.bio === I18N.en.defaultBio)) {
+        profileBio.textContent = dictionary.defaultBio;
     }
-    if (languageSelect) [...languageSelect.options].forEach((option,index) => option.textContent = index === 0 ? "Bahasa Indonesia" : "English");
+    if (themeSelect) {
+        const themeLabels = [dictionary.systemDefault, dictionary.dark, dictionary.light];
+        [...themeSelect.options].forEach((option, index) => option.textContent = themeLabels[index] || option.textContent);
+    }
+    if (languageSelect) {
+        [...languageSelect.options].forEach((option, index) => option.textContent = index === 0 ? dictionary.indonesian : dictionary.english);
+    }
 
-    // Re-render dynamic areas so their generated copy uses the selected language too.
+    updateAuthOverlayContent();
     updateUserInterface();
     renderJournal();
     renderStatistics();
     renderPsychologyProfile();
+    if (typeof applyLocalAccountLanguage === "function") applyLocalAccountLanguage();
+    if (typeof refreshNotificationLanguage === "function") refreshNotificationLanguage();
+    if (typeof renderNotificationCenter === "function" && $("notificationPanel")) renderNotificationCenter();
 }
 
 function applyTheme(theme, persist = true) {
-    const allowed = ["system","dark","light"].includes(theme) ? theme : "system";
+    const allowed = ["system", "dark", "light"].includes(theme) ? theme : "system";
     state.theme = allowed;
     if (persist) localStorage.setItem(STORAGE.theme, state.theme);
     if (themeSelect) themeSelect.value = state.theme;
-    if (allowed === "system") { const prefersLight = window.matchMedia?.("(prefers-color-scheme: light)").matches; document.body.dataset.theme = prefersLight ? "light" : "dark"; }
-    else document.body.dataset.theme = allowed;
+
+    const prefersLight = window.matchMedia?.("(prefers-color-scheme: light)").matches === true;
+    const resolved = allowed === "system" ? (prefersLight ? "light" : "dark") : allowed;
+    document.documentElement.dataset.theme = resolved;
+    document.body.dataset.theme = resolved;
+    document.documentElement.style.colorScheme = resolved;
+    document.body.style.colorScheme = resolved;
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+    if (themeColor) themeColor.content = resolved === "light" ? "#f7f3ea" : "#0a0a0d";
 }
 
 if (window.matchMedia) { const systemThemeQuery = window.matchMedia("(prefers-color-scheme: light)"); systemThemeQuery.addEventListener?.("change", () => { if (state.theme === "system") applyTheme("system", false); }); }
@@ -3899,44 +3249,7 @@ if (window.matchMedia) { const systemThemeQuery = window.matchMedia("(prefers-co
    RESET
 ========================================================= */
 
-function resetApplication() {
-    const confirmed =
-        window.confirm(
-            "Reset Dashboard?\n\nIni akan menghapus account setup dan seluruh journal lokal. Data yang dihapus tidak dapat dipulihkan."
-        );
-
-    if (!confirmed) {
-        return;
-    }
-
-    Object.values(
-        STORAGE
-    ).forEach(
-        (key) =>
-            localStorage.removeItem(
-                key
-            )
-    );
-    localStorage.removeItem(NOTIFICATION_STORAGE_KEY);
-
-    state.user = null; state.journals = []; state.selectedDate = ""; state.showAllJournals = false;
-    state.profile = { username:"", bio:"Membangun konsistensi, satu trade setiap kali.", avatar:null };
-    state.theme = "system"; state.language = "id"; document.body.removeAttribute("data-theme");
-
-    window.location.hash = "";
-
-    journalDateFilter.value = "";
-
-    updateAllAnalytics();
-
-    showSetupStep(1);
-    showScreen(welcomeScreen);
-
-    showToast(
-        "Dashboard di-reset."
-    );
-}
-
+/* Local reset behavior is in local-auth.js. */
 
 /* =========================================================
    FIELD HELPERS
@@ -4097,22 +3410,11 @@ function showToast(
 ========================================================= */
 
 function getGreetingByTime() {
-    const hour =
-        new Date().getHours();
-
-    if (hour < 5) {
-        return "Good night";
-    }
-
-    if (hour < 12) {
-        return "Good morning";
-    }
-
-    if (hour < 18) {
-        return "Good afternoon";
-    }
-
-    return "Good evening";
+    const hour = new Date().getHours();
+    if (hour < 5) return t("greetingNight");
+    if (hour < 12) return t("greetingMorning");
+    if (hour < 18) return t("greetingAfternoon");
+    return t("greetingEvening");
 }
 
 function formatMoney(
@@ -4121,7 +3423,7 @@ function formatMoney(
 ) {
     try {
         return new Intl.NumberFormat(
-            "en-US",
+            state.language === "en" ? "en-US" : "id-ID",
             {
                 style: "currency",
                 currency,
@@ -4142,7 +3444,7 @@ function formatNumber(
     return Number(
         value || 0
     ).toLocaleString(
-        "en-US",
+        state.language === "en" ? "en-US" : "id-ID",
         {
             minimumFractionDigits:
                 digits,
@@ -4166,7 +3468,7 @@ function formatRawNumber(
     return Number(
         value
     ).toLocaleString(
-        "en-US",
+        state.language === "en" ? "en-US" : "id-ID",
         {
             maximumFractionDigits:
                 8
@@ -4252,7 +3554,7 @@ function formatDateLong(
     }
 
     return new Intl.DateTimeFormat(
-        "id-ID",
+        (state.language === "en" ? "en-US" : "id-ID"),
         {
             day: "2-digit",
             month: "long",
@@ -4282,7 +3584,7 @@ function formatDateUpper(
     }
 
     return new Intl.DateTimeFormat(
-        "en-US",
+        state.language === "en" ? "en-US" : "id-ID",
         {
             day: "2-digit",
             month: "short",
@@ -4308,7 +3610,7 @@ function formatCreatedAt(
     }
 
     return new Intl.DateTimeFormat(
-        "id-ID",
+        (state.language === "en" ? "en-US" : "id-ID"),
         {
             day: "2-digit",
             month: "short",
@@ -4319,26 +3621,29 @@ function formatCreatedAt(
     ).format(date);
 }
 
-function formatFeelLabel(
-    feel
-) {
-    return (
-        FEEL_META[feel]
-            ?.label ||
-        "Unknown"
-    );
+function formatFeelLabel(feel) {
+    const keyByFeel = {
+        calm: "feelCalm",
+        neutral: "feelNeutral",
+        fear: "feelFear",
+        revenge: "feelRevenge",
+        overconfident: "feelOverconfident",
+        anxious: "feelAnxious"
+    };
+    const key = keyByFeel[feel];
+    return key ? t(key, FEEL_META[feel]?.label || "Unknown") : "Unknown";
 }
 
 function getFeelEmoji(
     feel
 ) {
     const icons = {
-        calm: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 14.5c.9 1.1 2 1.5 3.5 1.5s2.6-.4 3.5-1.5M9 10h.01M15 10h.01"></path></svg>',
-        neutral: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 14h7M9 10h.01M15 10h.01"></path></svg>',
-        fear: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 15.5c1-1 2-1.5 3.5-1.5s2.5.5 3.5 1.5M9 10h.01M15 10h.01"></path></svg>',
-        revenge: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8 9.5l2 1M16 9.5l-2 1M8.5 15h7M7 6l2 1M17 6l-2 1"></path></svg>',
-        overconfident: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.2 3.5c.9 3.4-1.9 4.4-1.2 7.1.4-1.2 1.4-2.2 2.7-2.8.6 1.8 2.8 3 2.8 6a4.5 4.5 0 1 1-8.9 0c0-2.3 1.2-4.1 2.8-5.7-.1 2 .4 2.9 1.2 3.5.1-2.5.2-4.8-2-6.9 1.1.3 2.1 1 2.6 1.8z"></path></svg>',
-        anxious: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 15.5c1.1-.8 2.1-1.2 3.5-1.2s2.4.4 3.5 1.2M9 10h.01M15 10h.01M8 6.5l1.2 1M16 6.5l-1.2 1"></path></svg>'
+        calm: '<svg class="feel-svg" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 14.5c.9 1.1 2 1.5 3.5 1.5s2.6-.4 3.5-1.5M9 10h.01M15 10h.01"></path></svg>',
+        neutral: '<svg class="feel-svg" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 14h7M9 10h.01M15 10h.01"></path></svg>',
+        fear: '<svg class="feel-svg" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 15.5c1-1 2-1.5 3.5-1.5s2.5.5 3.5 1.5M9 10h.01M15 10h.01"></path></svg>',
+        revenge: '<svg class="feel-svg" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"></circle><path d="M8 9.5l2 1M16 9.5l-2 1M8.5 15h7M7 6l2 1M17 6l-2 1"></path></svg>',
+        overconfident: '<svg class="feel-svg" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.2 3.5c.9 3.4-1.9 4.4-1.2 7.1.4-1.2 1.4-2.2 2.7-2.8.6 1.8 2.8 3 2.8 6a4.5 4.5 0 1 1-8.9 0c0-2.3 1.2-4.1 2.8-5.7-.1 2 .4 2.9 1.2 3.5.1-2.5.2-4.8-2-6.9 1.1.3 2.1 1 2.6 1.8z"></path></svg>',
+        anxious: '<svg class="feel-svg" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 15.5c1.1-.8 2.1-1.2 3.5-1.2s2.4.4 3.5 1.2M9 10h.01M15 10h.01M8 6.5l1.2 1M16 6.5l-1.2 1"></path></svg>'
     };
     return icons[feel] || "";
 }
@@ -4439,11 +3744,13 @@ document.addEventListener(
 ========================================================= */
 
 const NOTIFICATION_STORAGE_KEY = "trazeel_notifications_v1";
+const NOTIFICATION_DISMISSED_KEY = "trazeel_notifications_dismissed_v1";
 const NOTIFICATION_MAX_ITEMS = 40;
 
 let notificationState = {
     items: [],
-    filter: "all"
+    filter: "all",
+    dismissedIds: []
 };
 
 function initializeNotificationSystem() {
@@ -4451,6 +3758,7 @@ function initializeNotificationSystem() {
     injectNotificationStyles();
     ensureNotificationPanel();
     syncNotificationInsights();
+    refreshNotificationLanguage();
     renderNotificationCenter();
 }
 
@@ -4460,6 +3768,8 @@ function loadNotifications() {
         []
     );
 
+    const dismissed = safeJSONParse(localStorage.getItem(NOTIFICATION_DISMISSED_KEY), []);
+    notificationState.dismissedIds = Array.isArray(dismissed) ? dismissed.filter((id) => typeof id === "string") : [];
     notificationState.items = Array.isArray(parsed)
         ? parsed.filter(
               (item) =>
@@ -4511,6 +3821,7 @@ function createNotification({
     meta = ""
 }) {
     if (!id || !title || !body) return;
+    if (notificationState.dismissedIds.includes(id)) return;
 
     const index =
         notificationState.items.findIndex(
@@ -4556,8 +3867,8 @@ function recordTradeNotification(journal) {
     createNotification({
         id: `trade-${journal.id}`,
         type: "trading",
-        title: "Trade recorded",
-        body: `${journal.pair || "Trade"} berhasil dicatat di journal.`,
+        title: t("tradeRecorded"),
+        body: interpolate(t("tradeAddedBody"), { pair: journal.pair || "Trade" }),
         createdAt:
             journal.createdAt ||
             new Date().toISOString(),
@@ -4602,11 +3913,9 @@ function syncRiskNotification() {
         createNotification({
             id,
             type: "risk",
-            title: "Activity reminder",
-            body:
-                `You've logged ${count} trades today. Review your plan before opening another position.`,
-            meta:
-                `${count} trades today`
+            title: t("activityReminder"),
+            body: interpolate(t("riskReminderBody"), { count }),
+            meta: state.language === "en" ? `${count} trades today` : `${count} trade hari ini`
         });
     } else {
         removeNotification(
@@ -4629,16 +3938,9 @@ function syncPsychologyNotifications() {
                 createNotification({
                     id,
                     type: "psychology",
-                    title: "Psychology pattern",
-                    body:
-                        `${formatFeelLabel(
-                            feel
-                        )} is appearing repeatedly in your recent journal data.`,
-                    meta:
-                        `${data.count} trades • avg PNL ${formatSignedNumber(
-                            data.pnl /
-                                data.count
-                        )}`
+                    title: t("psychologyPattern"),
+                    body: interpolate(t("psychologyPatternBody"), { feel: formatFeelLabel(feel) }),
+                    meta: `${data.count} ${t("tradeCountPlural")} • ${t("avgPNL")} ${formatSignedNumber(data.pnl / data.count)}`
                 });
             } else {
                 removeNotification(
@@ -4661,25 +3963,16 @@ function syncPsychologyNotifications() {
     );
 }
 
-function removeNotification(
-    id,
-    persist = true
-) {
-    const next =
-        notificationState.items.filter(
-            (item) => item.id !== id
-        );
+function removeNotification(id, persist = true) {
+    const next = notificationState.items.filter((item) => item.id !== id);
+    const changed = next.length !== notificationState.items.length;
+    notificationState.items = next;
 
-    const changed =
-        next.length !==
-        notificationState.items.length;
-
-    notificationState.items =
-        next;
-
-    if (persist && changed) {
-        saveNotifications();
+    if (!persist) {
+        notificationState.dismissedIds = notificationState.dismissedIds.filter((dismissedId) => dismissedId !== id);
+        localStorage.setItem(NOTIFICATION_DISMISSED_KEY, JSON.stringify(notificationState.dismissedIds));
     }
+    if (persist && changed) saveNotifications();
 }
 
 function getUnreadNotificationCount() {
@@ -4728,6 +4021,57 @@ function markAllNotificationsRead() {
 
     saveNotifications();
     renderNotificationCenter();
+}
+
+function dismissNotification(id) {
+    if (!id) return;
+    if (!notificationState.dismissedIds.includes(id)) {
+        notificationState.dismissedIds.push(id);
+        localStorage.setItem(NOTIFICATION_DISMISSED_KEY, JSON.stringify(notificationState.dismissedIds));
+    }
+    removeNotification(id, true);
+    renderNotificationCenter();
+    showToast(t("notificationDeleted"));
+}
+
+function clearAllNotifications() {
+    if (!notificationState.items.length) return;
+    if (!window.confirm(t("notificationConfirmClearAll"))) return;
+    const ids = notificationState.items.map((item) => item.id);
+    notificationState.dismissedIds = [...new Set([...notificationState.dismissedIds, ...ids])];
+    localStorage.setItem(NOTIFICATION_DISMISSED_KEY, JSON.stringify(notificationState.dismissedIds));
+    notificationState.items = [];
+    saveNotifications();
+    renderNotificationCenter();
+    showToast(t("notificationAllDeleted"));
+}
+
+function refreshNotificationLanguage() {
+    notificationState.items.forEach((item) => {
+        if (item.id.startsWith("trade-")) {
+            const journalId = item.id.slice(6);
+            const journal = state.journals.find((entry) => String(entry.id) === journalId);
+            if (journal) {
+                item.title = t("tradeRecorded");
+                item.body = interpolate(t("tradeAddedBody"), { pair: journal.pair || "Trade" });
+                item.meta = `${formatSignedNumber(journal.pnl)} • ${formatFeelLabel(journal.feel)}`;
+            }
+        } else if (item.type === "risk" && item.id.startsWith("risk-daily-")) {
+            const count = state.journals.filter((journal) => journal.date === item.id.slice("risk-daily-".length)).length;
+            item.title = t("activityReminder");
+            item.body = interpolate(t("riskReminderBody"), { count });
+            item.meta = state.language === "en" ? `${count} trades today` : `${count} trade hari ini`;
+        } else if (item.type === "psychology" && item.id.startsWith("psych-")) {
+            const feel = item.id.slice(6);
+            const group = groupByFeel()[feel];
+            if (group) {
+                item.title = t("psychologyPattern");
+                item.body = interpolate(t("psychologyPatternBody"), { feel: formatFeelLabel(feel) });
+                item.meta = `${group.count} ${t("tradeCountPlural")} • ${t("avgPNL")} ${formatSignedNumber(group.pnl / group.count)}`;
+            }
+        }
+    });
+    saveNotifications();
 }
 
 function setNotificationFilter(
@@ -4795,325 +4139,134 @@ function closeNotificationCenter() {
 }
 
 function ensureNotificationPanel() {
-    if ($("notificationPanel")) {
-        return;
-    }
+    if ($("notificationPanel")) return;
 
-    const panel =
-        document.createElement(
-            "aside"
-        );
-
-    panel.id =
-        "notificationPanel";
-
-    panel.className =
-        "notification-panel";
-
-    panel.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
+    const panel = document.createElement("aside");
+    panel.id = "notificationPanel";
+    panel.className = "notification-panel";
+    panel.setAttribute("aria-hidden", "true");
     panel.innerHTML = `
         <div class="notification-panel-head">
             <div>
-                <span class="notification-eyebrow">NOTIFICATIONS</span>
-                <h2>Stay in the loop.</h2>
+                <span class="notification-eyebrow">${escapeHTML(t("notifications"))}</span>
+                <h2>${escapeHTML(t("notificationSubtitle"))}</h2>
             </div>
-
-            <button
-                class="notification-close"
-                id="notificationCloseBtn"
-                type="button"
-                aria-label="Close notifications"
-            >×</button>
+            <button class="notification-close" id="notificationCloseBtn" type="button" aria-label="${escapeHTML(t("closeLabel"))}">×</button>
         </div>
-
         <div class="notification-tools">
-            <div
-                class="notification-filters"
-                role="tablist"
-                aria-label="Notification filters"
-            >
-                <button
-                    class="notification-filter active"
-                    data-notification-filter="all"
-                    type="button"
-                >All</button>
-
-                <button
-                    class="notification-filter"
-                    data-notification-filter="trading"
-                    type="button"
-                >Trading</button>
-
-                <button
-                    class="notification-filter"
-                    data-notification-filter="risk"
-                    type="button"
-                >Risk</button>
-
-                <button
-                    class="notification-filter"
-                    data-notification-filter="psychology"
-                    type="button"
-                >Psychology</button>
+            <div class="notification-filters" role="tablist" aria-label="${escapeHTML(t("notificationTitle"))}">
+                <button class="notification-filter active" data-notification-filter="all" type="button">${escapeHTML(t("notificationAll"))}</button>
+                <button class="notification-filter" data-notification-filter="trading" type="button">${escapeHTML(t("notificationTrading"))}</button>
+                <button class="notification-filter" data-notification-filter="risk" type="button">${escapeHTML(t("notificationRisk"))}</button>
+                <button class="notification-filter" data-notification-filter="psychology" type="button">${escapeHTML(t("notificationPsychology"))}</button>
             </div>
-
-            <button
-                class="notification-mark-all"
-                id="notificationMarkAllBtn"
-                type="button"
-            >Mark all read</button>
+            <div class="notification-actions">
+                <button class="notification-clear-all" id="notificationClearAllBtn" type="button">${escapeHTML(t("notificationClearAll"))}</button>
+                <button class="notification-mark-all" id="notificationMarkAllBtn" type="button">${escapeHTML(t("notificationMarkAllRead"))}</button>
+            </div>
         </div>
-
-        <div
-            class="notification-list"
-            id="notificationList"
-        ></div>
+        <div class="notification-list" id="notificationList"></div>
     `;
+    document.body.appendChild(panel);
 
-    document.body.appendChild(
-        panel
-    );
+    $("notificationCloseBtn")?.addEventListener("click", closeNotificationCenter);
+    panel.querySelectorAll("[data-notification-filter]").forEach((button) => {
+        button.addEventListener("click", () => setNotificationFilter(button.dataset.notificationFilter));
+    });
+    $("notificationMarkAllBtn")?.addEventListener("click", markAllNotificationsRead);
+    $("notificationClearAllBtn")?.addEventListener("click", clearAllNotifications);
 
-    $("notificationCloseBtn")?.addEventListener(
-        "click",
-        closeNotificationCenter
-    );
-
-    panel
-        .querySelectorAll(
-            "[data-notification-filter]"
-        )
-        .forEach((button) => {
-            button.addEventListener(
-                "click",
-                () =>
-                    setNotificationFilter(
-                        button.dataset
-                            .notificationFilter
-                    )
-            );
-        });
-
-    $("notificationMarkAllBtn")?.addEventListener(
-        "click",
-        markAllNotificationsRead
-    );
-
-    $("notificationList")?.addEventListener(
-        "click",
-        (event) => {
-            const button =
-                event.target.closest(
-                    "[data-notification-id]"
-                );
-
-            if (!button) return;
-
-            markNotificationRead(
-                button.dataset
-                    .notificationId
-            );
+    $("notificationList")?.addEventListener("click", (event) => {
+        const deleteButton = event.target.closest("[data-notification-delete]");
+        if (deleteButton) {
+            event.preventDefault();
+            event.stopPropagation();
+            dismissNotification(deleteButton.dataset.notificationDelete);
+            return;
         }
-    );
+        const openButton = event.target.closest("[data-notification-open]");
+        if (openButton) markNotificationRead(openButton.dataset.notificationOpen);
+    });
 
-    document.addEventListener(
-        "click",
-        (event) => {
-            const current =
-                $("notificationPanel");
+    document.addEventListener("click", (event) => {
+        const current = $("notificationPanel");
+        const trigger = $("notificationBtn");
+        if (!current || !current.classList.contains("open")) return;
+        if (current.contains(event.target) || trigger?.contains(event.target)) return;
+        closeNotificationCenter();
+    });
 
-            const trigger =
-                $("notificationBtn");
-
-            if (
-                !current ||
-                !current.classList.contains(
-                    "open"
-                )
-            ) {
-                return;
-            }
-
-            if (
-                current.contains(
-                    event.target
-                ) ||
-                trigger?.contains(
-                    event.target
-                )
-            ) {
-                return;
-            }
-
-            closeNotificationCenter();
-        }
-    );
-
-    document.addEventListener(
-        "keydown",
-        (event) => {
-            if (
-                event.key ===
-                    "Escape" &&
-                $("notificationPanel")?.classList.contains(
-                    "open"
-                )
-            ) {
-                closeNotificationCenter();
-            }
-        }
-    );
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && $("notificationPanel")?.classList.contains("open")) closeNotificationCenter();
+    });
 }
 
 function renderNotificationCenter() {
     ensureNotificationPanel();
-
-    const list =
-        $("notificationList");
-
+    const list = $("notificationList");
     if (!list) return;
 
-    const filtered =
-        getFilteredNotifications();
+    const panel = $("notificationPanel");
+    const eyebrow = panel?.querySelector(".notification-eyebrow");
+    const heading = panel?.querySelector(".notification-panel-head h2");
+    const closeButton = $("notificationCloseBtn");
+    const filterList = panel?.querySelector(".notification-filters");
+    if (eyebrow) eyebrow.textContent = t("notifications");
+    if (heading) heading.textContent = t("notificationSubtitle");
+    if (closeButton) closeButton.setAttribute("aria-label", t("closeLabel"));
+    if (filterList) filterList.setAttribute("aria-label", t("notificationTitle"));
+    const filterKeys = { all: "notificationAll", trading: "notificationTrading", risk: "notificationRisk", psychology: "notificationPsychology" };
+    panel?.querySelectorAll("[data-notification-filter]").forEach((button) => { button.textContent = t(filterKeys[button.dataset.notificationFilter]); });
+    if ($("notificationClearAllBtn")) $("notificationClearAllBtn").textContent = t("notificationClearAll");
 
-    const unreadCount =
-        getUnreadNotificationCount();
-
-    const markAll =
-        $("notificationMarkAllBtn");
+    const filtered = getFilteredNotifications();
+    const unreadCount = getUnreadNotificationCount();
+    const markAll = $("notificationMarkAllBtn");
+    const clearAll = $("notificationClearAllBtn");
 
     if (markAll) {
-        markAll.disabled =
-            unreadCount === 0;
-
-        markAll.textContent =
-            unreadCount > 0
-                ? `Mark all read (${unreadCount})`
-                : "All read";
+        markAll.disabled = unreadCount === 0;
+        markAll.textContent = unreadCount > 0
+            ? `${t("notificationMarkAllRead")} (${unreadCount})`
+            : t("notificationAllRead");
     }
+    if (clearAll) clearAll.disabled = notificationState.items.length === 0;
 
-    document
-        .querySelectorAll(
-            "[data-notification-filter]"
-        )
-        .forEach((button) => {
-            button.classList.toggle(
-                "active",
-                button.dataset
-                    .notificationFilter ===
-                    notificationState.filter
-            );
-        });
-
-    updateNotificationBadge(
-        unreadCount
-    );
+    document.querySelectorAll("[data-notification-filter]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.notificationFilter === notificationState.filter);
+    });
+    updateNotificationBadge(unreadCount);
 
     if (!filtered.length) {
+        const emptyMessage = notificationState.items.length ? t("notificationEmptyFiltered") : t("notificationEmptyBody");
         list.innerHTML = `
             <div class="notification-empty">
                 <div class="notification-empty-icon ui-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m6.5 12.5 3.5 3.5 7.5-8"></path></svg></div>
-                <strong>Nothing new here.</strong>
-                <p>
-                    ${
-                        notificationState
-                            .items
-                            .length
-                            ? "Coba filter kategori lain."
-                            : "Aktivitas penting akan muncul di sini saat Trazeel digunakan."
-                    }
-                </p>
-            </div>
-        `;
-
+                <strong>${escapeHTML(t("notificationEmptyTitle"))}</strong>
+                <p>${escapeHTML(emptyMessage)}</p>
+            </div>`;
         return;
     }
 
-    list.innerHTML =
-        filtered
-            .map(
-                (item) => {
-                    const typeLabel =
-                        item.type ===
-                        "risk"
-                            ? "Risk"
-                            : item.type ===
-                                "psychology"
-                              ? "Psychology"
-                              : "Trading";
-
-                    const icon =
-                        item.type ===
-                        "risk"
-                            ? "!"
-                            : item.type ===
-                                "psychology"
-                              ? "◌"
-                              : "↗";
-
-                    return `
-                        <button
-                            class="notification-item ${
-                                item.read === true
-                                    ? ""
-                                    : "unread"
-                            }"
-                            type="button"
-                            data-notification-id="${escapeHTML(
-                                item.id
-                            )}"
-                        >
-                            <span class="notification-item-icon type-${escapeHTML(
-                                item.type
-                            )}">
-                                ${icon}
-                            </span>
-
-                            <span class="notification-item-content">
-                                <span class="notification-item-top">
-                                    <strong>${escapeHTML(
-                                        item.title
-                                    )}</strong>
-
-                                    <time>${escapeHTML(
-                                        formatNotificationTime(
-                                            item.createdAt
-                                        )
-                                    )}</time>
-                                </span>
-
-                                <span class="notification-item-body">
-                                    ${escapeHTML(
-                                        item.body
-                                    )}
-                                </span>
-
-                                <span class="notification-item-meta">
-                                    <span>${typeLabel}</span>
-                                    ${
-                                        item.meta
-                                            ? `<span>•</span><span>${escapeHTML(
-                                                  item.meta
-                                              )}</span>`
-                                            : ""
-                                    }
-                                </span>
-                            </span>
-
-                            ${
-                                item.read !== true
-                                    ? '<span class="notification-unread-dot" aria-label="Unread"></span>'
-                                    : ""
-                            }
-                        </button>
-                    `;
-                }
-            )
-            .join("");
+    list.innerHTML = filtered.map((item) => {
+        const typeLabel = item.type === "risk" ? t("notificationRisk") : item.type === "psychology" ? t("notificationPsychology") : t("notificationTrading");
+        const icon = item.type === "risk" ? "!" : item.type === "psychology" ? "◌" : "↗";
+        return `
+            <article class="notification-item ${item.read === true ? "" : "unread"}" data-notification-id="${escapeHTML(item.id)}">
+                <button class="notification-item-main" type="button" data-notification-open="${escapeHTML(item.id)}" aria-label="${escapeHTML(item.title)}">
+                    <span class="notification-item-icon type-${escapeHTML(item.type)}">${icon}</span>
+                    <span class="notification-item-content">
+                        <span class="notification-item-top"><strong>${escapeHTML(item.title)}</strong><time>${escapeHTML(formatNotificationTime(item.createdAt))}</time></span>
+                        <span class="notification-item-body">${escapeHTML(item.body)}</span>
+                        <span class="notification-item-meta"><span>${escapeHTML(typeLabel)}</span>${item.meta ? `<span>•</span><span>${escapeHTML(item.meta)}</span>` : ""}</span>
+                    </span>
+                    ${item.read !== true ? `<span class="notification-unread-dot" aria-label="${escapeHTML(t("notificationUnread"))}"></span>` : ""}
+                </button>
+                <button class="notification-delete-btn" type="button" data-notification-delete="${escapeHTML(item.id)}" aria-label="${escapeHTML(t("notificationDelete"))}" title="${escapeHTML(t("notificationDelete"))}">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"></path></svg>
+                </button>
+            </article>`;
+    }).join("");
 }
 
 function updateNotificationBadge(
@@ -5191,32 +4344,13 @@ function formatNotificationTime(
     const day =
         24 * hour;
 
-    if (diff < minute)
-        return "now";
-
-    if (diff < hour)
-        return `${Math.floor(
-            diff / minute
-        )}m ago`;
-
-    if (diff < day)
-        return `${Math.floor(
-            diff / hour
-        )}h ago`;
-
-    if (
-        diff <
-        7 * day
-    )
-        return `${Math.floor(
-            diff / day
-        )}d ago`;
+    if (diff < minute) return t("justNow");
+    if (diff < hour) return interpolate(t("minutesAgo"), { count: Math.floor(diff / minute) });
+    if (diff < day) return interpolate(t("hoursAgo"), { count: Math.floor(diff / hour) });
+    if (diff < 7 * day) return interpolate(t("daysAgo"), { count: Math.floor(diff / day) });
 
     return new Intl.DateTimeFormat(
-        state.language ===
-            "en"
-            ? "en-US"
-            : "id-ID",
+        state.language === "en" ? "en-US" : "id-ID",
         {
             day: "2-digit",
             month: "short"
@@ -5225,359 +4359,40 @@ function formatNotificationTime(
 }
 
 function injectNotificationStyles() {
-    if ($("notificationStyles")) {
-        return;
-    }
-
-    const style =
-        document.createElement(
-            "style"
-        );
-
-    style.id =
-        "notificationStyles";
-
+    if ($("notificationStyles")) return;
+    const style = document.createElement("style");
+    style.id = "notificationStyles";
     style.textContent = `
-        .notification-panel {
-            position: fixed;
-            top: 82px;
-            right: max(16px, calc((100vw - 900px) / 2));
-            z-index: 80;
-            width: min(430px, calc(100vw - 28px));
-            max-height: min(720px, calc(100vh - 98px));
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            padding: 18px;
-            border: 1px solid var(--border-strong);
-            border-radius: var(--radius-lg);
-            background: rgba(21,21,26,.97);
-            box-shadow: 0 24px 70px rgba(0,0,0,.34);
-            backdrop-filter: blur(22px);
-            -webkit-backdrop-filter: blur(22px);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px) scale(.985);
-            transform-origin: top right;
-            transition:
-                opacity 220ms ease,
-                visibility 220ms ease,
-                transform 300ms ease;
-        }
-
-        .notification-panel.open {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0) scale(1);
-        }
-
-        .notification-panel-head {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 16px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .notification-eyebrow {
-            display: block;
-            color: var(--text-muted);
-            font-size: 9px;
-            font-weight: 800;
-            letter-spacing: .16em;
-        }
-
-        .notification-panel-head h2 {
-            margin-top: 5px;
-            color: var(--text);
-            font-size: 22px;
-            letter-spacing: -.025em;
-        }
-
-        .notification-close {
-            width: 34px;
-            height: 34px;
-            display: grid;
-            place-items: center;
-            border: 1px solid var(--border);
-            border-radius: 11px;
-            color: var(--text-soft);
-            background: var(--surface-2);
-            cursor: pointer;
-            font-size: 20px;
-            line-height: 1;
-            transition:
-                transform 180ms ease,
-                background 180ms ease;
-        }
-
-        .notification-close:hover {
-            transform: rotate(4deg);
-            background: var(--surface-3);
-        }
-
-        .notification-tools {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            padding: 13px 0;
-        }
-
-        .notification-filters {
-            min-width: 0;
-            display: flex;
-            gap: 5px;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-
-        .notification-filters::-webkit-scrollbar {
-            display: none;
-        }
-
-        .notification-filter {
-            flex: 0 0 auto;
-            min-height: 30px;
-            padding: 0 10px;
-            border-radius: 999px;
-            color: var(--text-muted);
-            background: transparent;
-            border: 1px solid transparent;
-            font-size: 9px;
-            font-weight: 800;
-            cursor: pointer;
-            transition:
-                color 180ms ease,
-                background 180ms ease,
-                border-color 180ms ease;
-        }
-
-        .notification-filter.active {
-            color: var(--text);
-            background: var(--accent-soft);
-            border-color: var(--border-strong);
-        }
-
-        .notification-mark-all {
-            flex: 0 0 auto;
-            padding: 0;
-            color: var(--text-soft);
-            background: transparent;
-            font-size: 9px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .notification-mark-all:disabled {
-            opacity: .42;
-            cursor: default;
-        }
-
-        .notification-list {
-            min-height: 0;
-            overflow: auto;
-            padding-right: 2px;
-            display: grid;
-            gap: 8px;
-            scrollbar-width: thin;
-        }
-
-        .notification-item {
-            position: relative;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 34px minmax(0,1fr) auto;
-            align-items: start;
-            gap: 10px;
-            padding: 12px;
-            text-align: left;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            color: var(--text);
-            background: var(--surface);
-            cursor: pointer;
-            transition:
-                transform 220ms ease,
-                background 180ms ease,
-                border-color 180ms ease;
-        }
-
-        .notification-item:hover {
-            transform: translateY(-1px);
-            background: var(--surface-2);
-            border-color: var(--border-strong);
-        }
-
-        .notification-item.unread {
-            border-color: var(--border-strong);
-            background:
-                linear-gradient(
-                    135deg,
-                    var(--accent-soft),
-                    transparent 60%
-                ),
-                var(--surface);
-        }
-
-        .notification-item-icon {
-            width: 34px;
-            height: 34px;
-            display: grid;
-            place-items: center;
-            border-radius: 11px;
-            background: var(--surface-2);
-            color: var(--text-soft);
-            font-size: 13px;
-            font-weight: 900;
-        }
-
-        .notification-item-icon.type-trading {
-            color: var(--blue);
-        }
-
-        .notification-item-icon.type-risk {
-            color: var(--orange);
-        }
-
-        .notification-item-icon.type-psychology {
-            color: var(--accent);
-        }
-
-        .notification-item-content {
-            min-width: 0;
-            display: grid;
-            gap: 6px;
-        }
-
-        .notification-item-top {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            gap: 8px;
-        }
-
-        .notification-item-top strong {
-            min-width: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-size: 11px;
-        }
-
-        .notification-item-top time {
-            flex: 0 0 auto;
-            color: var(--text-muted);
-            font-size: 8px;
-            white-space: nowrap;
-        }
-
-        .notification-item-body {
-            color: var(--text-soft);
-            font-size: 10px;
-            line-height: 1.55;
-        }
-
-        .notification-item-meta {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 5px;
-            color: var(--text-muted);
-            font-size: 8px;
-        }
-
-        .notification-unread-dot {
-            width: 7px;
-            height: 7px;
-            margin-top: 6px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 0 4px var(--accent-soft);
-        }
-
-        .notification-empty {
-            min-height: 230px;
-            display: grid;
-            place-items: center;
-            align-content: center;
-            padding: 24px 18px;
-            text-align: center;
-            border: 1px dashed var(--border-strong);
-            border-radius: 18px;
-            color: var(--text-soft);
-        }
-
-        .notification-empty-icon {
-            width: 46px;
-            height: 46px;
-            display: grid;
-            place-items: center;
-            margin-bottom: 12px;
-            border-radius: 14px;
-            color: var(--green);
-            background: var(--green-soft);
-            font-size: 17px;
-            font-weight: 900;
-        }
-
-        .notification-empty strong {
-            color: var(--text);
-            font-size: 12px;
-        }
-
-        .notification-empty p {
-            max-width: 270px;
-            margin-top: 6px;
-            color: var(--text-muted);
-            font-size: 9px;
-            line-height: 1.5;
-        }
-
-        .icon-btn.has-notifications {
-            border-color: var(--border-strong);
-        }
-
-        .notification-unread-count {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            min-width: 17px;
-            height: 17px;
-            padding: 0 4px;
-            display: grid;
-            place-items: center;
-            border: 2px solid var(--bg);
-            border-radius: 999px;
-            color: var(--bg);
-            background: var(--accent);
-            font-size: 7px;
-            font-weight: 900;
-            line-height: 1;
-        }
-
-        @media (max-width: 560px) {
-            .notification-panel {
-                top: 78px;
-                right: 10px;
-                width: calc(100vw - 20px);
-                max-height: calc(100vh - 90px);
-                border-radius: 20px;
-                padding: 15px;
-            }
-
-            .notification-tools {
-                align-items: flex-end;
-            }
-
-            .notification-mark-all {
-                font-size: 8px;
-            }
-        }
+        .notification-panel{position:fixed;top:82px;right:max(16px,calc((100vw - 900px)/2));z-index:80;width:min(450px,calc(100vw - 28px));max-height:min(720px,calc(100vh - 98px));display:flex;flex-direction:column;overflow:hidden;padding:18px;border:1px solid var(--border-strong);border-radius:var(--radius-lg);background:var(--surface);color:var(--text);box-shadow:0 24px 70px rgba(0,0,0,.24);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);opacity:0;visibility:hidden;transform:translateY(-10px) scale(.985);transform-origin:top right;transition:opacity 220ms ease,visibility 220ms ease,transform 300ms ease}
+        .notification-panel.open{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+        .notification-panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding-bottom:15px;border-bottom:1px solid var(--border)}
+        .notification-eyebrow{display:block;color:var(--text-muted);font-size:9px;font-weight:800;letter-spacing:.16em}
+        .notification-panel-head h2{margin-top:5px;color:var(--text);font-size:20px;letter-spacing:-.025em}
+        .notification-close{width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--border);border-radius:11px;color:var(--text-soft);background:var(--surface-2);cursor:pointer;font-size:20px;line-height:1}
+        .notification-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 0}
+        .notification-filters{min-width:0;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}.notification-filters::-webkit-scrollbar{display:none}
+        .notification-filter{flex:0 0 auto;min-height:30px;padding:0 10px;border-radius:999px;color:var(--text-muted);background:transparent;border:1px solid transparent;font-size:9px;font-weight:800;cursor:pointer}
+        .notification-filter.active{color:var(--text);background:var(--accent-soft);border-color:var(--border-strong)}
+        .notification-actions{display:flex;align-items:center;gap:11px;flex:0 0 auto}
+        .notification-mark-all,.notification-clear-all{padding:0;color:var(--text-soft);background:transparent;font-size:9px;font-weight:700;cursor:pointer;white-space:nowrap}
+        .notification-clear-all{color:var(--red)}.notification-mark-all:disabled,.notification-clear-all:disabled{opacity:.38;cursor:default}
+        .notification-list{min-height:0;overflow:auto;padding-right:2px;display:grid;gap:8px;scrollbar-width:thin}
+        .notification-item{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 32px;align-items:stretch;gap:7px;padding:6px;border:1px solid var(--border);border-radius:16px;background:var(--surface);color:var(--text)}
+        .notification-item.unread{border-color:var(--border-strong);background:linear-gradient(135deg,var(--accent-soft),transparent 66%),var(--surface)}
+        .notification-item-main{width:100%;min-width:0;display:grid;grid-template-columns:34px minmax(0,1fr) auto;align-items:start;gap:10px;padding:6px;text-align:left;border:0;border-radius:11px;color:var(--text);background:transparent;cursor:pointer}
+        .notification-item-main:hover{background:var(--surface-2)}
+        .notification-item-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:var(--surface-2);color:var(--text-soft);font-size:13px;font-weight:900}
+        .notification-item-icon.type-trading{color:var(--blue)}.notification-item-icon.type-risk{color:var(--orange)}.notification-item-icon.type-psychology{color:var(--accent)}
+        .notification-item-content{min-width:0;display:grid;gap:6px}
+        .notification-item-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.notification-item-top strong{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}.notification-item-top time{flex:0 0 auto;color:var(--text-muted);font-size:8px;white-space:nowrap}
+        .notification-item-body{color:var(--text-soft);font-size:10px;line-height:1.55}.notification-item-meta{display:flex;align-items:center;flex-wrap:wrap;gap:5px;color:var(--text-muted);font-size:8px}
+        .notification-unread-dot{width:7px;height:7px;margin:6px 4px 0 0;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+        .notification-delete-btn{width:30px;height:30px;align-self:start;display:grid;place-items:center;margin-top:6px;border:1px solid transparent;border-radius:9px;color:var(--text-muted);background:transparent;cursor:pointer;transition:color 160ms ease,background 160ms ease,border-color 160ms ease}
+        .notification-delete-btn:hover{color:var(--red);background:var(--red-soft);border-color:rgba(193,85,95,.2)}.notification-delete-btn svg{width:16px;height:16px;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+        .notification-empty{min-height:230px;display:grid;place-items:center;align-content:center;padding:24px 18px;text-align:center;border:1px dashed var(--border-strong);border-radius:18px;color:var(--text-soft)}
+        .notification-empty-icon{width:46px;height:46px;display:grid;place-items:center;margin-bottom:12px;border-radius:14px;color:var(--green);background:var(--green-soft);font-size:17px;font-weight:900}.notification-empty strong{color:var(--text);font-size:12px}.notification-empty p{max-width:270px;margin-top:6px;color:var(--text-muted);font-size:9px;line-height:1.5}
+        .icon-btn.has-notifications{border-color:var(--border-strong)}.notification-unread-count{position:absolute;top:-5px;right:-5px;min-width:17px;height:17px;padding:0 4px;display:grid;place-items:center;border:2px solid var(--bg);border-radius:999px;color:var(--bg);background:var(--accent);font-size:7px;font-weight:900;line-height:1}
+        @media(max-width:560px){.notification-panel{top:78px;right:10px;width:calc(100vw - 20px);max-height:calc(100vh - 90px);border-radius:20px;padding:15px}.notification-tools{align-items:flex-start;flex-direction:column}.notification-actions{width:100%;justify-content:flex-end}.notification-mark-all{font-size:8px}}
     `;
-
-    document.head.appendChild(
-        style
-    );
+    document.head.appendChild(style);
 }
