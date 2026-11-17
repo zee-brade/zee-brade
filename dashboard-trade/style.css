@@ -511,7 +511,7 @@ button, .feature-card, .setting-button, .journal-card { -webkit-tap-highlight-co
     border-radius:14px; background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.05);
 }
 .psych-row-main { display:flex; align-items:center; gap:9px; min-width:0; }
-.psych-emoji { width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto; } .psych-emoji svg { width:22px; height:22px; display:block; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.psych-emoji { font-size:17px; }
 .psych-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .psych-name strong { display:block; font-size:11px; }
 .psych-name span { display:block; margin-top:3px; color:var(--text-muted); font-size:8px; }
@@ -792,9 +792,6 @@ button, .feature-card, .setting-button, .journal-card { -webkit-tap-highlight-co
     transition:all var(--transition);
 }
 .feel-choice span { font-size:20px; }
-.feel-choice .feel-icon { display:grid; place-items:center; width:22px; height:22px; }
-.feel-choice .feel-icon svg, .ui-icon svg { width:1em; height:1em; display:block; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
-.ui-icon { display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; vertical-align:-4px; flex:0 0 auto; }
 .feel-choice strong { font-size:8px; }
 .feel-choice.selected { color:#f3efe6; background:var(--accent-soft); border-color:rgba(201,169,104,.38); box-shadow:0 0 0 1px rgba(201,169,104,.05) inset; }
 
@@ -827,8 +824,7 @@ button, .feature-card, .setting-button, .journal-card { -webkit-tap-highlight-co
     display:flex; gap:10px; padding:13px; margin-bottom:15px; border-radius:16px;
     background:rgba(201,169,104,.06); border:1px solid rgba(201,169,104,.10);
 }
-.locked-notice > span { font-size:16px; display:inline-flex; align-items:center; justify-content:center; }
-.locked-notice > span .ui-icon { width:17px; height:17px; vertical-align:0; }
+.locked-notice > span { font-size:16px; }
 .locked-notice strong { display:block; font-size:10px; }
 .locked-notice p { margin-top:3px; color:var(--text-muted); font-size:9px; line-height:1.5; }
 
@@ -972,7 +968,7 @@ button, .feature-card, .setting-button, .journal-card { -webkit-tap-highlight-co
 .calendar-symbol { display:inline-grid; place-items:center; }
 .calendar-symbol > svg { width:15px; height:15px; }
 .insight-icon > svg { width:22px; height:22px; }
-.psychology-face > svg { width:32px; height:32px; display:block; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.psychology-face > svg { width:32px; height:32px; }
 .choice-icon > svg { width:21px; height:21px; }
 .nav-icon svg { fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
 .notification-dot { z-index:2; }
@@ -1909,6 +1905,233 @@ body[data-theme="light"] .profile-stats span {
     }
 }
 
-.detail-value-with-icon { display:flex; align-items:center; gap:7px; }
-.detail-feel-icon { width:17px; height:17px; vertical-align:0; }
-.detail-feel-icon svg { width:17px; height:17px; display:block; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+
+/* LOCAL ACCOUNTS + BACKUP VAULT */
+.local-account-section,.local-backup-section{margin-top:24px}.local-account-count{color:var(--text-muted);font-size:10px;font-weight:800;white-space:nowrap}
+.local-account-list{display:grid;gap:9px;margin:13px 0}.local-account-row{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--border);border-radius:16px;background:var(--surface)}.local-account-row.is-active{border-color:rgba(201,169,104,.42);background:var(--surface-2)}
+.local-account-avatar{width:40px;height:40px;flex:0 0 40px;display:grid;place-items:center;border-radius:50%;background:var(--surface-2);color:var(--text);font-size:14px;font-weight:900}.local-account-details{min-width:0;flex:1;display:grid;gap:3px}
+.local-account-details strong{overflow:hidden;color:var(--text);font-size:12px;text-overflow:ellipsis;white-space:nowrap}.local-account-details span{overflow:hidden;color:var(--text-muted);font-size:10px;text-overflow:ellipsis;white-space:nowrap}.local-account-details small{color:var(--text-soft);font-size:9px}.local-account-controls{flex:0 0 auto}
+.local-account-action{min-height:34px;padding:0 11px;border:1px solid rgba(201,169,104,.35);border-radius:10px;background:rgba(201,169,104,.10);color:var(--text);font-size:10px;font-weight:800}.local-account-action.muted{border-color:var(--border);background:transparent;color:var(--text-muted)}
+.local-empty-state{padding:17px;border:1px dashed var(--border);border-radius:14px;color:var(--text-muted);font-size:11px;text-align:center}.local-section-note{margin-top:10px;color:var(--text-muted);font-size:10px;line-height:1.7}
+.local-vault-indicator{display:inline-flex;align-items:center;gap:6px;color:var(--text-muted);font-size:10px;font-weight:800}.local-vault-indicator span{width:7px;height:7px;border-radius:50%;background:#5ca77a}
+.local-backup-card{display:flex;align-items:center;gap:13px;padding:14px;border:1px solid var(--border);border-radius:17px;background:var(--surface)}.local-backup-icon{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border-radius:13px;background:var(--surface-2);color:var(--accent)}
+.local-backup-icon svg,.local-permission-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.local-backup-copy{min-width:0;display:grid;gap:5px}.local-backup-copy strong{color:var(--text);font-size:12px}.local-backup-copy span{color:var(--text-muted);font-size:10px;line-height:1.55}
+.local-backup-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.local-backup-actions #chooseBackupFolderBtn{grid-column:1/-1}.local-backup-actions button{min-height:42px;padding:10px 12px;font-size:10px}
+.local-permission-sheet{max-width:430px}.local-permission-icon{width:52px;height:52px;display:grid;place-items:center;margin:0 auto 15px;border:1px solid rgba(201,169,104,.28);border-radius:17px;background:rgba(201,169,104,.09);color:var(--accent)}.local-permission-icon svg{width:27px;height:27px}.local-permission-sheet .modal-header{justify-content:center;margin-bottom:10px;text-align:center}.local-permission-sheet .info-modal-text{text-align:center}.local-permission-actions{display:grid;gap:9px;margin-top:18px}
+@media(max-width:420px){.local-account-row{gap:8px;padding:10px}.local-account-avatar{width:36px;height:36px;flex-basis:36px}.local-account-action{padding:0 8px;font-size:9px}.local-backup-actions{grid-template-columns:1fr}.local-backup-actions #chooseBackupFolderBtn{grid-column:auto}}
+
+/* Welcome-screen backup recovery */
+.welcome-restore-btn { max-width: 100%; margin-top: 11px; }
+
+
+/* =========================================================
+   ICON RENDERING FIXES
+   Explicit dimensions/strokes prevent inline SVG icons from
+   falling back to oversized browser defaults.
+========================================================= */
+.feel-icon{width:32px;height:32px;display:grid;place-items:center;color:var(--accent);flex:0 0 auto}
+.feel-icon svg,.psych-emoji svg,.psychology-face svg,.ui-icon svg,.danger-btn .ui-icon svg,.detail-feel-icon svg{width:100%;height:100%;max-width:28px;max-height:28px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.feel-choice{gap:6px;min-width:0}
+.feel-choice .feel-icon{margin-bottom:1px}
+.feel-choice strong{line-height:1.25;text-align:center}
+.psychology-face{color:var(--accent)}
+.psychology-face svg{width:32px;height:32px;max-width:none;max-height:none}
+.psych-emoji{width:30px;height:30px;display:grid;place-items:center;color:var(--accent)}
+.psych-emoji svg{width:25px;height:25px;max-width:none;max-height:none}
+.ui-icon{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;vertical-align:-3px;flex:0 0 auto;color:currentColor}
+.ui-icon svg{width:100%;height:100%;max-width:none;max-height:none}
+.detail-feel-icon{width:22px;height:22px;margin-right:5px;vertical-align:middle}
+.detail-value-with-icon{display:flex;align-items:center}
+.danger-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px}
+
+/* =========================================================
+   SHARED LIGHT/DARK THEME LAYER
+   Surface, border, and text colors are driven by the active
+   theme across existing and dynamically inserted screens.
+========================================================= */
+:root{
+    --danger-surface:rgba(193,85,95,.10);
+    --danger-border:rgba(193,85,95,.22);
+    --overlay-surface:rgba(14,14,18,.82);
+    --input-placeholder:rgba(163,157,146,.68);
+    --subtle-line:rgba(255,255,255,.07);
+}
+body[data-theme="light"]{
+    --danger-surface:rgba(193,85,95,.08);
+    --danger-border:rgba(193,85,95,.20);
+    --overlay-surface:rgba(247,243,234,.88);
+    --input-placeholder:rgba(107,97,84,.62);
+    --subtle-line:rgba(35,31,25,.10);
+}
+body[data-theme="light"] .setting-row,
+body[data-theme="light"] .setting-button,
+body[data-theme="light"] .psychology-note,
+body[data-theme="light"] .journal-card-bottom,
+body[data-theme="light"] .detail-actions,
+body[data-theme="light"] .profile-stats{border-color:var(--subtle-line)}
+body[data-theme="light"] .setting-button:hover,
+body[data-theme="light"] .feature-card:hover{background:var(--surface-2)}
+body[data-theme="light"] .psychology-face,
+body[data-theme="light"] .feel-choice,
+body[data-theme="light"] .upload-box,
+body[data-theme="light"] .spot-only-notice,
+body[data-theme="light"] .journal-card,
+body[data-theme="light"] .stat-card,
+body[data-theme="light"] .chart-card,
+body[data-theme="light"] .psychology-stats-card,
+body[data-theme="light"] .insight-card,
+body[data-theme="light"] .settings-card,
+body[data-theme="light"] .detail-group,
+body[data-theme="light"] .sl-tp-grid>div,
+body[data-theme="light"] .pnl-amount-wrap,
+body[data-theme="light"] .form-field>input,
+body[data-theme="light"] .form-field>textarea,
+body[data-theme="light"] .form-field>select,
+body[data-theme="light"] .date-filter-control,
+body[data-theme="light"] .settings-select,
+body[data-theme="light"] .local-account-row,
+body[data-theme="light"] .local-backup-card{
+    color:var(--text);background-color:var(--surface);border-color:var(--border)
+}
+body[data-theme="light"] .feature-card,
+body[data-theme="light"] .quick-action-card,
+body[data-theme="light"] .psychology-card{
+    color:var(--text);border-color:var(--border)
+}
+body[data-theme="light"] .feature-card,
+body[data-theme="light"] .quick-action-card{background:var(--surface)}
+body[data-theme="light"] .psychology-card{background:linear-gradient(135deg,rgba(169,129,63,.10),rgba(169,129,63,.035))}
+body[data-theme="light"] .feel-choice.selected{color:var(--text);background:var(--accent-soft);border-color:var(--border-strong)}
+body[data-theme="light"] .primary-btn,
+body[data-theme="light"] .small-primary-btn,
+body[data-theme="light"] .round-arrow-btn{color:#20180f}
+body[data-theme="light"] .danger-btn{color:#a83f49;background:var(--danger-surface);border-color:var(--danger-border)}
+body[data-theme="light"] .toast{color:var(--text);background:rgba(255,253,248,.97);border-color:var(--border-strong);box-shadow:0 18px 45px rgba(58,46,26,.16)}
+body[data-theme="light"] .modal-sheet{color:var(--text);background:var(--surface);border-color:var(--border-strong)}
+body[data-theme="light"] .modal-backdrop{background:rgba(35,31,25,.42)}
+body[data-theme="light"] .remove-image-btn{color:#fff;background:rgba(35,31,25,.78)}
+body[data-theme="light"] .input-group input::placeholder,
+body[data-theme="light"] .form-field>input::placeholder,
+body[data-theme="light"] .form-field>textarea::placeholder{color:var(--input-placeholder)}
+body[data-theme="light"] .local-account-avatar{color:#49371c}
+body[data-theme="light"] .social-profile-cover{background:radial-gradient(circle at 22% 30%,rgba(232,205,148,.42),transparent 22%),radial-gradient(circle at 82% 20%,rgba(201,169,104,.42),transparent 30%),linear-gradient(135deg,#e9dfca,#d9c7a7 48%,#c8b18a)}
+body[data-theme="light"] .social-avatar .avatar-edit-badge{color:#fff;background:#62502f}
+body[data-theme="light"] .profile-footer{color:var(--text-muted)}
+body[data-theme="light"] .locked-notice{background:rgba(169,129,63,.08);border-color:rgba(169,129,63,.16)}
+body[data-theme="light"] .upload-box{border-style:dashed}
+body[data-theme="light"] .account-card{color:var(--text)}
+body[data-theme="light"] .auth-gate-screen .auth-container{background:var(--surface);border-color:var(--border-strong);box-shadow:0 24px 80px rgba(58,46,26,.15)}
+body[data-theme="light"] .auth-gate-screen .form-panel{background:var(--surface);color:var(--text)}
+body[data-theme="light"] .auth-gate-screen .form-kicker,
+body[data-theme="light"] .auth-gate-screen .form-description,
+body[data-theme="light"] .auth-gate-screen .field label{color:var(--text-soft)}
+body[data-theme="light"] .auth-gate-screen .field input{background:var(--surface-2);color:var(--text);border-color:var(--border)}
+body[data-theme="light"] .auth-gate-screen .field input::placeholder{color:var(--input-placeholder)}
+body[data-theme="light"] .auth-gate-screen .field input:focus{background:var(--surface);border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+body[data-theme="light"] .auth-gate-screen .overlay{color:#2a241b;background:linear-gradient(145deg,#e8d5ad,#c8a66b 56%,#a9813f)}
+body[data-theme="light"] .auth-gate-screen .overlay-description,
+body[data-theme="light"] .auth-gate-screen .overlay-hint,
+body[data-theme="light"] .auth-gate-screen .switch-hint{color:rgba(42,36,27,.82)}
+body[data-theme="light"] .auth-gate-screen .overlay-badge{color:#342817;border-color:rgba(52,40,23,.24);background:rgba(255,255,255,.28)}
+body[data-theme="light"] .auth-gate-screen .arrow-btn{color:#342817;border-color:rgba(52,40,23,.32);background:rgba(255,255,255,.28)}
+body[data-theme="light"] .auth-gate-screen .arrow-btn:hover{background:rgba(255,255,255,.5)}
+body[data-theme="dark"] .auth-gate-screen .form-panel{background:var(--surface);color:var(--text)}
+body[data-theme="dark"] .auth-gate-screen .field input{background:var(--surface-2);color:var(--text)}
+body[data-theme="dark"] .auth-gate-screen .field input::placeholder{color:var(--text-muted)}
+body[data-theme="dark"] .modal-sheet{background:var(--surface);color:var(--text)}
+body[data-theme="dark"] .notification-panel{background:var(--surface);color:var(--text)}
+
+@media(prefers-reduced-motion:reduce){.notification-panel,.notification-item,.notification-item-main,.notification-delete-btn{transition:none!important}}
+
+
+/* ICON NORMALIZATION */
+.feel-choice .feel-icon{width:34px;height:34px;display:grid;place-items:center;color:var(--accent);flex:0 0 34px}
+.feel-choice .feel-icon svg,.feel-choice .feel-icon .feel-svg{width:28px!important;height:28px!important;max-width:28px!important;max-height:28px!important;display:block!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;overflow:visible}
+.ui-icon{width:19px;height:19px;display:inline-grid;place-items:center;line-height:0}
+.ui-icon svg,.danger-btn svg,.notification-delete-btn svg,.local-account-action svg{width:100%;height:100%;max-width:none;max-height:none;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.danger-btn .ui-icon{width:18px;height:18px}.notification-delete-btn{flex:0 0 30px}.notification-delete-btn svg{width:17px;height:17px}
+
+/* GLOBAL THEME TOKENS */
+:root{--page-text:var(--text);--panel-text:var(--text);--field-surface:var(--surface);--field-border:var(--border);--control-muted:var(--text-muted);--overlay-backdrop:rgba(0,0,0,.70);--account-card-bg:radial-gradient(circle at 92% 12%,rgba(232,205,148,.16),transparent 22%),linear-gradient(135deg,#1c1917,#131316);--auth-input-bg:#1d1d26;--auth-muted:#aaa7b1;--modal-shadow:0 24px 70px rgba(0,0,0,.36)}
+body[data-theme="dark"]{color-scheme:dark;--page-text:#f3efe6;--panel-text:#f3efe6;--field-surface:#15151a;--field-border:rgba(201,169,104,.14);--control-muted:#8e887e;--overlay-backdrop:rgba(0,0,0,.70);--account-card-bg:radial-gradient(circle at 92% 12%,rgba(232,205,148,.16),transparent 22%),linear-gradient(135deg,#1c1917,#131316);--auth-input-bg:#1d1d26;--auth-muted:#aaa7b1;--modal-shadow:0 24px 70px rgba(0,0,0,.36)}
+body[data-theme="light"]{color-scheme:light;--page-text:#231f19;--panel-text:#231f19;--field-surface:#fffdf8;--field-border:rgba(35,31,25,.13);--control-muted:#8c8272;--overlay-backdrop:rgba(35,31,25,.40);--account-card-bg:radial-gradient(circle at 92% 12%,rgba(232,205,148,.20),transparent 22%),linear-gradient(135deg,#fbf6ea,#fffdf8);--auth-input-bg:#f6f0e4;--auth-muted:#6b6154;--modal-shadow:0 24px 70px rgba(58,46,26,.15)}
+body[data-theme]{color:var(--page-text)}
+body[data-theme] .main-app,body[data-theme] .page-container,body[data-theme] .page-view,body[data-theme] .setup-screen,body[data-theme] .welcome-screen,body[data-theme] .auth-gate-screen{color:var(--page-text)}
+body[data-theme] .account-card{background:var(--account-card-bg)}
+body[data-theme] .feature-card,body[data-theme] .journal-card,body[data-theme] .stat-card,body[data-theme] .chart-card,body[data-theme] .psychology-stats-card,body[data-theme] .insight-card,body[data-theme] .settings-card,body[data-theme] .detail-group,body[data-theme] .local-account-row,body[data-theme] .local-backup-card,body[data-theme] .feel-choice,body[data-theme] .psychology-face,body[data-theme] .date-filter-control,body[data-theme] .settings-select,body[data-theme] .pnl-amount-wrap,body[data-theme] .sl-tp-grid>div,body[data-theme] .upload-box,body[data-theme] .spot-only-notice,body[data-theme] .locked-notice,body[data-theme] .setting-button,body[data-theme] .setting-row,body[data-theme] .psychology-note{color:var(--panel-text);border-color:var(--field-border)}
+body[data-theme] .feature-card,body[data-theme] .journal-card,body[data-theme] .stat-card,body[data-theme] .chart-card,body[data-theme] .psychology-stats-card,body[data-theme] .insight-card,body[data-theme] .settings-card,body[data-theme] .detail-group,body[data-theme] .local-account-row,body[data-theme] .local-backup-card,body[data-theme] .feel-choice,body[data-theme] .date-filter-control,body[data-theme] .settings-select,body[data-theme] .pnl-amount-wrap,body[data-theme] .sl-tp-grid>div,body[data-theme] .upload-box,body[data-theme] .spot-only-notice,body[data-theme] .locked-notice,body[data-theme] .setting-button,body[data-theme] .setting-row,body[data-theme] .psychology-note{background-color:var(--field-surface)}
+body[data-theme] .feature-info p,body[data-theme] .page-header p:not(.eyebrow),body[data-theme] .greeting-section .muted,body[data-theme] .profile-bio,body[data-theme] .profile-footer,body[data-theme] .setting-button span,body[data-theme] .setting-row span,body[data-theme] .local-section-note,body[data-theme] .local-empty-state,body[data-theme] .psychology-note,body[data-theme] .form-description,body[data-theme] .field label,body[data-theme] .form-field label,body[data-theme] .form-field small,body[data-theme] .input-group label,body[data-theme] .input-group small{color:var(--text-soft)}
+body[data-theme] .input-group input,body[data-theme] .input-group select,body[data-theme] .field input,body[data-theme] .form-field>input,body[data-theme] .form-field>textarea,body[data-theme] .form-field>select,body[data-theme] #profileEditBio,body[data-theme] #accountEditCurrency,body[data-theme] #accountEditBalance,body[data-theme] .settings-select{color:var(--text);background-color:var(--field-surface);border-color:var(--field-border)}
+body[data-theme] input::placeholder,body[data-theme] textarea::placeholder{color:var(--control-muted);opacity:.78}body[data-theme] select option{color:var(--text);background:var(--surface)}
+body[data-theme] .topbar,body[data-theme] .bottom-nav{color:var(--text);border-color:var(--border)}
+body[data-theme] .modal-sheet,body[data-theme] .notification-panel,body[data-theme] .auth-gate-screen .auth-container,body[data-theme] .auth-gate-screen .form-panel{color:var(--text);background:var(--surface);border-color:var(--border-strong);box-shadow:var(--modal-shadow)}
+body[data-theme] .modal-backdrop{background:var(--overlay-backdrop)}
+body[data-theme] .toast{color:var(--text);background:var(--surface-2);border-color:var(--border-strong);box-shadow:var(--modal-shadow)}
+body[data-theme] .modal-close,body[data-theme] .notification-close,body[data-theme] .clear-filter-btn{color:var(--text-soft);background:var(--surface-2);border-color:var(--border)}
+body[data-theme] .feel-choice.selected{color:var(--text);background:var(--accent-soft);border-color:var(--border-strong)}
+body[data-theme] .primary-btn,body[data-theme] .small-primary-btn,body[data-theme] .round-arrow-btn{color:#20180f}
+body[data-theme] .danger-btn{color:var(--red);background:var(--danger-surface);border-color:var(--danger-border)}body[data-theme] .danger-btn:hover{background:var(--red-soft)}
+body[data-theme] .quick-action-card{color:var(--text);border-color:var(--border)}body[data-theme] .quick-label{color:var(--accent)}
+body[data-theme] .account-card-top strong{background-image:linear-gradient(100deg,var(--accent) 0%,var(--accent) 42%,var(--text) 50%,var(--accent) 58%,var(--accent) 100%)}
+body[data-theme] .auth-gate-screen .field input{color:var(--text);background:var(--auth-input-bg);border-color:var(--field-border)}body[data-theme] .auth-gate-screen .form-description,body[data-theme] .auth-gate-screen .field label{color:var(--auth-muted)}
+body[data-theme="light"] .auth-gate-screen .overlay{color:#2a241b}body[data-theme="light"] .auth-gate-screen .overlay-description,body[data-theme="light"] .auth-gate-screen .overlay-hint,body[data-theme="light"] .auth-gate-screen .switch-hint{color:rgba(42,36,27,.82)}
+body[data-theme="light"] .intro-screen{background:radial-gradient(circle at center,rgba(169,129,63,.13),transparent 36%),var(--bg)}body[data-theme="light"] .intro-logo{color:var(--text)}body[data-theme="light"] .intro-tagline{color:var(--text-soft);background:var(--surface);border-color:var(--border)}
+body[data-theme="light"] .setup-screen,body[data-theme="light"] .welcome-screen{background-color:var(--bg);color:var(--text)}
+body[data-theme="light"] .required-note,body[data-theme="light"] .spot-only-notice,body[data-theme="light"] .locked-notice{color:var(--text-soft)}
+body[data-theme="light"] .profile-stats div{background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(246,240,228,.90))!important}body[data-theme="light"] .social-profile-copy h1{color:var(--text)}
+body[data-theme="light"] .notification-item{color:var(--text);background:var(--surface);border-color:var(--border)}body[data-theme="light"] .notification-item-main:hover{background:var(--surface-2)}
+body[data-theme="light"] .auth-gate-screen .auth-container,body[data-theme="light"] .auth-gate-screen .form-panel{background:var(--surface)}body[data-theme="light"] .auth-gate-screen .field input{background:var(--surface-2)}
+body[data-theme="dark"] .notification-item{color:var(--text);background:var(--surface)}body[data-theme="dark"] .auth-gate-screen .auth-container,body[data-theme="dark"] .auth-gate-screen .form-panel{background:var(--surface)}
+@media(prefers-reduced-motion:reduce){body,body *{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+
+/* LIGHT THEME CONTRAST PASS */
+body[data-theme="light"] .welcome-badge{
+    color:var(--accent-2);
+    background:var(--accent-soft);
+    border-color:var(--border-strong);
+}
+body[data-theme="light"] .welcome-content h1 span{
+    background-image:linear-gradient(90deg,#76572c,#ad8340);
+}
+body[data-theme="light"] .setup-number,
+body[data-theme="light"] .setup-heading h1 span{
+    color:var(--accent-2);
+}
+body[data-theme="light"] .trade-badge{
+    color:var(--accent-2);
+    background:var(--accent-soft);
+    border-color:var(--border-strong);
+}
+body[data-theme="light"] .chart-badge{
+    color:#526f91;
+    background:rgba(82,111,145,.12);
+}
+body[data-theme="light"] .account-status{
+    color:#28734b;
+    background:rgba(40,115,75,.09);
+    border-color:rgba(40,115,75,.16);
+}
+body[data-theme="light"] .feature-icon.purple{
+    color:#765482;
+    background:rgba(118,84,130,.11);
+}
+body[data-theme="light"] .feature-icon.blue{
+    color:#4c6e91;
+    background:rgba(76,110,145,.11);
+}
+body[data-theme="light"] .feature-icon.orange{
+    color:#885b3e;
+    background:rgba(136,91,62,.10);
+}
+body[data-theme="light"] .feature-icon.green{
+    color:#28734b;
+    background:rgba(40,115,75,.10);
+}
+body[data-theme="light"] .psych-row{
+    color:var(--text);
+    background:var(--surface-2);
+    border-color:var(--border);
+}
+body[data-theme="light"] .nav-item.active .nav-label{
+    color:#2a241b;
+}
