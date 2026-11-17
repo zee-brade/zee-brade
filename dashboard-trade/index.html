@@ -7,9 +7,12 @@
 <meta content="Trazeel, personal trading journal and statistics dashboard." name="description"/>
 <meta content="#0a0a0d" name="theme-color"/>
 <title>Trazeel • Personal Trading Workspace</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,400..600&amp;family=Inter:wght@400;500;600;700;800;900&amp;family=IBM+Plex+Mono:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+
+
+
+<link href="manifest.webmanifest" rel="manifest"/>
+<link href="logo-trazeel.png" rel="icon" type="image/png"/>
+<link href="logo-trazeel.png" rel="apple-touch-icon"/>
 <link href="style.css" rel="stylesheet"/>
 </head>
 <body>
@@ -19,20 +22,22 @@
 <div class="intro-content">
 <div class="logo-mark"><img class="trazeel-logo-img" src="logo-trazeel.png" alt="Trazeel logo"></div>
 <h1 class="intro-logo">TRAZEEL</h1>
-<p class="intro-tagline">Your personal trading space.</p>
+<p class="intro-tagline" data-i18n="introTagline">Your personal trading space.</p>
 <div class="intro-loader"><div class="intro-loader-bar"></div></div>
 </div>
 </section>
 <!-- WELCOME -->
 <section class="screen welcome-screen hidden" id="welcomeScreen">
 <div class="welcome-content">
-<div class="welcome-badge">TRADING WORKSPACE</div>
+<div class="welcome-badge" data-i18n="welcomeBadge">TRADING WORKSPACE</div>
 <div class="welcome-logo-small">
 <div class="logo-mark mini"><img class="trazeel-logo-img" src="logo-trazeel.png" alt="Trazeel logo"></div>
 </div>
-<h1>Welcome to <span>Trazeel.</span></h1>
-<p>Tempat pribadi untuk mencatat, memahami, dan mengevaluasi perjalanan trading lo.</p>
-<button class="primary-btn" id="startSetupBtn" type="button">Get Started <span>→</span></button>
+<h1><span data-i18n="welcomeTo">Welcome to</span> <span>Trazeel.</span></h1>
+<p data-i18n="welcomeBody">Tempat pribadi untuk mencatat, memahami, dan mengevaluasi perjalanan trading lo.</p>
+<button class="primary-btn" id="startSetupBtn" type="button"><span data-i18n="getStarted">Get Started</span> <span>→</span></button>
+<button class="secondary-btn full welcome-restore-btn" data-i18n="restoreAccountBackup" id="restoreBackupFromWelcomeBtn" type="button">Pulihkan akun dari backup</button>
+<input accept="application/json,.json" hidden id="restoreBackupFromWelcomeInput" type="file"/>
 </div>
 </section>
 
@@ -79,22 +84,11 @@
                     class="form-content"
                 >
 
-                    <span
-                        class="form-kicker"
-                    >
-                        Welcome Back
-                    </span>
+                    <span class="form-kicker" data-i18n="welcomeBackShort">Welcome Back</span>
 
-                    <h1>
-                        Login
-                    </h1>
+                    <h1 data-i18n="login">Login</h1>
 
-                    <p
-                        class="form-description"
-                    >
-                        Masuk ke akun kamu dan
-                        lanjutkan perjalananmu.
-                    </p>
+                    <p class="form-description" data-i18n="loginDescription">Masuk ke akun kamu dan lanjutkan perjalananmu.</p>
 
                     <form
                         id="authLoginForm"
@@ -102,18 +96,14 @@
 
                         <div class="field">
 
-                            <label
-                                for="loginEmail"
-                            >
-                                Email
-                            </label>
+                            <label data-i18n="accountId" for="authLoginId">ID Akun</label>
 
                             <input
-                                id="authLoginEmail"
-                                name="email"
-                                type="email"
-                                autocomplete="email"
-                                placeholder="you@example.com"
+                                id="authLoginId"
+                                name="loginId"
+                                type="text"
+                                autocomplete="username"
+                                placeholder="contoh: zril.trade"
                                 required
                             >
 
@@ -121,11 +111,7 @@
 
                         <div class="field">
 
-                            <label
-                                for="loginPassword"
-                            >
-                                Password
-                            </label>
+                            <label data-i18n="password" for="authLoginPassword">Password</label>
 
                             <input
                                 id="authLoginPassword"
@@ -138,12 +124,7 @@
 
                         </div>
 
-                        <button
-                            class="submit-btn"
-                            type="submit"
-                        >
-                            Login
-                        </button>
+                        <button class="submit-btn" data-i18n="login" type="submit">Login</button>
 
                     </form>
 
@@ -167,22 +148,11 @@
                     class="form-content"
                 >
 
-                    <span
-                        class="form-kicker"
-                    >
-                        New Account
-                    </span>
+                    <span class="form-kicker" data-i18n="newAccount">New Account</span>
 
-                    <h1>
-                        Sign Up
-                    </h1>
+                    <h1 data-i18n="signUp">Sign Up</h1>
 
-                    <p
-                        class="form-description"
-                    >
-                        Buat akun baru dan mulai
-                        perjalanan trading kamu.
-                    </p>
+                    <p class="form-description" data-i18n="signupDescription">Buat akun baru dan mulai perjalanan trading kamu.</p>
 
                     <form
                         id="authSignupForm"
@@ -190,11 +160,7 @@
 
                         <div class="field">
 
-                            <label
-                                for="signupName"
-                            >
-                                Name
-                            </label>
+                            <label data-i18n="name" for="authSignupName">Name</label>
 
                             <input
                                 id="authSignupName"
@@ -209,18 +175,14 @@
 
                         <div class="field">
 
-                            <label
-                                for="signupEmail"
-                            >
-                                Email
-                            </label>
+                            <label data-i18n="accountId" for="authSignupId">ID Akun</label>
 
                             <input
-                                id="authSignupEmail"
-                                name="email"
-                                type="email"
-                                autocomplete="email"
-                                placeholder="you@example.com"
+                                id="authSignupId"
+                                name="loginId"
+                                type="text"
+                                autocomplete="username"
+                                placeholder="contoh: zril.trade"
                                 required
                             >
 
@@ -228,16 +190,13 @@
 
                         <div class="field">
 
-                            <label
-                                for="signupPassword"
-                            >
-                                Password
-                            </label>
+                            <label data-i18n="password" for="authSignupPassword">Password</label>
 
                             <input
                                 id="authSignupPassword"
                                 name="password"
                                 type="password"
+                                minlength="8"
                                 autocomplete="new-password"
                                 placeholder="••••••••"
                                 required
@@ -245,12 +204,7 @@
 
                         </div>
 
-                        <button
-                            class="submit-btn"
-                            type="submit"
-                        >
-                            Sign Up
-                        </button>
+                        <button class="submit-btn" data-i18n="signUp" type="submit">Sign Up</button>
 
                     </form>
 
@@ -276,11 +230,7 @@
                 class="overlay-content"
             >
 
-                <div
-                    class="overlay-badge"
-                >
-                    Trazeel Auth
-                </div>
+                <div class="overlay-badge" data-i18n="trazeelAuth">Trazeel Auth</div>
 
                 <h2
                     id="authOverlayTitle"
@@ -297,12 +247,7 @@
                     perjalananmu.
                 </p>
 
-                <p
-                    class="overlay-hint"
-                >
-                    Geser panel atau tekan
-                    tombol panah untuk berpindah.
-                </p>
+                <p class="overlay-hint" data-i18n="authGestureHint">Geser panel atau tekan tombol panah untuk berpindah.</p>
 
                 <button
                     class="arrow-btn"
@@ -313,13 +258,7 @@
                     ←
                 </button>
 
-                <p
-                    class="switch-hint"
-                    id="authSwitchHint"
-                    aria-live="polite"
-                >
-                    Geser untuk Sign Up
-                </p>
+                <p class="switch-hint" id="authSwitchHint" aria-live="polite" data-i18n="swipeToSignup">Geser untuk Sign Up</p>
 
             </div>
 
@@ -338,40 +277,40 @@
 <div class="setup-step">
 <span class="active"></span><span></span>
 </div>
-<p>ACCOUNT SETUP</p>
+<p data-i18n="accountSetup">ACCOUNT SETUP</p>
 </div>
 <div class="setup-step-content active" id="setupStep1">
 <div class="setup-heading">
 <span class="setup-number">01</span>
-<h1>Let's get to know <span>you.</span></h1>
-<p>Nama ini akan digunakan untuk menyambut lo di dashboard.</p>
+<h1><span data-i18n="setupNameTitle">Let's get to know</span> <span data-i18n="setupYouSuffix">you.</span></h1>
+<p data-i18n="setupNameDescription">Nama ini akan digunakan untuk menyambut lo di dashboard.</p>
 </div>
 <div class="input-group">
-<label for="userName">Your name *</label>
+<label data-i18n="yourNameRequired" for="userName">Your name *</label>
 <input autocomplete="name" data-i18n-placeholder="namePlaceholder" id="userName" maxlength="30" placeholder="Contoh: Zril" type="text"/>
 <small class="field-error" id="userNameError"></small>
 </div>
-<button class="primary-btn full" id="step1Btn" type="button">Continue <span>→</span></button>
+<button class="primary-btn full" id="step1Btn" type="button"><span data-i18n="continue">Continue</span> <span>→</span></button>
 </div>
 <div class="setup-step-content" id="setupStep2">
 <div class="setup-heading">
 <span class="setup-number">02</span>
-<h1>Set your <span>account.</span></h1>
-<p>Data ini menjadi dasar informasi awal dashboard.</p>
+<h1><span data-i18n="setupAccountTitle">Set your</span> <span data-i18n="setupAccountSuffix">account.</span></h1>
+<p data-i18n="setupAccountDescription">Data ini menjadi dasar informasi awal dashboard.</p>
 </div>
 <div class="input-group">
-<label for="accountName">Account name *</label>
+<label data-i18n="accountNameRequired" for="accountName">Account name *</label>
 <input data-i18n-placeholder="accountPlaceholder" id="accountName" maxlength="30" placeholder="Main Account" type="text"/>
 <small class="field-error" id="accountNameError"></small>
 </div>
 <div class="setup-grid">
 <div class="input-group">
-<label for="startingBalance">Starting balance *</label>
+<label data-i18n="startingBalanceRequired" for="startingBalance">Starting balance *</label>
 <input data-i18n-placeholder="balancePlaceholder" id="startingBalance" min="0" placeholder="1000" step="0.01" type="number"/>
 <small class="field-error" id="startingBalanceError"></small>
 </div>
 <div class="input-group">
-<label for="currency">Currency *</label>
+<label data-i18n="currencyRequired" for="currency">Currency *</label>
 <select id="currency">
 <option value="USD">USD</option>
 <option value="IDR">IDR</option>
@@ -382,7 +321,7 @@
 </div>
 <div class="setup-actions">
 <button class="secondary-btn" data-i18n="back" id="backStepBtn" type="button">← Back</button>
-<button class="primary-btn" id="finishSetupBtn" type="button">Enter Dashboard <span>→</span></button>
+<button class="primary-btn" id="finishSetupBtn" type="button"><span data-i18n="enterDashboard">Enter Dashboard</span> <span>→</span></button>
 </div>
 </div>
 </div>
@@ -394,7 +333,7 @@
 <div class="brand-mark"><img class="trazeel-logo-img" src="logo-trazeel.png" alt="Trazeel logo"></div>
 <div>
 <div class="brand-name">TRAZEEL</div>
-<div class="brand-subtitle">Trading Space</div>
+<div class="brand-subtitle" data-i18n="tradingSpace">Trading Space</div>
 </div>
 </div>
 <button aria-label="Notifications" class="icon-btn" data-i18n-aria-label="notifications" id="notificationBtn" type="button">
@@ -417,7 +356,7 @@
 <span data-i18n="accountBalance">ACCOUNT BALANCE</span>
 <strong id="homeBalance">$0.00</strong>
 </div>
-<div class="account-status">ACTIVE</div>
+<div class="account-status" data-i18n="active">ACTIVE</div>
 </div>
 <div class="account-card-bottom">
 <div>
@@ -445,7 +384,7 @@
 <div class="feature-icon purple"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"></path><path d="M4 4.5v17M8 6h8M8 10h8"></path></svg></div>
 <div class="feature-info">
 <h3 data-i18n="tradingJournal">Trading Journal</h3>
-<p>Catat entry, setup, hasil trade, psychology, dan alasan di balik setiap keputusan.</p>
+<p data-i18n="journalFeatureDescription">Catat entry, setup, hasil trade, psychology, dan alasan di balik setiap keputusan.</p>
 </div>
 <span class="feature-arrow">→</span>
 </article>
@@ -453,7 +392,7 @@
 <div class="feature-icon blue"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M4 19V5M4 19h16"></path><path d="m7 15 4-4 3 2 5-6"></path></svg></div>
 <div class="feature-info">
 <h3 data-i18n="statistics">Statistics</h3>
-<p>Ubah seluruh data jurnal menjadi insight tentang performa trading lo.</p>
+<p data-i18n="statisticsFeatureDescription">Ubah seluruh data jurnal menjadi insight tentang performa trading lo.</p>
 </div>
 <span class="feature-arrow">→</span>
 </article>
@@ -461,7 +400,7 @@
 <div class="feature-icon orange"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M9 4.5A3.5 3.5 0 0 0 5.5 8c0 .8.27 1.54.72 2.13A3.5 3.5 0 0 0 8 16.5c0 1.93 1.57 3.5 3.5 3.5H12V4.5z"></path><path d="M15 4.5A3.5 3.5 0 0 1 18.5 8c0 .8-.27 1.54-.72 2.13A3.5 3.5 0 0 1 16 16.5c0 1.93-1.57 3.5-3.5 3.5H12V4.5z"></path><path d="M8.5 7.5h1M7.5 12h2M15.5 7.5h-1M16.5 12h-2"></path></svg></div>
 <div class="feature-info">
 <h3 data-i18n="psychologyTitle">Psychology</h3>
-<p>Lihat ringkasan kondisi psikologi lo berdasarkan trade yang sudah dicatat.</p>
+<p data-i18n="psychologyFeatureDescription">Lihat ringkasan kondisi psikologi lo berdasarkan trade yang sudah dicatat.</p>
 </div>
 <span class="feature-arrow">→</span>
 </article>
@@ -469,7 +408,7 @@
 <div class="feature-icon green"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"></path><path d="m19 13.5 1.2 1-.2 2.1-2 .8-.9 1.5-2.1-.2-.8-2h-2.4l-.8 2-2.1.2-.9-1.5-2-.8-.2-2.1 1.2-1v-3l-1.2-1 .2-2.1 2-.8.9-1.5 2.1.2.8 2h2.4l.8-2 2.1-.2.9 1.5 2 .8.2 2.1-1.2 1z"></path></svg></div>
 <div class="feature-info">
 <h3 data-i18n="profileSettings">Profile &amp; Settings</h3>
-<p>Kelola informasi akun, preferensi, dan pengaturan dashboard.</p>
+<p data-i18n="profileFeatureDescription">Kelola informasi akun, preferensi, dan pengaturan dashboard.</p>
 </div>
 <span class="feature-arrow">→</span>
 </article>
@@ -478,7 +417,7 @@
 <div>
 <span class="quick-label" data-i18n="readyToLog">READY TO LOG?</span>
 <h3 data-i18n="recordNextTrade">Record your next trade.</h3>
-<p>Jangan cuma mengingat trade. Catat.</p>
+<p data-i18n="quickActionDescription">Jangan cuma mengingat trade. Catat.</p>
 </div>
 <button class="round-arrow-btn" id="quickJournalBtn" type="button">→</button>
 </div>
@@ -489,9 +428,9 @@
 <div>
 <p class="eyebrow" data-i18n="journal">JOURNAL</p>
 <h1 data-i18n="yourTrades">Your trades.</h1>
-<p>Catat keputusan trading, bukan cuma hasil akhirnya.</p>
+<p data-i18n="journalPageDescription">Catat keputusan trading, bukan cuma hasil akhirnya.</p>
 </div>
-<button class="small-primary-btn" id="addJournalBtn" type="button">+ Add</button>
+<button class="small-primary-btn" id="addJournalBtn" type="button" data-i18n="add">+ Add</button>
 </div>
 <div class="journal-toolbar">
 <div class="date-filter-wrap">
@@ -510,7 +449,7 @@
 <div class="journal-list" id="journalList"></div>
 <div class="journal-more-wrap hidden" id="journalMoreWrap">
 <button class="secondary-btn full" id="showAllJournalsBtn" type="button">
-                        Lihat lainnya <span>→</span>
+                        <span data-i18n="seeMore">Lihat lainnya</span> <span>→</span>
 </button>
 <p class="journal-more-info" id="journalMoreInfo"></p>
 </div>
@@ -521,7 +460,7 @@
 <div>
 <p class="eyebrow" data-i18n="statistics">STATISTICS</p>
 <h1 data-i18n="readTheData">Read the data.</h1>
-<p>Data jurnal diubah menjadi gambaran performa dan pola trading lo.</p>
+<p data-i18n="statisticsPageDescription">Data jurnal diubah menjadi gambaran performa dan pola trading lo.</p>
 </div>
 </div>
 <div class="stats-grid">
@@ -531,7 +470,7 @@
 <small id="statWinRateMeta">0 wins / 0 trades</small>
 </div>
 <div class="stat-card">
-<span>AVG. RR</span>
+<span data-i18n="averageRR">AVG. RR</span>
 <strong id="statAvgRR">0.00R</strong>
 <small data-i18n="basedOnSltp">Based on SL / TP</small>
 </div>
@@ -555,7 +494,7 @@
 <span class="chart-badge">R</span>
 </div>
 <div class="performance-bars" id="performanceBars">
-<div class="stats-empty-message">Chart akan muncul setelah journal memiliki data.</div>
+<div class="stats-empty-message" data-i18n="chartEmpty">Chart akan muncul setelah journal memiliki data.</div>
 </div>
 </div>
 <div class="insight-card">
@@ -569,12 +508,12 @@
 <div class="psychology-stats-card">
 <div class="section-heading compact">
 <div>
-<p class="eyebrow">PSYCHOLOGY BY FEEL</p>
+<p class="eyebrow" data-i18n="psychologyByFeel">PSYCHOLOGY BY FEEL</p>
 <h2 data-i18n="seeThePattern">See the pattern.</h2>
 </div>
 </div>
 <div class="psychology-stats-list" id="psychologyStatsList">
-<div class="stats-empty-message">Belum ada data psychology.</div>
+<div class="stats-empty-message" data-i18n="noPsychData">Belum ada data psychology.</div>
 </div>
 </div>
 </section>
@@ -585,7 +524,7 @@
 <div class="social-profile-body">
 <div class="social-profile-top">
 <button aria-label="Change profile photo" class="profile-avatar social-avatar" data-i18n-aria-label="changeProfilePhoto" id="profileAvatarButton" type="button">
-<img alt="Profile photo" class="profile-avatar-image hidden" id="profileAvatarImage"/>
+<img alt="Profile photo" class="profile-avatar-image hidden" data-i18n-alt="profilePhoto" id="profileAvatarImage"/>
 <span id="profileInitial">Z</span>
 <span aria-hidden="true" class="avatar-edit-badge"><svg viewbox="0 0 24 24"><path d="M4 7h3l1.4-2h7.2L17 7h3v12H4z"></path><circle cx="12" cy="13" r="3.5"></circle></svg></span>
 </button>
@@ -617,7 +556,7 @@
 </div>
 </div>
 <div class="settings-section"><div class="section-heading compact"><div><p class="eyebrow" data-i18n="psychology">PSYCHOLOGY</p><h2 data-i18n="yourCurrentProfile">Profil psikologi lo saat ini.</h2></div></div>
-<div class="psychology-card"><div class="psychology-main"><div class="psychology-face" id="psychologyFace"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M9 4.5A3.5 3.5 0 0 0 5.5 8c0 .8.27 1.54.72 2.13A3.5 3.5 0 0 0 8 16.5c0 1.93 1.57 3.5 3.5 3.5H12V4.5z"></path><path d="M15 4.5A3.5 3.5 0 0 1 18.5 8c0 .8-.27 1.54-.72 2.13A3.5 3.5 0 0 1 16 16.5c0 1.93-1.57 3.5-3.5 3.5H12V4.5z"></path><path d="M8.5 7.5h1M7.5 12h2M15.5 7.5h-1M16.5 12h-2"></path></svg></div><div><span data-i18n="dominantState">DOMINANT STATE</span><strong id="profileDominantFeel">No data yet</strong></div></div><div class="psychology-note" id="profilePsychologyNote">Psychology di halaman ini akan membaca data kondisi psikologi dari journal trading lo.</div></div>
+<div class="psychology-card"><div class="psychology-main"><div class="psychology-face" id="psychologyFace"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M9 4.5A3.5 3.5 0 0 0 5.5 8c0 .8.27 1.54.72 2.13A3.5 3.5 0 0 0 8 16.5c0 1.93 1.57 3.5 3.5 3.5H12V4.5z"></path><path d="M15 4.5A3.5 3.5 0 0 1 18.5 8c0 .8-.27 1.54-.72 2.13A3.5 3.5 0 0 1 16 16.5c0 1.93-1.57 3.5-3.5 3.5H12V4.5z"></path><path d="M8.5 7.5h1M7.5 12h2M15.5 7.5h-1M16.5 12h-2"></path></svg></div><div><span data-i18n="dominantState">DOMINANT STATE</span><strong id="profileDominantFeel">No data yet</strong></div></div><div class="psychology-note" id="profilePsychologyNote" data-i18n="profilePsychologyNoData">Psychology di halaman ini akan membaca data kondisi psikologi dari journal trading lo.</div></div>
 </div>
 <div class="settings-section"><div class="section-heading compact"><div><p class="eyebrow" data-i18n="settings">SETTINGS</p><h2 data-i18n="preferences">Preferences</h2></div></div>
 <div class="settings-card">
@@ -627,14 +566,26 @@
 <button class="setting-button danger" id="resetAppBtn" type="button"><div><strong data-i18n="resetDashboard">Reset Dashboard</strong><span data-i18n="resetDashboardDesc">Hapus seluruh data lokal</span></div><span>›</span></button>
 </div>
 </div>
-<div class="profile-footer">Trazeel • Personal Trading Workspace</div>
+<div class="settings-section local-account-section">
+<div class="section-heading compact"><div><p class="eyebrow" data-i18n="deviceAccounts">DEVICE ACCOUNTS</p><h2 data-i18n="accountSwitcher">Account Switcher</h2></div><span class="local-account-count" id="localAccountCount">0/3 akun</span></div>
+<div class="local-account-list" id="localAccountSwitcherList"><div class="local-empty-state" data-i18n="noLocalAccounts">Belum ada akun lokal.</div></div>
+<button class="secondary-btn full" id="addLocalAccountBtn" type="button" data-i18n="addAccount">+ Tambahkan akun</button>
+<p class="local-section-note" data-i18n="localAccountsDescription">Maksimal 3 akun dalam satu perangkat. Setiap akun harus menyetujui Quick Switch sebelum bisa dibuka melalui pintasan.</p>
+</div>
+<div class="settings-section local-backup-section">
+<div class="section-heading compact"><div><p class="eyebrow" data-i18n="localData">LOCAL DATA</p><h2 data-i18n="backupVault">Backup Vault</h2></div><span class="local-vault-indicator"><span></span> <span data-i18n="offline">Offline</span></span></div>
+<div class="local-backup-card"><div class="local-backup-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v3h16v-3"/></svg></div><div class="local-backup-copy"><strong data-i18n="deviceBackup">Cadangan perangkat</strong><span id="backupStatusText" data-i18n="backupLocationNotSelected">Lokasi backup belum dipilih.</span></div></div>
+<div class="local-backup-actions"><button class="secondary-btn full" id="chooseBackupFolderBtn" type="button" data-i18n="chooseBackupLocation">Pilih lokasi backup</button><button class="primary-btn full" id="backupNowBtn" type="button" data-i18n="backupNow">Backup sekarang</button><button class="secondary-btn full" id="restoreBackupBtn" type="button" data-i18n="restoreBackup">Pulihkan backup</button></div>
+<input accept="application/json,.json" hidden id="restoreBackupInput" type="file"/>
+<p class="local-section-note" data-i18n="backupDescription">Backup mencakup maksimal 3 akun, jurnal, foto, profil, dan preferensi. File tersimpan di lokasi perangkat yang kamu pilih, bukan dikirim ke server.</p>
+</div><div class="profile-footer">Trazeel • Personal Trading Workspace</div>
 </section>
 <input accept="image/*" hidden="" id="profileAvatarInput" type="file"/>
 <!-- EDIT ACCOUNT MODAL -->
 <div aria-hidden="true" class="modal hidden" id="accountEditModal">
 <div class="modal-backdrop" data-close-modal="accountEditModal"></div>
 <div aria-labelledby="accountEditTitle" aria-modal="true" class="modal-sheet account-edit-sheet" role="dialog">
-<div class="modal-header"><div><span class="eyebrow">ACCOUNT</span><h2 data-i18n="editAccountTitle" id="accountEditTitle">Edit Account</h2></div><button aria-label="Close" class="modal-close" data-close-modal="accountEditModal" type="button">×</button></div>
+<div class="modal-header"><div><span class="eyebrow" data-i18n="account">ACCOUNT</span><h2 data-i18n="editAccountTitle" id="accountEditTitle">Edit Account</h2></div><button aria-label="Close" data-i18n-aria-label="closeLabel" class="modal-close" data-close-modal="accountEditModal" type="button">×</button></div>
 <div class="form-stack">
 <div class="form-field"><label data-i18n="name" for="accountEditName">Nama</label><input data-i18n-placeholder="yourNamePlaceholder" id="accountEditName" maxlength="30" placeholder="Your name" type="text"/></div>
 <div class="form-field"><label data-i18n="accountName" for="accountEditAccountName">Account</label><input data-i18n-placeholder="accountPlaceholder" id="accountEditAccountName" maxlength="30" placeholder="Main Account" type="text"/></div>
@@ -648,7 +599,7 @@
 <div aria-hidden="true" class="modal hidden" id="profileEditModal">
 <div class="modal-backdrop" data-close-modal="profileEditModal"></div>
 <div aria-labelledby="profileEditTitle" aria-modal="true" class="modal-sheet profile-edit-sheet" role="dialog">
-<div class="modal-header"><div><span class="eyebrow">PROFILE</span><h2 data-i18n="editProfileTitle" id="profileEditTitle">Edit Profile</h2></div><button aria-label="Close" class="modal-close" data-close-modal="profileEditModal" type="button">×</button></div>
+<div class="modal-header"><div><span class="eyebrow" data-i18n="profileLabel">PROFILE</span><h2 data-i18n="editProfileTitle" id="profileEditTitle">Edit Profile</h2></div><button aria-label="Close" data-i18n-aria-label="closeLabel" class="modal-close" data-close-modal="profileEditModal" type="button">×</button></div>
 <div class="form-stack"><div class="form-field"><label data-i18n="displayName" for="profileEditName">Display Name</label><input data-i18n-placeholder="yourNamePlaceholder" id="profileEditName" maxlength="30" placeholder="Your name" type="text"/></div><div class="form-field"><label data-i18n="username" for="profileEditUsername">Username</label><input autocomplete="off" data-i18n-placeholder="usernamePlaceholder" id="profileEditUsername" maxlength="20" placeholder="@trader" type="text"/></div><div class="form-field"><label data-i18n="bio" for="profileEditBio">Bio</label><textarea data-i18n-placeholder="bioPlaceholder" id="profileEditBio" maxlength="120" placeholder="Tell something about your trading journey..." rows="4"></textarea></div><button class="primary-btn full" data-i18n="saveProfile" id="saveProfileBtn" type="button">Save Profile</button></div>
 </div>
 </div>
@@ -678,48 +629,48 @@
 <div aria-labelledby="addJournalTitle" aria-modal="true" class="modal-sheet add-journal-sheet" role="dialog">
 <div class="modal-header">
 <div>
-<span class="eyebrow">NEW RECORD</span>
-<h2 id="addJournalTitle">Add Journal</h2>
+<span class="eyebrow" data-i18n="newRecord">NEW RECORD</span>
+<h2 data-i18n="addJournal" id="addJournalTitle">Add Journal</h2>
 </div>
-<button aria-label="Close" class="modal-close" data-close-modal="journalModal" type="button">×</button>
+<button aria-label="Close" data-i18n-aria-label="closeLabel" class="modal-close" data-close-modal="journalModal" type="button">×</button>
 </div>
 <!-- MARKET SELECT -->
 <div class="add-flow-step active" id="marketStep">
 <div class="flow-title">
-<span>STEP 01</span>
+<span data-i18n="stepOne">STEP 01</span>
 <h3 data-i18n="whatDidYouTrade">What did you trade?</h3>
 <p data-i18n="chooseTradeType">Pilih jenis transaksi terlebih dahulu.</p>
 </div>
 <div class="choice-grid two">
 <button class="choice-card" data-market-type="spot" type="button">
 <span class="choice-icon"><svg aria-hidden="true" viewbox="0 0 24 24"><circle cx="12" cy="12" r="8.5"></circle><path d="M10 9.5c.5-1 1.3-1.5 2.5-1.5 1.3 0 2.5.7 2.5 1.8 0 2.9-5 1.3-5 4.3 0 1.1.9 1.9 2.3 1.9 1.4 0 2.4-.6 2.8-1.6M12 6.5v11"></path></svg></span>
-<strong>Spot</strong>
-<small>Buy only</small>
+<strong data-i18n="spot">Spot</strong>
+<small data-i18n="buyOnly">Buy only</small>
 </button>
 <button class="choice-card" data-market-type="future" type="button">
 <span class="choice-icon"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M6 4v16M12 2v20M18 5v14"></path><rect height="6" rx=".5" width="3" x="4.5" y="8"></rect><rect height="9" rx=".5" width="3" x="10.5" y="6"></rect><rect height="5" rx=".5" width="3" x="16.5" y="9"></rect></svg></span>
-<strong>Future</strong>
-<small>Forex / Crypto</small>
+<strong data-i18n="future">Future</strong>
+<small data-i18n="forexCrypto">Forex / Crypto</small>
 </button>
 </div>
 </div>
 <!-- FUTURE CATEGORY -->
 <div class="add-flow-step" id="futureCategoryStep">
 <div class="flow-title">
-<span>STEP 02</span>
+<span data-i18n="stepTwo">STEP 02</span>
 <h3 data-i18n="chooseMarket">Choose the market.</h3>
 <p data-i18n="futureMarkets">Future dibagi menjadi Forex atau Crypto.</p>
 </div>
 <div class="choice-grid two">
 <button class="choice-card" data-future-category="forex" type="button">
 <span class="choice-icon">FX</span>
-<strong>Forex</strong>
-<small>Currency pairs</small>
+<strong data-i18n="forex">Forex</strong>
+<small data-i18n="currencyPairs">Currency pairs</small>
 </button>
 <button class="choice-card" data-future-category="crypto" type="button">
 <span class="choice-icon"><svg aria-hidden="true" viewbox="0 0 24 24"><circle cx="12" cy="12" r="8.5"></circle><path d="M10 9.5c.5-1 1.3-1.5 2.5-1.5 1.3 0 2.5.7 2.5 1.8 0 2.9-5 1.3-5 4.3 0 1.1.9 1.9 2.3 1.9 1.4 0 2.4-.6 2.8-1.6M12 6.5v11"></path></svg></span>
-<strong>Crypto</strong>
-<small>Crypto futures</small>
+<strong data-i18n="crypto">Crypto</strong>
+<small data-i18n="cryptoFutures">Crypto futures</small>
 </button>
 </div>
 <button class="text-btn" data-i18n="back" id="futureBackBtn" type="button">← Back</button>
@@ -731,38 +682,38 @@
 <div class="form-stack">
 <div class="form-field">
 <div class="field-label-row">
-<label for="journalDate">01. Date <span>*</span></label>
+<label for="journalDate"><span data-i18n="dateFieldLabel">01. Date</span> <span>*</span></label>
 </div>
 <input id="journalDate" required="" type="date"/>
 <small class="field-error" data-error-for="journalDate"></small>
 </div>
 <div class="form-field">
 <div class="field-label-row">
-<label for="journalPair">02. Pair <span>*</span></label>
-<small>Manual</small>
+<label for="journalPair"><span data-i18n="pairFieldLabel">02. Pair</span> <span>*</span></label>
+<small data-i18n="manual">Manual</small>
 </div>
 <input autocomplete="off" data-i18n-placeholder="pairPlaceholder" id="journalPair" maxlength="20" placeholder="Contoh: XAUUSD" required="" type="text"/>
 <small class="field-error" data-error-for="journalPair"></small>
 </div>
 <div class="form-field" id="positionField">
 <div class="field-label-row">
-<label>03. Position <span>*</span></label>
-<small>Select</small>
+<label><span data-i18n="positionFieldLabel">03. Position</span> <span>*</span></label>
+<small data-i18n="select">Select</small>
 </div>
 <div class="inline-choice-grid two">
-<button class="inline-choice buy" data-position="buy" type="button">BUY</button>
-<button class="inline-choice sell" data-position="sell" type="button">SELL</button>
+<button class="inline-choice buy" data-position="buy" type="button" data-i18n="buy">BUY</button>
+<button class="inline-choice sell" data-position="sell" type="button" data-i18n="sell">SELL</button>
 </div>
 <small class="field-error" data-error-for="journalPosition"></small>
 </div>
 <div class="spot-only-notice hidden" id="spotPositionNotice">
 <span>SPOT</span>
-                            Position tidak diperlukan untuk transaksi Spot.
+                            <span class="spot-notice-copy" data-i18n="spotNotice">Position tidak diperlukan untuk transaksi Spot.</span>
                         </div>
 <div class="form-field">
 <div class="field-label-row">
-<label>04. Final PNL <span>*</span></label>
-<small>Choose result</small>
+<label><span data-i18n="finalPNLFieldLabel">04. Final PNL</span> <span>*</span></label>
+<small data-i18n="chooseResult">Choose result</small>
 </div>
 <div class="pnl-choice-grid">
 <button class="pnl-choice pnl-profit" data-pnl-sign="positive" type="button">
@@ -782,24 +733,24 @@
 </div>
 <div class="form-field">
 <div class="field-label-row">
-<label for="journalEntry">05. Entry Price <span>*</span></label>
-<small>Manual</small>
+<label for="journalEntry"><span data-i18n="entryPriceFieldLabel">05. Entry Price</span> <span>*</span></label>
+<small data-i18n="manual">Manual</small>
 </div>
 <input data-i18n-placeholder="entryPlaceholder" id="journalEntry" placeholder="3342.50" required="" step="any" type="number"/>
 <small class="field-error" data-error-for="journalEntry"></small>
 </div>
 <div class="form-field">
 <div class="field-label-row">
-<label>06. SL / TP <span>*</span></label>
-<small>Manual</small>
+<label><span data-i18n="sltpFieldLabel">06. SL / TP</span> <span>*</span></label>
+<small data-i18n="manual">Manual</small>
 </div>
 <div class="sl-tp-grid">
 <div>
-<span>STOP LOSS</span>
+<span data-i18n="stopLoss">STOP LOSS</span>
 <input id="journalSl" placeholder="3332.50" required="" step="any" type="number"/>
 </div>
 <div>
-<span>TAKE PROFIT</span>
+<span data-i18n="takeProfit">TAKE PROFIT</span>
 <input id="journalTp" placeholder="3360.00" required="" step="any" type="number"/>
 </div>
 </div>
@@ -810,57 +761,57 @@
 </div>
 <div class="form-field">
 <div class="field-label-row">
-<label for="journalSetup">07. Setup <span>*</span></label>
-<small>Manual</small>
+<label for="journalSetup"><span data-i18n="setupFieldLabel">07. Setup</span> <span>*</span></label>
+<small data-i18n="manual">Manual</small>
 </div>
 <input data-i18n-placeholder="setupPlaceholder" id="journalSetup" maxlength="60" placeholder="Liquidity Sweep" required="" type="text"/>
 <small class="field-error" data-error-for="journalSetup"></small>
 </div>
 <div class="form-field">
 <div class="field-label-row">
-<label for="journalMethod">08. Method <span>*</span></label>
-<small>Manual</small>
+<label for="journalMethod"><span data-i18n="methodFieldLabel">08. Method</span> <span>*</span></label>
+<small data-i18n="manual">Manual</small>
 </div>
 <input data-i18n-placeholder="methodPlaceholder" id="journalMethod" maxlength="60" placeholder="SMC / Price Action / etc." required="" type="text"/>
 <small class="field-error" data-error-for="journalMethod"></small>
 </div>
 <div class="form-field">
 <div class="field-label-row">
-<label>09. Feel <span>*</span></label>
-<small>Psychology data</small>
+<label><span data-i18n="feelFieldLabel">09. Feel</span> <span>*</span></label>
+<small data-i18n="psychologyData">Psychology data</small>
 </div>
 <div class="feel-grid">
-<button class="feel-choice" data-feel="calm" type="button"><span class="feel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 14.5c.9 1.1 2 1.5 3.5 1.5s2.6-.4 3.5-1.5M9 10h.01M15 10h.01"></path></svg></span><strong>Calm</strong></button>
-<button class="feel-choice" data-feel="neutral" type="button"><span class="feel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 14h7M9 10h.01M15 10h.01"></path></svg></span><strong>Neutral</strong></button>
-<button class="feel-choice" data-feel="fear" type="button"><span class="feel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 15.5c1-1 2-1.5 3.5-1.5s2.5.5 3.5 1.5M9 10h.01M15 10h.01"></path></svg></span><strong>Fear</strong></button>
-<button class="feel-choice" data-feel="revenge" type="button"><span class="feel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M8 9.5l2 1M16 9.5l-2 1M8.5 15h7M7 6l2 1M17 6l-2 1"></path></svg></span><strong>Revenge</strong></button>
-<button class="feel-choice" data-feel="overconfident" type="button"><span class="feel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12.2 3.5c.9 3.4-1.9 4.4-1.2 7.1.4-1.2 1.4-2.2 2.7-2.8.6 1.8 2.8 3 2.8 6a4.5 4.5 0 1 1-8.9 0c0-2.3 1.2-4.1 2.8-5.7-.1 2 .4 2.9 1.2 3.5.1-2.5.2-4.8-2-6.9 1.1.3 2.1 1 2.6 1.8z"></path></svg></span><strong>Overconfident</strong></button>
-<button class="feel-choice" data-feel="anxious" type="button"><span class="feel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 15.5c1.1-.8 2.1-1.2 3.5-1.2s2.4.4 3.5 1.2M9 10h.01M15 10h.01M8 6.5l1.2 1M16 6.5l-1.2 1"></path></svg></span><strong>Anxious</strong></button>
+<button class="feel-choice" data-feel="calm" type="button"><span class="feel-icon" aria-hidden="true"><svg class="feel-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 14.5c.9 1.1 2 1.5 3.5 1.5s2.6-.4 3.5-1.5M9 10h.01M15 10h.01"></path></svg></span><strong data-i18n="feelCalm">Calm</strong></button>
+<button class="feel-choice" data-feel="neutral" type="button"><span class="feel-icon" aria-hidden="true"><svg class="feel-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 14h7M9 10h.01M15 10h.01"></path></svg></span><strong data-i18n="feelNeutral">Neutral</strong></button>
+<button class="feel-choice" data-feel="fear" type="button"><span class="feel-icon" aria-hidden="true"><svg class="feel-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 15.5c1-1 2-1.5 3.5-1.5s2.5.5 3.5 1.5M9 10h.01M15 10h.01"></path></svg></span><strong data-i18n="feelFear">Fear</strong></button>
+<button class="feel-choice" data-feel="revenge" type="button"><span class="feel-icon" aria-hidden="true"><svg class="feel-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8 9.5l2 1M16 9.5l-2 1M8.5 15h7M7 6l2 1M17 6l-2 1"></path></svg></span><strong data-i18n="feelRevenge">Revenge</strong></button>
+<button class="feel-choice" data-feel="overconfident" type="button"><span class="feel-icon" aria-hidden="true"><svg class="feel-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.2 3.5c.9 3.4-1.9 4.4-1.2 7.1.4-1.2 1.4-2.2 2.7-2.8.6 1.8 2.8 3 2.8 6a4.5 4.5 0 1 1-8.9 0c0-2.3 1.2-4.1 2.8-5.7-.1 2 .4 2.9 1.2 3.5.1-2.5.2-4.8-2-6.9 1.1.3 2.1 1 2.6 1.8z"></path></svg></span><strong data-i18n="feelOverconfident">Overconfident</strong></button>
+<button class="feel-choice" data-feel="anxious" type="button"><span class="feel-icon" aria-hidden="true"><svg class="feel-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8.5 15.5c1.1-.8 2.1-1.2 3.5-1.2s2.4.4 3.5 1.2M9 10h.01M15 10h.01M8 6.5l1.2 1M16 6.5l-1.2 1"></path></svg></span><strong data-i18n="feelAnxious">Anxious</strong></button>
 </div>
 <small class="field-error" data-error-for="journalFeel"></small>
 </div>
 <div class="form-field">
 <div class="field-label-row">
-<label>10. Screenshot</label>
-<small>Optional</small>
+<label data-i18n="screenshotFieldLabel">10. Screenshot</label>
+<small data-i18n="optional">Optional</small>
 </div>
 <label class="upload-box" for="journalScreenshot" id="uploadBox">
 <input accept="image/*" id="journalScreenshot" type="file"/>
 <span class="upload-icon">＋</span>
-<strong>Add image</strong>
-<small>Optional. Image akan dikompres untuk penyimpanan lokal.</small>
+<strong data-i18n="addImage">Add image</strong>
+<small data-i18n="optionalImageDescription">Optional. Image akan dikompres untuk penyimpanan lokal.</small>
 </label>
 <div class="image-preview-wrap hidden" id="imagePreviewWrap">
 <img alt="Journal screenshot preview" id="imagePreview"/>
-<button class="remove-image-btn" id="removeImageBtn" type="button">Remove</button>
+<button class="remove-image-btn" id="removeImageBtn" type="button" data-i18n="remove">Remove</button>
 </div>
 </div>
 <div class="form-submit-area">
 <div class="required-note">
-<span>*</span> Semua field wajib diisi kecuali screenshot.
+<span>*</span> <span data-i18n="requiredFieldsNote">Semua field wajib diisi kecuali screenshot.</span>
                             </div>
 <button class="primary-btn full" id="saveJournalBtn" type="submit">
-                                Add Journal <span>→</span>
+                                <span data-i18n="saveJournalButton">Tambah Journal</span> <span>→</span>
 </button>
 </div>
 </div>
@@ -874,34 +825,41 @@
 <div aria-labelledby="detailTitle" aria-modal="true" class="modal-sheet detail-sheet" role="dialog">
 <div class="modal-header">
 <div>
-<span class="eyebrow">LOCKED RECORD</span>
-<h2 id="detailTitle">Journal Detail</h2>
+<span class="eyebrow" data-i18n="lockedRecord">LOCKED RECORD</span>
+<h2 data-i18n="journalDetail" id="detailTitle">Journal Detail</h2>
 </div>
-<button aria-label="Close" class="modal-close" data-close-modal="detailModal" type="button">×</button>
+<button aria-label="Close" data-i18n-aria-label="closeLabel" class="modal-close" data-close-modal="detailModal" type="button">×</button>
 </div>
 <div class="locked-notice">
 <span class="ui-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v2"></path></svg></span>
 <div>
-<strong>View only</strong>
-<p>Journal yang sudah disimpan tidak dapat diedit. Data hanya bisa dilihat atau dihapus.</p>
+<strong data-i18n="viewOnly">View only</strong>
+<p data-i18n="journalReadOnlyDescription">Journal yang sudah disimpan tidak dapat diedit. Data hanya bisa dilihat atau dihapus.</p>
 </div>
 </div>
 <div class="journal-detail-content" id="journalDetailContent"></div>
 <div class="detail-actions">
-<button class="danger-btn full" id="deleteJournalBtn" type="button"><span class="ui-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 7h14M9 7V5h6v2M8 7l.7 12h6.6L16 7M10 10v6M14 10v6"></path></svg></span> Delete Journal</button>
+<button class="danger-btn full" id="deleteJournalBtn" type="button"><span class="ui-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M9 7V5h6v2M8 7l.7 12h6.6L16 7M10 10v6M14 10v6"></path></svg></span><span data-i18n="deleteJournal">Delete Journal</span></button>
 </div>
 </div>
 </div>
-<!-- SIMPLE INFO MODAL -->
+<!-- QUICK SWITCH PERMISSION -->
+<div aria-hidden="true" class="modal hidden" id="switchPermissionModal"><div class="modal-backdrop"></div>
+<div aria-labelledby="switchPermissionTitle" aria-modal="true" class="modal-sheet local-permission-sheet" role="dialog">
+<div class="local-permission-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20 6v5c0 5-3.4 8.3-8 10-4.6-1.7-8-5-8-10V6z"/><path d="m8.5 12 2.2 2.2 4.8-4.8"/></svg></div>
+<div class="modal-header"><div><span class="eyebrow" data-i18n="accountPermission">ACCOUNT PERMISSION</span><h2 data-i18n="allowQuickSwitchTitle" id="switchPermissionTitle">Izinkan Quick Switch?</h2></div></div>
+<p class="info-modal-text"><strong id="switchPermissionAccountName">Akun</strong><br/><span id="switchPermissionDescription" data-i18n="allowQuickSwitchDescription">Izinkan akun ini muncul di pintasan pergantian akun?</span></p>
+<div class="local-permission-actions"><button class="primary-btn full" id="allowQuickSwitchBtn" type="button" data-i18n="allow">Izinkan</button><button class="secondary-btn full" id="denyQuickSwitchBtn" type="button" data-i18n="notNow">Jangan sekarang</button></div>
+</div></div><!-- SIMPLE INFO MODAL -->
 <div aria-hidden="true" class="modal hidden" id="infoModal">
 <div class="modal-backdrop" data-close-modal="infoModal"></div>
 <div aria-modal="true" class="modal-sheet info-sheet" role="dialog">
 <div class="modal-header">
 <div>
 <span class="eyebrow">TRAZEEL</span>
-<h2 id="infoModalTitle">Information</h2>
+<h2 data-i18n="information" id="infoModalTitle">Information</h2>
 </div>
-<button aria-label="Close" class="modal-close" data-close-modal="infoModal" type="button">×</button>
+<button aria-label="Close" data-i18n-aria-label="closeLabel" class="modal-close" data-close-modal="infoModal" type="button">×</button>
 </div>
 <p class="info-modal-text" id="infoModalText"></p>
 <button class="primary-btn full" data-close-modal="infoModal" data-i18n="close" type="button">Close</button>
@@ -910,5 +868,6 @@
 <div aria-live="polite" class="toast" id="toast" role="status"></div>
 </div>
 <script src="script.js"></script>
+<script src="local-auth.js"></script>
 </body>
 </html>
